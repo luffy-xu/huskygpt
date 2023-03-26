@@ -5,6 +5,7 @@ describe('towSum', () => {
     const nums = [2, 7, 11, 15];
     const target = 9;
     const expected = [0, 1];
-    expect(towSum(nums, target)).toEqual(expected);
+    const result = towSum(nums, target);
+    expect(result).toEqual(expected);
   });
 });
