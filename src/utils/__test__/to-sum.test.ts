@@ -1,4 +1,3 @@
-
 import towSum from '../to-sum';
 
 describe('towSum', () => {
