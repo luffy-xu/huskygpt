@@ -1,4 +1,5 @@
-import towSum from './towSum';
+
+import towSum from '../to-sum';
 
 describe('towSum', () => {
   it('should return the indices of the two numbers that add up to the target', () => {

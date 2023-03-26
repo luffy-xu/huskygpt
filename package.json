@@ -1,7 +1,6 @@
 {
   "name": "react-app-test",
   "version": "0.1.0",
-  "type": "module",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -16,9 +15,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "gen-test": "node test/index.js",
+    "gen-test": "ts-node test/index.ts",
     "eject": "react-scripts eject",
-    "prettier": "prettier --write \"src/**/*.js\""
+    "prettier": "prettier --write \"**/*.(js|ts|tsx)\""
   },
   "eslintConfig": {
     "extends": [
@@ -39,8 +38,11 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^18.15.10",
     "dotenv": "^16.0.3",
     "openai": "^3.2.1",
-    "prettier": "^2.8.7"
+    "prettier": "^2.8.7",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.2"
   }
 }

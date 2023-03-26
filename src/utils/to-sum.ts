@@ -1,6 +1,6 @@
 // tow sum
 // https://leetcode.com/problems/two-sum/description/
-function towSum(nums, target) {
+function towSum(nums: number[], target: number): number[] {
   const map = new Map();
   for (let i = 0; i < nums.length; i++) {
     const num = nums[i];
