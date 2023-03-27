@@ -3,7 +3,7 @@ This project is an example of how you can use the GPT-4 language model to automa
 
 # Requirements
 - Node.js 14.0 or higher
-- An OpenAI API key
+- An [OpenAI API key](https://platform.openai.com/account/api-keys)
 
 # Getting started
 1. Clone this repository to your local machine.
@@ -16,9 +16,11 @@ This project is an example of how you can use the GPT-4 language model to automa
     OPENAI_API_KEY=YOR_API_KEY
     ```
 1. Make sure to replace `<your_api_key>` with your actual API key.
-1. Modify the generate-tests.js file to define your own prompt and model configuration. You can use the `openai.complete()` function to interact with the GPT-4 API and generate the desired number of test cases.
+1. Modify the `.env` file to define your own prompt and model configuration. You can update the `openai.createCompletion()` function to interact with the GPT API and generate the desired number of test cases.
 1. Run the script by running the following command in your terminal:
     ```bash
+    // NOTE: If **.test.ts is already present in the project, will skip this file generation
+
     npm run generate-tests
     ```
 - This will generate the test cases based on your prompt and model configuration, and print them to the console.
