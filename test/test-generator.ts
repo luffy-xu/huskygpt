@@ -16,6 +16,13 @@ class TestGenerator {
       'TestGenerator Started, your ai model is: ',
       completionParams.model
     );
+
+    // Check if the OPENAI_API_KEY environment variable is set
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('Error: OPENAI_API_KEY environment variable is not set.');
+      process.exit(1);
+    }
+
     // Create a new OpenAI API client configuration
     this.configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY!,
