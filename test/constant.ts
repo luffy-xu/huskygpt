@@ -1,5 +1,10 @@
 import path from 'path';
 import { CreateCompletionRequest } from 'openai';
+import { config } from 'dotenv';
+
+// Read the .env file
+config();
+config({ path: path.join(process.cwd(), '.env.local') });
 
 /**
  * The file extensions to search for
@@ -14,8 +19,8 @@ export const TEST_FILE_NAME_EXTENSION = `${TEST_FILE_NAME}.ts`;
  * The parameters for the OpenAI API request
  */
 export const completionParams: CreateCompletionRequest = {
-  model: 'text-davinci-003',
-  max_tokens: 2000,
+  model: process.env.OPENAI_MODEL || 'text-davinci-003',
+  max_tokens: Number(process.env.OPENAI_MAX_TOKENS) || 100,
   temperature: 0,
   top_p: 1,
   n: 1,

@@ -1,6 +1,22 @@
 {
-  "name": "react-app-test",
+  "name": "auto-generate-tests-with-chatgpt4",
   "version": "0.1.0",
+  "description": "Automatically generate unit tests for your code using GPT-4",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your_username/gpt4-auto-test-generator.git"
+  },
+  "author": "https://github.com/luffy-xu",
+  "license": "MIT",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "generate-tests": "ts-node test/index.ts",
+    "eject": "react-scripts eject",
+    "prettier": "prettier --write \"**/*.(js|ts|tsx)\""
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -10,14 +26,6 @@
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "gen-test": "ts-node test/index.ts",
-    "eject": "react-scripts eject",
-    "prettier": "prettier --write \"**/*.(js|ts|tsx)\""
   },
   "eslintConfig": {
     "extends": [

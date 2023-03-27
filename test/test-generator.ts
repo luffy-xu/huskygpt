@@ -12,6 +12,10 @@ class TestGenerator {
   private openai: OpenAIApi;
 
   constructor() {
+    console.log(
+      'TestGenerator Started, your ai model is: ',
+      completionParams.model
+    );
     // Create a new OpenAI API client configuration
     this.configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY!,
