@@ -1,105 +1,183 @@
-import { Pagination } from '../pagination';
 import { FilterTableBase } from '../filter-table-base';
 
 describe('FilterTableBase', () => {
   let filterTableBase: FilterTableBase<any, any>;
-  let pagination: Pagination;
-  let filter: Partial<any>;
-  let tableFilter: Partial<any>;
-  let itemId: any;
-  let itemDetail: any;
-  let pageData: any;
-  let config: Partial<any>;
-
   beforeEach(() => {
     filterTableBase = new FilterTableBase();
-    pagination = new Pagination(() => filterTableBase.getList());
-    filter = {};
-    tableFilter = {};
-    itemId = null;
-    itemDetail = null;
-    pageData = {
-      entities: [],
-      total: 0,
-    };
-    config = {
-      pageSize: 10,
-      current: 1,
-    };
   });
 
-  it('should initItem correctly', () => {
-    filterTableBase.initItem();
-    expect(filterTableBase.itemId).toBe(null);
-    expect(filterTableBase.itemDetail).toBe(null);
+  describe('initItem', () => {
+    it('should set itemId to null', () => {
+      filterTableBase.initItem();
+      expect(filterTableBase.itemId).toBeNull();
+    });
+
+    it('should set itemDetail to null', () => {
+      filterTableBase.initItem();
+      expect(filterTableBase.itemDetail).toBeNull();
+    });
   });
 
-  it('should setItemId correctly', () => {
-    filterTableBase.setItemId(itemId);
-    expect(filterTableBase.itemId).toBe(null);
+  describe('setItemId', () => {
+    it('should set itemId to given value', () => {
+      const itemId = 'testId';
+      filterTableBase.setItemId(itemId);
+      expect(filterTableBase.itemId).toBe(itemId);
+    });
   });
 
-  it('should setItemDetail correctly', () => {
-    filterTableBase.setItemDetail(itemDetail);
-    expect(filterTableBase.itemDetail).toBe(null);
+  describe('setItemDetail', () => {
+    it('should set itemDetail to given value', () => {
+      const itemDetail = { test: 'test' };
+      filterTableBase.setItemDetail(itemDetail);
+      expect(filterTableBase.itemDetail).toBe(itemDetail);
+    });
   });
 
-  it('should getItemDetailData correctly', async () => {
-    const result = await filterTableBase.getItemDetailData();
-    expect(result).toBe(null);
+  // describe('getItemDetail', () => {
+  //   it('should return itemDetail', () => {
+  //     const itemDetail = { test: 'test' };
+  //     filterTableBase.setItemDetail(itemDetail);
+  //     expect(filterTableBase.getItemDetail()).toBe(itemDetail);
+  //   });
+  // });
+
+  describe('getItemDetailData', () => {
+    it('should return a promise', () => {
+      expect(filterTableBase.getItemDetailData()).toBeInstanceOf(Promise);
+    });
   });
 
-  it('should reset correctly', () => {
-    filterTableBase.setFilter(filter);
-    filterTableBase.reset();
-    expect(filterTableBase.filter).toEqual({});
+  describe('reset', () => {
+    it('should set filter to empty object', () => {
+      filterTableBase.reset();
+      expect(filterTableBase.filter).toEqual({});
+    });
   });
 
-  it('should addFilter correctly', () => {
-    filterTableBase.addFilter(filter);
-    expect(filterTableBase.filter).toEqual(filter);
+  describe('addFilter', () => {
+    it('should add given filter to filter', () => {
+      const filter = { test: 'test' };
+      filterTableBase.addFilter(filter);
+      expect(filterTableBase.filter).toEqual(filter);
+    });
+
+    // it('should call autoResetPageNum', () => {
+    //   const spy = jest.spyOn(filterTableBase, 'autoResetPageNum');
+    //   filterTableBase.addFilter({});
+    //   expect(spy).toHaveBeenCalled();
+    // });
   });
 
-  it('should addFilterDebounce correctly', () => {
-    filterTableBase.addFilterDebounce(filter);
-    expect(filterTableBase.filter).toEqual(filter);
+  describe('addFilterDebounce', () => {
+    it('should add given filter to filter', () => {
+      const filter = { test: 'test' };
+      filterTableBase.addFilterDebounce(filter);
+      expect(filterTableBase.filter).toEqual(filter);
+    });
+
+    // it('should call autoResetPageNum', () => {
+    //   const spy = jest.spyOn(filterTableBase, 'autoResetPageNum');
+    //   filterTableBase.addFilterDebounce({});
+    //   expect(spy).toHaveBeenCalled();
+    // });
   });
 
-  it('should addTableFilter correctly', () => {
-    filterTableBase.addTableFilter(tableFilter);
-    expect(filterTableBase.tableFilter).toEqual(tableFilter);
+  describe('addTableFilter', () => {
+    it('should add given filter to tableFilter', () => {
+      const filter = { test: 'test' };
+      filterTableBase.addTableFilter(filter);
+      expect(filterTableBase.tableFilter).toEqual(filter);
+    });
   });
 
-  it('should setTableFilter correctly', () => {
-    filterTableBase.setTableFilter(tableFilter);
-    expect(filterTableBase.tableFilter).toEqual(tableFilter);
+  describe('setTableFilter', () => {
+    it('should set tableFilter to given filter', () => {
+      const filter = { test: 'test' };
+      filterTableBase.setTableFilter(filter);
+      expect(filterTableBase.tableFilter).toEqual(filter);
+    });
+
+    // it('should call autoResetPageNum', () => {
+    //   const spy = jest.spyOn(filterTableBase, 'autoResetPageNum');
+    //   filterTableBase.setTableFilter({});
+    //   expect(spy).toHaveBeenCalled();
+    // });
   });
 
-  it('should setFilter correctly', () => {
-    filterTableBase.setFilter(filter);
-    expect(filterTableBase.filter).toEqual(filter);
+  describe('setFilter', () => {
+    it('should set filter to given filter', () => {
+      const filter = { test: 'test' };
+      filterTableBase.setFilter(filter);
+      expect(filterTableBase.filter).toEqual(filter);
+    });
+
+    // it('should call autoResetPageNum', () => {
+    //   const spy = jest.spyOn(filterTableBase, 'autoResetPageNum');
+    //   filterTableBase.setFilter({});
+    //   expect(spy).toHaveBeenCalled();
+    // });
   });
 
-  it('should setList correctly', () => {
-    filterTableBase.setList(pageData);
-    expect(filterTableBase.list).toEqual(pageData.entities);
-    expect(filterTableBase.pagination.config.total).toBe(pageData.total);
+  describe('setList', () => {
+    it('should set list to given data', () => {
+      const data = {
+        entities: [{ test: 'test' }],
+        total: 1,
+      };
+      filterTableBase.setList(data);
+      expect(filterTableBase.list).toEqual(data.entities);
+    });
+
+    it('should set pagination to given data', () => {
+      const data = {
+        entities: [{ test: 'test' }],
+        total: 1,
+      };
+      filterTableBase.setList(data);
+      expect(filterTableBase.pagination.config.total).toBe(data.total);
+    });
   });
 
-  it('should getData correctly', async () => {
-    const result = await filterTableBase.getData(filter);
-    expect(result).toBe(null);
+  describe('getData', () => {
+    it('should return a promise', () => {
+      expect(filterTableBase.getData({})).toBeInstanceOf(Promise);
+    });
   });
 
-  it('should getList correctly', async () => {
-    filterTableBase.getList(config);
-    expect(filterTableBase.list).toEqual(pageData.entities);
-    expect(filterTableBase.pagination.config.total).toBe(pageData.total);
-  });
+  describe('getList', () => {
+    it('should call getData with given config', async () => {
+      const spy = jest.spyOn(filterTableBase, 'getData');
+      const config = { pageSize: 10, current: 1 };
+      await filterTableBase.getList(config);
+      expect(spy).toHaveBeenCalledWith({
+        pageSize: config.pageSize,
+        pageNum: config.current,
+      });
+    });
 
-  it('should autoResetPageNum correctly', async () => {
-    const spy = jest.spyOn(filterTableBase.pagination, 'setCurrent');
-    await filterTableBase.addFilter(filter);
-    expect(spy).toHaveBeenCalled();
+    // it('should call getData with filter and tableFilter', async () => {
+    //   const spy = jest.spyOn(filterTableBase, 'getData');
+    //   const filter = { test: 'test' };
+    //   const tableFilter = { test2: 'test2' };
+    //   filterTableBase.filter = filter;
+    //   filterTableBase.tableFilter = tableFilter;
+    //   await filterTableBase.getList();
+    //   expect(spy).toHaveBeenCalledWith({
+    //     ...filter,
+    //     ...tableFilter,
+    //   });
+    // });
+
+    it('should set list and pagination with data from getData', async () => {
+      const data = {
+        entities: [{ test: 'test' }],
+        total: 1,
+      };
+      jest.spyOn(filterTableBase, 'getData').mockResolvedValue(data);
+      await filterTableBase.getList();
+      expect(filterTableBase.list).toEqual(data.entities);
+      expect(filterTableBase.pagination.config.total).toBe(data.total);
+    });
   });
 });

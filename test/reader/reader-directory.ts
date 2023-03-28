@@ -1,22 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 import {
-  testDirPath,
   testFileExtensions,
   TEST_DIR_NAME,
   TEST_FILE_NAME,
   TEST_FILE_NAME_EXTENSION,
-} from './constant';
+} from '../constant';
 
-class TestFilePaths {
-  private dirPath: string;
+class ReadTestFilePathsByDirectory {
   private fileExtensions: string[];
 
-  constructor({
-    dirPath = testDirPath,
-    fileExtensions = testFileExtensions,
-  } = {}) {
-    this.dirPath = dirPath;
+  constructor({ fileExtensions = testFileExtensions } = {}) {
     this.fileExtensions = fileExtensions;
   }
 
@@ -62,7 +56,7 @@ class TestFilePaths {
   }
 
   // Get all file paths in a directory and its subdirectories
-  private getFilePaths(dirPath: string): string[] {
+  public getFilePaths(dirPath: string): string[] {
     const files = this.getFilesInDirectory(dirPath);
 
     return files.reduce((filePaths: string[], file: string) => {
@@ -84,14 +78,6 @@ class TestFilePaths {
       return [...filePaths, filePath];
     }, []);
   }
-
-  // Get all file paths that are not test files
-  public getTestFilePath(): string[] {
-    const filePaths = this.getFilePaths(this.dirPath);
-
-    console.log('[Gen files] ===>', filePaths);
-    return filePaths;
-  }
 }
 
-export default TestFilePaths;
+export default ReadTestFilePathsByDirectory;

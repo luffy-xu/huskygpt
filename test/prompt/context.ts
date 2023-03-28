@@ -1,6 +1,26 @@
 import fs from 'fs';
 import path from 'path';
 
+/**
+ * Prompt example:
+ *
+  // Get the file context
+  // const dependencyReader = new DependencyReader(filePath);
+  // const context = dependencyReader
+  //   .getDependencies()
+  //   .map((dependency) => dependency.content)
+  //   .join('\n');
+ */
+//   Please Write a javascript unit tests.
+//   The test should import the test function from parent directory and file name is ${fileName}.
+//   Should include at least one test case for each function or class.
+//   No need to test the function only return another function.
+//   No need to test variable definition.
+
+//   ${context}
+
+//   Need to write test content: ${fileContent}
+
 interface Dependency {
   path: string;
   content: string;

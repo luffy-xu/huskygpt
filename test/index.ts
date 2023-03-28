@@ -1,5 +1,5 @@
+import TestFilePaths from './reader';
 import TestGenerator from './test-generator';
-import TestFilePaths from './read-test-files';
 
 // Create a new instance of the TestGenerator class
 const testGenerator = new TestGenerator();

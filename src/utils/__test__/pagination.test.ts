@@ -1,8 +1,9 @@
 import { Pagination } from '../pagination';
 
 describe('Pagination', () => {
-  let pagination;
+  let pagination: Pagination;
   beforeEach(() => {
+    // @ts-ignore
     pagination = new Pagination(() => {});
   });
 
@@ -23,6 +24,7 @@ describe('Pagination', () => {
   });
 
   it('should call the change handler when changePage is called', () => {
+    // @ts-ignore
     const spy = jest.spyOn(pagination, 'handler');
     const config = {
       pageSize: 10,

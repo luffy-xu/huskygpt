@@ -14,7 +14,7 @@ export const testFileExtensions = ['.ts', '.tsx'];
 export const TEST_DIR_NAME = '__test__';
 export const TEST_FILE_NAME = '.test';
 export const TEST_FILE_NAME_EXTENSION = `${TEST_FILE_NAME}.${
-  process.env.TEST_FILE_EXTENSION || 'js'
+  process.env.TEST_FILE_EXTENSION || 'ts'
 }`;
 
 /**

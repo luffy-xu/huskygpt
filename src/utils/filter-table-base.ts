@@ -75,6 +75,7 @@ export class FilterTableBase<
   }
 
   setList(data: IPageData) {
+    if (!data) return;
     this.list = data.entities;
     this.pagination.setPagination({ total: data.total });
   }
@@ -92,5 +93,6 @@ export class FilterTableBase<
     });
 
     this.setList(result);
+    return result;
   }
 }
