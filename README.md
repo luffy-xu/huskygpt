@@ -3,7 +3,7 @@ This project is an example of how you can use the GPT-4 language model to automa
 
 # Key Features
 - 🤖 Generates test cases using the OpenAI API
-- 🧠 Supports multiple OpenAI models
+- 🧠 Supports multiple OpenAI models and customizing the prompt
 - 📂 Supports reading test files from `directories` or `git stage files`
 - 📝 Generates test files with customizable file extensions
 
