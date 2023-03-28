@@ -1,6 +1,6 @@
 {
   "name": "auto-generate-tests-with-chatgpt4",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Automatically generate unit tests for your code using openai gpt4",
   "main": "index.js",
   "repository": {
