@@ -6,16 +6,30 @@ import { config } from 'dotenv';
 config();
 config({ path: path.join(process.cwd(), '.env.local') });
 
-/**
- * The file extensions to search for
- */
-export const testDirPath = path.join(process.cwd(), 'src');
-export const testFileExtensions = ['.ts', '.tsx'];
 export const TEST_DIR_NAME = '__test__';
 export const TEST_FILE_NAME = '.test';
-export const TEST_FILE_NAME_EXTENSION = `${TEST_FILE_NAME}.${
+export const readRootName = process.env.TEST_FILE_READ_DIR_NAME || 'src';
+export const testDirPath = path.join(process.cwd(), readRootName);
+export const testFileExtensions = ['.ts', '.tsx'];
+export const testFileNameExtension = `${TEST_FILE_NAME}.${
   process.env.TEST_FILE_EXTENSION || 'ts'
 }`;
+
+/**
+ * The file extensions to search for
+ * @enum {string}
+ * @property {string} Directory - Read test files from directory
+ * @property {string} GitStage - Read test files from git stage
+ * @readonly
+ * @type {ReadTypeEnum}
+ * @default 'dir'
+ */
+export enum ReadTypeEnum {
+  Directory = 'dir',
+  GitStage = 'git',
+}
+export const testFileReadType =
+  (process.env.TEST_FILE_READ_TYPE as ReadTypeEnum) || ReadTypeEnum.Directory;
 
 /**
  * The parameters for the OpenAI API request

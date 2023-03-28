@@ -1,19 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import {
-  testFileExtensions,
-  TEST_DIR_NAME,
-  TEST_FILE_NAME,
-  TEST_FILE_NAME_EXTENSION,
-} from '../constant';
 
 class ReadTestFilePathsByDirectory {
-  private fileExtensions: string[];
-
-  constructor({ fileExtensions = testFileExtensions } = {}) {
-    this.fileExtensions = fileExtensions;
-  }
-
   // Get all files in a directory
   private getFilesInDirectory(dirPath: string): string[] {
     return fs.readdirSync(dirPath);
@@ -29,32 +17,6 @@ class ReadTestFilePathsByDirectory {
     return this.getFilePaths(filePath);
   }
 
-  // Check if a file has a valid extension
-  private hasValidExtension(file: string): boolean {
-    const extension = path.extname(file);
-    return this.fileExtensions.includes(extension);
-  }
-
-  // Check if a file is a test file
-  private isTestFile(file: string): boolean {
-    const extension = path.extname(file);
-    return file.endsWith(TEST_FILE_NAME + extension);
-  }
-
-  // Check if a file exists in the test directory
-  private fileExistsInTestDir(filePath: string): boolean {
-    const fileName = path.basename(filePath, path.extname(filePath));
-    const pathName = path.dirname(filePath);
-
-    const testFilePath = path.join(
-      pathName,
-      TEST_DIR_NAME,
-      `${fileName}${TEST_FILE_NAME_EXTENSION}`
-    );
-
-    return fs.existsSync(testFilePath);
-  }
-
   // Get all file paths in a directory and its subdirectories
   public getFilePaths(dirPath: string): string[] {
     const files = this.getFilesInDirectory(dirPath);
@@ -65,14 +27,6 @@ class ReadTestFilePathsByDirectory {
       if (this.isDirectory(filePath)) {
         const subDirFilePaths = this.getSubDirectoryFilePaths(filePath);
         return [...filePaths, ...subDirFilePaths];
-      }
-
-      if (
-        !this.hasValidExtension(file) ||
-        this.isTestFile(file) ||
-        this.fileExistsInTestDir(filePath)
-      ) {
-        return filePaths;
       }
 
       return [...filePaths, filePath];

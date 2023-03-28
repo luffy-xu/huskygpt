@@ -4,7 +4,7 @@ import path from 'path';
 import {
   completionParams,
   TEST_DIR_NAME,
-  TEST_FILE_NAME_EXTENSION,
+  testFileNameExtension,
 } from './constant';
 import { generatePrompt } from './prompt';
 
@@ -80,7 +80,7 @@ class TestGenerator {
     try {
       const dirPath = path.join(path.dirname(filePath), TEST_DIR_NAME);
       const fileName =
-        this.getFileNameWithoutExtension(filePath) + TEST_FILE_NAME_EXTENSION;
+        this.getFileNameWithoutExtension(filePath) + testFileNameExtension;
 
       // Create the output directory if it doesn't exist
       if (!fs.existsSync(dirPath)) {
