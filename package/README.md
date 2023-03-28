@@ -1,10 +1,12 @@
-# Test Case Generator
+# gen-test-gpt
 
-This is a command line tool that generates test cases using the OpenAI API.
+`gen-test-gpt` is a command line tool that generates test cases using the OpenAI API. It is designed to help developers automate the process of generating test cases for their code.
+
 
 ## Installation
 
-To install the tool, run the following command:
+To install Test Case Generator, run the following command:
+
 ```
 npm install -g gen-test-gpt
 ```
@@ -13,7 +15,7 @@ npm install -g gen-test-gpt
 
 To generate test cases, run the following command:
 ```
-gen-test-gpt --api-key --model --test-file-extension --test-file-read-type --test-file-read-dir-name
+gen-test-gpt -k <YOUR_OPENAI_KEY>
 ```
 
 Replace `<key>` with your OpenAI API key, `<model>` with the OpenAI model to use, `<extension>` with the file extension for the generated test files, `<type>` with the type of test file to read (dir or git), and `<name>` with the name of the directory to read the test files from.

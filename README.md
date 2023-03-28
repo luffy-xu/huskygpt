@@ -1,5 +1,16 @@
-# Auto-generating unit tests with GPT-4
+# Auto-generating unit tests with OpenAI (GPT-4)
 This project is an example of how you can use the GPT-4 language model to automatically generate unit tests for your code. This repository contains a Node.js script that interacts with the OpenAI API to generate test cases based on a given prompt and model configuration.
+
+# Key Features
+- 🤖 Generates test cases using the OpenAI API
+- 🧠 Supports multiple OpenAI models
+- 📂 Supports reading test files from `directories` or `git stage files`
+- 📝 Generates test files with customizable file extensions
+
+# Usage
+- [Command Line Usage Click Me](https://github.com/luffy-xu/auto-generate-tests-with-chatgpt4/tree/main/package
+)
+
 
 # Requirements
 - Node.js 14.0 or higher
