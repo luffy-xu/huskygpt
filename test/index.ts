@@ -1,13 +1,17 @@
 import TestFilePaths from './reader';
-import TestGenerator from './test-generator';
+import TestGenerator from './generate-test';
 
-// Create a new instance of the TestGenerator class
-const testGenerator = new TestGenerator();
+/**
+ * Main function for generating test cases
+ */
+export function main() {
+  const testFilePaths = new TestFilePaths();
+  const testGenerator = new TestGenerator();
 
-// Create a new instance of the TestFilePaths class
-const testFilePaths = new TestFilePaths();
+  // Generate a test case for each file path
+  testFilePaths.getTestFilePath().map(async (filePath) => {
+    await testGenerator.generateTestCase({ filePath });
+  });
+}
 
-// Generate a test case for each file path
-testFilePaths.getTestFilePath().map(async (filePath) => {
-  await testGenerator.generateTestCase({ filePath });
-});
+export default main;
