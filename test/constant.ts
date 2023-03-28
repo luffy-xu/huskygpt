@@ -13,7 +13,9 @@ export const testDirPath = path.join(process.cwd(), 'src');
 export const testFileExtensions = ['.ts', '.tsx'];
 export const TEST_DIR_NAME = '__test__';
 export const TEST_FILE_NAME = '.test';
-export const TEST_FILE_NAME_EXTENSION = `${TEST_FILE_NAME}.ts`;
+export const TEST_FILE_NAME_EXTENSION = `${TEST_FILE_NAME}.${
+  process.env.TEST_FILE_EXTENSION || 'ts'
+}`;
 
 /**
  * The parameters for the OpenAI API request
