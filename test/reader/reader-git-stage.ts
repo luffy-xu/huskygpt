@@ -1,49 +1,40 @@
 import { execSync } from 'child_process';
-import fs from 'fs';
 import path from 'path';
 import { readRootName } from '../constant';
 
-interface StagedFile {
-  path: string;
-  content: string;
-}
-
 /**
- * Read all staged files
- * @returns {StagedFile[]} staged files
- * @example
- * const stagedFiles = new StagedFileReader().getStagedFiles();
- * console.log(stagedFiles);
+ * Read the staged files from git only when the file is added
+ * @returns the file path of the staged files
  */
 class StagedFileReader {
-  private stagedFiles: StagedFile[];
+  private stagedFiles: string[];
 
   constructor() {
     this.stagedFiles = this.readStagedFiles();
   }
 
-  // Read all staged files
-  private readStagedFiles(): StagedFile[] {
-    const files = execSync('git diff --name-only --cached')
+  private readStagedFiles(): string[] {
+    const files = execSync('git diff --cached --name-status')
       .toString()
       .split('\n')
       .filter(Boolean);
-    const stagedFiles: StagedFile[] = [];
+    const stagedFiles: string[] = [];
 
-    // Read the content of each staged file
+    // Add the path of each added file
     for (const file of files) {
-      // Only read files in the root directory
-      if (file.startsWith(`${readRootName}/`)) {
-        const filePath = path.join(process.cwd(), file);
-        const content = fs.readFileSync(filePath, 'utf-8');
-        stagedFiles.push({ path: filePath, content });
+      const fileSplitArr = file.split('\t');
+      const status = fileSplitArr[0].slice(0, 1);
+      const filePath = fileSplitArr.slice(-1)[0];
+      if (['A', 'R'].includes(status) && filePath.startsWith(`${readRootName}/`)) {
+        const fullPath = path.join(process.cwd(), filePath);
+        stagedFiles.push(fullPath);
       }
     }
 
     return stagedFiles;
   }
 
-  public getStagedFiles(): StagedFile[] {
+  public getStagedFiles(): string[] {
     return this.stagedFiles;
   }
 }

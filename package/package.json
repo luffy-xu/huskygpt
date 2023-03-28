@@ -1,6 +1,6 @@
 {
   "name": "gen-test-gpt",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Automatically generate unit tests for your code using openai gpt-4",
   "main": "lib/index.js",
   "scripts": {

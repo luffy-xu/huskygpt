@@ -32,10 +32,13 @@ The following options are available:
 
 - `-k, --api-key <key>`: Set the OpenAI API key (required)
 - `-m, --model <model>`: OpenAI model to use (default: `text-davinci-003`)
-- `-t, --max-tokens <tokens>`: Set the maximum number of tokens to generate (default: `2048`)
+- `-p, --prompt <prompt>`, 'OpenAI additional prompt string
 - `-e, --test-file-extension <extension>`: Generate Test file extension (default: `ts`)
-- `-r, --test-file-read-type <type>`: Read test file type, dir or git (default: `git`)
+- `-t, --test-file-read-type <type>`: Read test file type, dir or git (default: `git`)
 - `-d, --test-file-read-dir-name <name>`: Read test file dir name (default: `src`)
+
+## Note
+If there are `env` or `env.local` files in the project, the `OPENAI_API_KEY` will be read from the file, and the `-k` parameter will be ignored. And other parameters are also the same.
 
 ## License
 

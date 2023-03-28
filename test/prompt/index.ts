@@ -21,6 +21,7 @@ export const generatePrompt = (filePath: string) => {
     '- No need to test the function import from other files',
     '- No need to test variable definition',
     '- No need to test function that only return a value',
+    process.env.OPENAI_PROMPT,
     `- Write tests by following typescript code: ${fileContent}`,
   ].join('\n');
 };

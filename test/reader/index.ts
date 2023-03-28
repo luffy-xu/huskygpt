@@ -41,7 +41,7 @@ class TestFilePaths {
   private getTestFilePathByGit(): string[] {
     const reader = new StagedFileReader();
 
-    return reader.getStagedFiles().map((file) => file.path);
+    return reader.getStagedFiles();
   }
 
   // Check if a file has a valid extension
