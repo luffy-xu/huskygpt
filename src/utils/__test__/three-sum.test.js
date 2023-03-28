@@ -1,7 +1,7 @@
 import threeSum from '../three-sum';
 
 describe('threeSum', () => {
-  it('should return the correct result', () => {
+  it('should return the correct result for a given array of numbers', () => {
     const nums = [-1, 0, 1, 2, -1, -4];
     const expectedResult = [
       [-1, -1, 2],

@@ -6,6 +6,7 @@ import {
   TEST_DIR_NAME,
   TEST_FILE_NAME_EXTENSION,
 } from './constant';
+import { generatePrompt } from './prompt';
 
 class TestGenerator {
   private configuration: Configuration;
@@ -40,15 +41,10 @@ class TestGenerator {
    * Generate prompt for the OpenAI API
    */
   private async generatePrompt(filePath: string): Promise<string> {
-    // Read the file contents using the fs module
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
-    const fileName = this.getFileNameWithoutExtension(filePath);
-
     // Set the file content as the prompt for the API request
     const prompt = `
-      Write a TypeScript unit test for the following function:
-      ${fileContent}
-      The test should import the function from "../${fileName}".
+      ${generatePrompt(filePath)}
+
       Test case:
       ###
     `;
