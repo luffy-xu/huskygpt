@@ -1,7 +1,7 @@
 {
   "name": "auto-generate-tests-with-chatgpt4",
   "version": "0.1.0",
-  "description": "Automatically generate unit tests for your code using GPT-4",
+  "description": "Automatically generate unit tests for your code using openai gpt4",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "generate-tests": "ts-node test/index.ts",
+    "generate-tests": "ts-node test/execute.ts",
     "eject": "react-scripts eject",
     "prettier": "prettier --write \"**/*.(js|ts|tsx)\""
   },

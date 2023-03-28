@@ -1,0 +1,42 @@
+{
+  "name": "gen-test-gpt",
+  "version": "0.0.1",
+  "description": "Automatically generate unit tests for your code using openai gpt-4",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "rimraf lib && tsc ../test/index.ts --outDir lib --esModuleInterop",
+    "prepare": "npm run build"
+  },
+  "bin": {
+    "gen-test-gpt": "./cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luffy-xu/auto-generate-tests-with-chatgpt4"
+  },
+  "keywords": [
+    "auto",
+    "generate",
+    "test",
+    "gpt4",
+    "openai"
+  ],
+  "author": "https://github.com/luffy-xu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/luffy-xu/auto-generate-tests-with-chatgpt4/issues"
+  },
+  "homepage": "https://github.com/luffy-xu/auto-generate-tests-with-chatgpt4#readme",
+  "dependencies": {
+    "commander": "^10.0.0",
+    "dotenv": "^16.0.3",
+    "openai": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.5.2",
+    "jest": "^27.5.1",
+    "rimraf": "^4.4.1",
+    "typescript": "^5.0.2"
+  }
+}

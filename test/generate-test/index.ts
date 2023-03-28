@@ -5,8 +5,8 @@ import {
   completionParams,
   TEST_DIR_NAME,
   testFileNameExtension,
-} from './constant';
-import { generatePrompt } from './prompt';
+} from '../constant';
+import { generatePrompt } from '../prompt';
 
 class TestGenerator {
   private configuration: Configuration;
