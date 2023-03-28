@@ -11,6 +11,7 @@ program
   .description('Generate test cases by openai gpt')
   .option('-k, --api-key <key>', 'Set the OpenAI API key')
   .option('-m, --model <model>', 'OpenAI model to use')
+  .option('-p, --prompt <prompt>', 'OpenAI additional prompt string')
   .option(
     '-e, --test-file-extension <extension>',
     'Generate Test file extension, default is ts'
@@ -26,6 +27,9 @@ program
     }
     if (options.model) {
       process.env.OPENAI_MODEL = options.model;
+    }
+    if (options.prompt) {
+      process.env.OPENAI_PROMPT = options.prompt;
     }
     if (options.maxTokens) {
       process.env.OPENAI_MAX_TOKENS = options.maxTokens;
