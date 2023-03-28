@@ -1,11 +1,10 @@
 {
-  "name": "auto-generate-tests-with-chatgpt4",
+  "name": "huskygpt",
   "version": "0.0.1",
-  "description": "Automatically generate unit tests for your code using openai gpt4",
-  "main": "index.js",
+  "description": "Auto gen (generate) unit test tests form your code using openai model davinci gpt gpt3 gpt4 chatgpt4, support command line tool.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your_username/gpt4-auto-test-generator.git"
+    "url": "https://github.com/luffy-xu/huskygpt"
   },
   "author": "https://github.com/luffy-xu",
   "license": "MIT",
@@ -45,6 +44,17 @@
       "last 1 safari version"
     ]
   },
+  "keywords": [
+    "openai",
+    "gpt4",
+    "gpt",
+    "test",
+    "auto",
+    "generate",
+    "gen",
+    "jest",
+    "unit test"
+  ],
   "devDependencies": {
     "@types/node": "^18.15.10",
     "dotenv": "^16.0.3",

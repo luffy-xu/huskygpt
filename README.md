@@ -8,7 +8,7 @@ This project is an example of how you can use the GPT-4 language model to automa
 - 📝 Generates test files with customizable file extensions
 
 # Usage
-- [Command Line Usage Click Me](https://github.com/luffy-xu/auto-generate-tests-with-chatgpt4/tree/main/package
+- [Command Line Usage Click Me](https://github.com/luffy-xu/huskygpt/tree/main/package
 )
 
 
