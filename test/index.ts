@@ -28,7 +28,7 @@ const runMap: Record<HuskyGPTTypeEnum, () => void> = {
  * Main function for huskygpt
  */
 export function main(options?: UserOptions) {
-  userOptions.updateOptions(options);
+  userOptions.init(options);
   const type = userOptions.huskyGPTType;
 
   if (!runMap[type]) throw new Error('Invalid huskyGPTType: ' + type);
