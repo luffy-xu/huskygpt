@@ -80,3 +80,10 @@ Replace `<runType>` with either `test` or `review`, depending on whether you wan
 - `-f, --test-file-type <type>`: Generate test file type, example: `test` or `spec`
 - `-x, --test-file-extension <extension>`: Generate test file name extension, example: `.ts` or `.js`
 - `-n, --test-file-dir-name <name>`: Generate test file directory name, example: `__tests__`
+- `-w, --review-report-webhook <url>`: Webhook URL to send review result to your channel, execute example:
+    ```bash
+    execSync(`curl -i -X POST -H 'Content-Type: application/json' -d '{ "tag": "markdown", "markdown": {"content": "${content}"}}}' ${webhook}`);
+    ```
+- `-h, --help`: Display help for command
+
+
