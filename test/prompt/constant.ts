@@ -1,5 +1,5 @@
 import fs from 'fs';
-import path from 'path';
+import { getFileNameByPath } from '../utils/files';
 import { userOptions } from '../constant';
 import { HuskyGPTTypeEnum } from '../types';
 
@@ -12,7 +12,7 @@ export const huskyGPTTypeMap: Record<
     const fileContent = fs.readFileSync(filePath, 'utf-8');
 
     // Get the file name without the extension
-    const fileName = path.basename(filePath, path.extname(filePath));
+    const fileName = getFileNameByPath(filePath);
     const userPrompt = userOptions.options.openAIPrompt;
 
     return [

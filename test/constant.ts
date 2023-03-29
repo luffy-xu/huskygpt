@@ -114,6 +114,10 @@ class UserOptionsClass {
       testFileType: processEnv.TEST_FILE_TYPE || this.userOptionsDefault.testFileType,
       testFileNameExtension: processEnv.TEST_FILE_NAME_EXTENSION || this.userOptionsDefault.testFileNameExtension,
       testFileDirName: processEnv.TEST_FILE_DIR_NAME || this.userOptionsDefault.testFileDirName,
+      /**
+       * Review options
+       */
+      reviewReportWebhook: processEnv.REVIEW_REPORT_WEBHOOK,
     };
   }
 
@@ -126,6 +130,11 @@ class UserOptionsClass {
     config();
     config({ path: path.join(process.cwd(), '.env.local') });
     const envUserOptions = this.convertProcessEnvToUserOptions(process.env);
+
+    if (process.env.DEBUG) {
+      console.log('envUserOptions: ', envUserOptions);
+      console.log('userOptions: ', userOptions);
+    }
 
     this.options = Object.assign({}, this.userOptionsDefault, envUserOptions, userOptions);
   }

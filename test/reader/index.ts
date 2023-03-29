@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { userOptions } from '../constant';
 import { ReadTypeEnum } from '../types';
+import { getFileNameByPath } from '../utils/files';
 import ReadTestFilePathsByDirectory from './reader-directory';
 import StagedFileReader from './reader-git-stage';
 
@@ -52,7 +53,7 @@ class TestFilePaths {
 
   // Check if a file exists in the test directory
   private fileExistsInTestDir(filePath: string): boolean {
-    const fileName = path.basename(filePath, path.extname(filePath));
+    const fileName = getFileNameByPath(filePath);
     const pathName = path.dirname(filePath);
     const testFileDirName = userOptions.options.testFileDirName;
 
@@ -81,7 +82,9 @@ class TestFilePaths {
         !this.isTestFile(filePath)
     );
 
-    console.log('Need gen test files ===>', filePaths);
+    if (process.env.DEBUG) {
+      console.log('Need gen test files ===>', filePaths);
+    }
     return filePaths;
   }
 }

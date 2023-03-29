@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { getFileNameByPath } from '../utils/files';
 
 /**
  * Prompt example:
@@ -41,7 +42,7 @@ class DependencyReader {
 
   private readFileIgnoreExtension(filePath: string): string {
     const directoryPath = path.dirname(filePath);
-    const fileName = path.basename(filePath, path.extname(filePath));
+    const fileName = getFileNameByPath(filePath);
     const files = fs.readdirSync(directoryPath);
 
     const matchingFiles = files.filter((file) => {
