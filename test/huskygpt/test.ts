@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { TEST_DIR_NAME, testFileNameExtension } from '../constant';
+import { userOptions } from '../constant';
 import OpenAIFactory from '../openai';
 
 /**
@@ -32,9 +32,13 @@ class HuskyGPTTest {
   ): Promise<void> {
     // Write the message to a file
     try {
-      const dirPath = path.join(path.dirname(filePath), TEST_DIR_NAME);
+      const testFileDirName = userOptions.options.testFileDirName;
+      if (!testFileDirName) throw new Error('testFileDirName is not set');
+
+      const dirPath = path.join(path.dirname(filePath), testFileDirName);
       const fileName =
-        this.getFileNameWithoutExtension(filePath) + testFileNameExtension;
+        this.getFileNameWithoutExtension(filePath) +
+        userOptions.testFileNameSuffix;
 
       // Create the output directory if it doesn't exist
       if (!fs.existsSync(dirPath)) {

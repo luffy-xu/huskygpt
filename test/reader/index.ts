@@ -1,14 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import {
-  ReadTypeEnum,
-  testDirPath,
-  testFileExtensions,
-  testFileNameExtension,
-  testFileReadType,
-  TEST_DIR_NAME,
-  TEST_FILE_NAME,
-} from '../constant';
+import { userOptions } from '../constant';
+import { ReadTypeEnum } from '../types';
 import ReadTestFilePathsByDirectory from './reader-directory';
 import StagedFileReader from './reader-git-stage';
 
@@ -17,8 +10,8 @@ class TestFilePaths {
   private fileExtensions: string[];
 
   constructor({
-    dirPath = testDirPath,
-    fileExtensions = testFileExtensions,
+    dirPath = userOptions.readFilesRoot,
+    fileExtensions = userOptions.readFilesExtensions,
   } = {}) {
     this.dirPath = dirPath;
     this.fileExtensions = fileExtensions;
@@ -53,18 +46,22 @@ class TestFilePaths {
   // Check if a file is a test file
   private isTestFile(file: string): boolean {
     const extension = path.extname(file);
-    return file.endsWith(TEST_FILE_NAME + extension);
+    const testFileType = userOptions.options.testFileType;
+    return file.endsWith(`.${testFileType}${extension}`);
   }
 
   // Check if a file exists in the test directory
   private fileExistsInTestDir(filePath: string): boolean {
     const fileName = path.basename(filePath, path.extname(filePath));
     const pathName = path.dirname(filePath);
+    const testFileDirName = userOptions.options.testFileDirName;
+
+    if (!testFileDirName) throw new Error('testFileDirName is not set');
 
     const testFilePath = path.join(
       pathName,
-      TEST_DIR_NAME,
-      `${fileName}${testFileNameExtension}`
+      testFileDirName,
+      `${fileName}${userOptions.testFileNameSuffix}`
     );
 
     return fs.existsSync(testFilePath);
@@ -72,11 +69,12 @@ class TestFilePaths {
 
   // Get all file paths that are not test files
   public getTestFilePath(): string[] {
-    if (!this.readTypeMap[testFileReadType])
+    const readFileType = userOptions.readFileType;
+
+    if (!this.readTypeMap[readFileType])
       throw new Error('Invalid test file read type');
 
-    console.log('Read type ===>', testFileReadType);
-    const filePaths = this.readTypeMap[testFileReadType]().filter(
+    const filePaths = this.readTypeMap[readFileType]().filter(
       (filePath) =>
         !this.fileExistsInTestDir(filePath) &&
         this.hasValidExtension(filePath) &&

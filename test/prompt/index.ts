@@ -1,7 +1,9 @@
-import { huskyGPTType } from '../constant';
+import { userOptions } from '../constant';
 import { huskyGPTTypeMap } from './constant';
 
 export const generatePrompt = (filePath: string): string => {
+  const huskyGPTType = userOptions.huskyGPTType;
+
   if (!filePath) throw new Error('File path is required for generatePrompt');
   if (!huskyGPTTypeMap[huskyGPTType])
     throw new Error('Invalid huskyGPTType: ' + huskyGPTType);
