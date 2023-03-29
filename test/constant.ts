@@ -131,6 +131,11 @@ class UserOptionsClass {
     config({ path: path.join(process.cwd(), '.env.local') });
     const envUserOptions = this.convertProcessEnvToUserOptions(process.env);
 
+    if (process.env.DEBUG) {
+      console.log('envUserOptions: ', envUserOptions);
+      console.log('userOptions: ', userOptions);
+    }
+
     this.options = Object.assign({}, this.userOptionsDefault, envUserOptions, userOptions);
   }
 }

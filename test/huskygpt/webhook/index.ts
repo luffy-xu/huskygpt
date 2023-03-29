@@ -41,7 +41,7 @@ class WebhookNotifier {
     const content = this.tasks.join('\\r\\r');
 
 
-    if (!this.channel) return console.log('publishNotice: ', content);
+    if (!this.channel || process.env.DEBUG) return console.log('publishNotice: ', content);
 
     this.tasks.unshift(`<mention-tag target=\\"seatalk://user?email=${this.userEmail || getUserEmail()}\\" />}__`);
 

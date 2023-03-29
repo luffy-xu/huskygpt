@@ -32,6 +32,10 @@ class OpenAIFactory {
       ###
     `;
 
+    if (process.env.DEBUG) {
+      console.log('prompt ===>', prompt)
+    }
+
     return prompt;
   }
 
