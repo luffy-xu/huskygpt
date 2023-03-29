@@ -42,5 +42,3 @@ Auto Review your code or Auto generate unit tests by OpenAI api gpt (GPT-4)
 ).
 - The generated test cases may not always cover all edge cases or error conditions, and may require manual review and refinement to ensure they provide adequate coverage of your code. Additionally, generating tests may not be the best approach for all types of projects, and may be more suitable for certain types of code or applications.
 - The example `xxx.test.ts` file is provided as a starting point and may need to be modified to suit your specific needs.
-
-

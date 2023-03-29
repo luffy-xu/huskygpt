@@ -100,20 +100,34 @@ class UserOptionsClass {
        * OpenAI options
        */
       openAIKey: processEnv.OPENAI_API_KEY,
-      openAIModel: processEnv.OPENAI_MODEL || this.userOptionsDefault.openAIModel,
-      openAIMaxTokens: Number(processEnv.OPENAI_MAX_TOKENS || this.userOptionsDefault.openAIMaxTokens),
+      openAIModel:
+        processEnv.OPENAI_MODEL || this.userOptionsDefault.openAIModel,
+      openAIMaxTokens: Number(
+        processEnv.OPENAI_MAX_TOKENS || this.userOptionsDefault.openAIMaxTokens
+      ),
       /**
        * Read file options
        */
-      readType: processEnv.READ_TYPE as ReadTypeEnum || this.userOptionsDefault.readType,
-      readFilesRootName: processEnv.READ_FILES_ROOT_NAME || this.userOptionsDefault.readFilesRootName,
-      readFileExtensions: processEnv.READ_FILE_EXTENSIONS || this.userOptionsDefault.readFileExtensions,
+      readType:
+        (processEnv.READ_TYPE as ReadTypeEnum) ||
+        this.userOptionsDefault.readType,
+      readFilesRootName:
+        processEnv.READ_FILES_ROOT_NAME ||
+        this.userOptionsDefault.readFilesRootName,
+      readFileExtensions:
+        processEnv.READ_FILE_EXTENSIONS ||
+        this.userOptionsDefault.readFileExtensions,
       /**
        * Test file options
        */
-      testFileType: processEnv.TEST_FILE_TYPE || this.userOptionsDefault.testFileType,
-      testFileNameExtension: processEnv.TEST_FILE_NAME_EXTENSION || this.userOptionsDefault.testFileNameExtension,
-      testFileDirName: processEnv.TEST_FILE_DIR_NAME || this.userOptionsDefault.testFileDirName,
+      testFileType:
+        processEnv.TEST_FILE_TYPE || this.userOptionsDefault.testFileType,
+      testFileNameExtension:
+        processEnv.TEST_FILE_NAME_EXTENSION ||
+        this.userOptionsDefault.testFileNameExtension,
+      testFileDirName:
+        processEnv.TEST_FILE_DIR_NAME ||
+        this.userOptionsDefault.testFileDirName,
       /**
        * Review options
        */
@@ -136,7 +150,12 @@ class UserOptionsClass {
       console.log('userOptions: ', userOptions);
     }
 
-    this.options = Object.assign({}, this.userOptionsDefault, envUserOptions, userOptions);
+    this.options = Object.assign(
+      {},
+      this.userOptionsDefault,
+      envUserOptions,
+      userOptions
+    );
   }
 }
 
@@ -146,8 +165,8 @@ export const userOptions = new UserOptionsClass();
  * The parameters for the OpenAI API request
  */
 export const completionParams: Partial<CreateCompletionRequest> = {
-  temperature: 0,
-  top_p: 1,
+  temperature: 0.2,
+  top_p: 0.4,
   n: 1,
   frequency_penalty: 0,
   presence_penalty: 0,
