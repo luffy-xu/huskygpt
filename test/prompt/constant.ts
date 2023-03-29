@@ -9,7 +9,8 @@ export const huskyGPTTypeMap: Record<
 > = {
   [HuskyGPTTypeEnum.Test]: (fileResult) => {
     // Read the file contents using the fs module
-    const fileContent = fileResult.fileContent || fs.readFileSync(fileResult.filePath!, 'utf-8');
+    const fileContent =
+      fileResult.fileContent || fs.readFileSync(fileResult.filePath!, 'utf-8');
 
     // Get the file name without the extension
     const fileName = getFileNameByPath(fileResult.filePath!);
@@ -29,7 +30,8 @@ export const huskyGPTTypeMap: Record<
   },
   [HuskyGPTTypeEnum.Review]: (fileResult) => {
     // Read the file contents using the fs module
-    const fileContent = fileResult.fileContent || fs.readFileSync(fileResult.filePath!, 'utf-8');
+    const fileContent =
+      fileResult.fileContent || fs.readFileSync(fileResult.filePath!, 'utf-8');
     const userPrompt = userOptions.options.openAIPrompt;
     const fileExtension = fileResult.filePath?.split('.').pop();
 

@@ -18,7 +18,10 @@ class StagedFileReader {
   /**
    * Get the modified function from the staged files
    */
-  private extractModifiedFunction(filePath: string, contents: string): string | null {
+  private extractModifiedFunction(
+    filePath: string,
+    contents: string
+  ): string | null {
     const diffOutput = execSync(`git diff --cached ${filePath}`).toString();
     const diffLines = diffOutput.split('\n');
 
@@ -96,8 +99,12 @@ class StagedFileReader {
         const contents = fs.readFileSync(fullPath, 'utf-8');
 
         if (status === 'M') {
-          const modifiedContents = this.extractModifiedFunction(fullPath, contents) || '';
-          stagedFiles.push({ filePath: fullPath, fileContent: modifiedContents });
+          const modifiedContents =
+            this.extractModifiedFunction(fullPath, contents) || '';
+          stagedFiles.push({
+            filePath: fullPath,
+            fileContent: modifiedContents,
+          });
           continue;
         }
 

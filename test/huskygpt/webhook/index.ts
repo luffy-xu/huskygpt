@@ -55,11 +55,7 @@ class WebhookNotifier {
 
     // Write the output text to a file if there are code blocks
     if (codeBlocksRegex.test(content)) {
-      fs.writeFileSync(
-        reviewFilePath,
-        content,
-        'utf-8'
-      );
+      fs.writeFileSync(reviewFilePath, content, 'utf-8');
     }
 
     // If no channel is provided, log the content to the console

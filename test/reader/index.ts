@@ -30,7 +30,7 @@ class ReadFiles {
 
     return filePaths.map((filePath) => ({
       filePath,
-      content: ''
+      content: '',
     }));
   }
 
