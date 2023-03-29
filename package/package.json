@@ -1,6 +1,6 @@
 {
-  "name": "gen-test-gpt",
-  "version": "0.0.3",
+  "name": "huskygpt",
+  "version": "0.0.1",
   "description": "Automatically generate unit tests for your code using openai gpt-4",
   "main": "lib/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "prepare": "npm run build"
   },
   "bin": {
-    "gen-test-gpt": "./cli.js"
+    "huskygpt": "./cli.js"
   },
   "repository": {
     "type": "git",

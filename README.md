@@ -1,8 +1,9 @@
-# Auto-generating unit tests with OpenAI (GPT-4)
-This project is an example of how you can use the GPT-4 language model to automatically generate unit tests for your code. This repository contains a Node.js script that interacts with the OpenAI API to generate test cases based on a given prompt and model configuration.
+# HuskyGPT
+Review your code or Auto-generating unit tests with OpenAI (GPT-4)
 
 # Key Features
 - 🤖 Generates test cases using the OpenAI API
+- 🤖 Review your code using the OpenAI API
 - 🧠 Supports multiple OpenAI models and customizing the prompt
 - 📂 Supports reading test files from `directories` or `git stage files`
 - 📝 Generates test files with customizable file extensions
@@ -31,7 +32,7 @@ This project is an example of how you can use the GPT-4 language model to automa
     ```bash
     // NOTE: If **.test.ts is already present in the project, will skip this file generation
 
-    npm run generate-tests
+    npm run huskygpt
     ```
 - This will generate the test cases based on your prompt and model configuration, and print them to the console.
 - Review and modify the generated test cases as necessary to ensure they provide adequate coverage of your code.

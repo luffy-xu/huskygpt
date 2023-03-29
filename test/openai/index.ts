@@ -1,7 +1,5 @@
 import { Configuration, OpenAIApi } from 'openai';
-import {
-  completionParams,
-} from '../constant';
+import { completionParams } from '../constant';
 import { generatePrompt } from '../prompt';
 
 /**
@@ -64,7 +62,6 @@ class OpenAIFactory {
 
     return result || '';
   }
-
 
   /**
    * Run the OpenAI API

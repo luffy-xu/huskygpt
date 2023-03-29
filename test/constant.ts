@@ -32,6 +32,19 @@ export const testFileReadType =
   (process.env.TEST_FILE_READ_TYPE as ReadTypeEnum) || ReadTypeEnum.Directory;
 
 /**
+ * The run mode of the huskygpt
+ * test - Run the test file generation
+ * review - Run the review file generation
+ */
+export enum HuskyGPTTypeEnum {
+  Test = 'test',
+  Review = 'review',
+}
+// The run mode of the huskygpt default to review
+export const huskyGPTType =
+  (process.env.HUSKY_GPT_TYPE as HuskyGPTTypeEnum) || HuskyGPTTypeEnum.Review;
+
+/**
  * The parameters for the OpenAI API request
  */
 export const completionParams: CreateCompletionRequest = {
