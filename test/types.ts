@@ -44,7 +44,7 @@ export interface UserOptions {
   /**
    * Read files options
    */
-  // Read files from directory or git stage, default is 'dir'
+  // Read files from directory or git stage, default is 'git'
   readType?: ReadTypeEnum;
   // The root name of the directory to read files from, default is 'src'
   readFilesRootName?: string;

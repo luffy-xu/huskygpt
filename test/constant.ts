@@ -3,25 +3,14 @@ import { CreateCompletionRequest } from 'openai';
 import { config } from 'dotenv';
 import { HuskyGPTTypeEnum, ReadTypeEnum, UserOptions } from './types';
 
-// Read the .env file
-config();
-config({ path: path.join(process.cwd(), '.env.local') });
-
 class UserOptionsClass {
   options: UserOptions;
 
-  constructor(userOptions: UserOptions = {}) {
-    this.options = {
-      ...this.userOptionsDefault,
-      ...userOptions,
-    };
-  }
-
-  private readonly userOptionsDefault: UserOptions = {
+  private userOptionsDefault: UserOptions = {
     huskyGPTType: HuskyGPTTypeEnum.Review,
     openAIModel: 'text-davinci-003',
     openAIMaxTokens: 2048,
-    readType: ReadTypeEnum.Directory,
+    readType: ReadTypeEnum.GitStage,
     readFilesRootName: 'src',
     readFileExtensions: '.ts,.tsx',
     testFileType: 'test',
@@ -85,8 +74,6 @@ class UserOptionsClass {
 
   /**
    * File read type, either 'dir' or 'git'
-   * @example
-   * // returns 'dir'
    */
   get readFileType(): ReadTypeEnum {
     if (!this.options.readType) throw new Error('readType is not set');
@@ -113,43 +100,38 @@ class UserOptionsClass {
        * OpenAI options
        */
       openAIKey: processEnv.OPENAI_API_KEY,
-      openAIModel: processEnv.OPENAI_MODEL,
-      openAIMaxTokens: Number(processEnv.OPENAI_MAX_TOKENS),
+      openAIModel: processEnv.OPENAI_MODEL || this.userOptionsDefault.openAIModel,
+      openAIMaxTokens: Number(processEnv.OPENAI_MAX_TOKENS || this.userOptionsDefault.openAIMaxTokens),
       /**
        * Read file options
        */
-      readType: processEnv.READ_TYPE as ReadTypeEnum,
-      readFilesRootName: processEnv.READ_FILES_ROOT_NAME,
-      readFileExtensions: processEnv.READ_FILE_EXTENSIONS,
+      readType: processEnv.READ_TYPE as ReadTypeEnum || this.userOptionsDefault.readType,
+      readFilesRootName: processEnv.READ_FILES_ROOT_NAME || this.userOptionsDefault.readFilesRootName,
+      readFileExtensions: processEnv.READ_FILE_EXTENSIONS || this.userOptionsDefault.readFileExtensions,
       /**
        * Test file options
        */
-      testFileType: processEnv.TEST_FILE_TYPE,
-      testFileNameExtension: processEnv.TEST_FILE_NAME_EXTENSION,
-      testFileDirName: processEnv.TEST_FILE_DIR_NAME,
+      testFileType: processEnv.TEST_FILE_TYPE || this.userOptionsDefault.testFileType,
+      testFileNameExtension: processEnv.TEST_FILE_NAME_EXTENSION || this.userOptionsDefault.testFileNameExtension,
+      testFileDirName: processEnv.TEST_FILE_DIR_NAME || this.userOptionsDefault.testFileDirName,
     };
   }
 
   /**
-   * Update the user options
+   * Initialize the user options
    */
-  public updateOptions(userOptions?: UserOptions) {
-    if (!userOptions) return;
 
-    this.options = {
-      ...this.options,
-      ...userOptions,
-    };
-  }
+  public init(userOptions: UserOptions = {}) {
+    // Read the .env file
+    config();
+    config({ path: path.join(process.cwd(), '.env.local') });
+    const envUserOptions = this.convertProcessEnvToUserOptions(process.env);
 
-  public updateOptionsFromProcessEnv(processEnv: NodeJS.ProcessEnv) {
-    const userOptions = this.convertProcessEnvToUserOptions(processEnv);
-    this.updateOptions(userOptions);
+    this.options = Object.assign({}, this.userOptionsDefault, envUserOptions, userOptions);
   }
 }
 
 export const userOptions = new UserOptionsClass();
-userOptions.updateOptionsFromProcessEnv(process.env);
 
 /**
  * The parameters for the OpenAI API request
