@@ -1,4 +1,9 @@
-import { Configuration, CreateCompletionRequest, OpenAIApi, CreateChatCompletionRequest } from 'openai';
+import {
+  Configuration,
+  CreateCompletionRequest,
+  OpenAIApi,
+  CreateChatCompletionRequest,
+} from 'openai';
 import { completionParams, userOptions } from '../constant';
 import { generatePrompt } from '../prompt';
 import { HuskyGPTTypeEnum } from '../types';
@@ -23,10 +28,13 @@ class OpenAIFactory {
     this.openai = new OpenAIApi(this.configuration);
   }
 
-  private openAICompletionMap: Record<HuskyGPTTypeEnum, (prompt: string) => Promise<string>> = {
+  private openAICompletionMap: Record<
+    HuskyGPTTypeEnum,
+    (prompt: string) => Promise<string>
+  > = {
     [HuskyGPTTypeEnum.Test]: this.openAICreateCompletion.bind(this),
     [HuskyGPTTypeEnum.Review]: this.openAIChatCompletion.bind(this),
-  }
+  };
 
   private get completionParams(): CreateCompletionRequest {
     const options: CreateCompletionRequest = {
@@ -64,7 +72,7 @@ class OpenAIFactory {
     `;
 
     if (process.env.DEBUG) {
-      console.log('prompt ===>', prompt)
+      console.log('prompt ===>', prompt);
     }
 
     return prompt;
@@ -94,11 +102,10 @@ class OpenAIFactory {
    * Generate a review message using the OpenAI API chat completion
    */
   private async openAIChatCompletion(prompt: string): Promise<string> {
-
     // Create a new chat completion, using the GPT-3.5 Turbo model
     const completion = await this.openai.createChatCompletion({
       ...this.chatCompletionParams,
-      messages: [{role: 'user', content: prompt}],
+      messages: [{ role: 'user', content: prompt }],
     });
 
     if (process.env.DEBUG) {
@@ -119,7 +126,9 @@ class OpenAIFactory {
    */
   async run({ filePath }: { filePath: string }): Promise<string> {
     const prompt = this.generatePrompt(filePath);
-    const message = await this.openAICompletionMap[userOptions.huskyGPTType](prompt);
+    const message = await this.openAICompletionMap[userOptions.huskyGPTType](
+      prompt
+    );
 
     return message;
   }

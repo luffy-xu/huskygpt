@@ -31,10 +31,12 @@ export const huskyGPTTypeMap: Record<
     // Read the file contents using the fs module
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     const userPrompt = userOptions.options.openAIPrompt;
+    const fileExtension = filePath.split('.').pop();
 
     return [
       'You are a programer to review code.',
-      '- if there is bug or can be optimized you should reply key problems with code, otherwise reply "perfect!" only',
+      '- if there is bug or can be optimized you should reply key problems with code, else reply "perfect!"',
+      `- if return code, you should reply code with markdown ${fileExtension} language block`,
       userPrompt,
       `- review following code: ${fileContent}`,
     ].join('\n');
