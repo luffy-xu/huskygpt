@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { HuskyGPTTypeEnum } from '../constant';
+import { userOptions } from '../constant';
+import { HuskyGPTTypeEnum } from '../types';
 
 export const huskyGPTTypeMap: Record<
   HuskyGPTTypeEnum,
@@ -12,8 +13,7 @@ export const huskyGPTTypeMap: Record<
 
     // Get the file name without the extension
     const fileName = path.basename(filePath, path.extname(filePath));
-
-    console.log('Customize prompt ===>', process.env.OPENAI_PROMPT);
+    const userPrompt = userOptions.options.openAIPrompt;
 
     return [
       'Please Write a unit tests by jest by typescript',
@@ -22,7 +22,7 @@ export const huskyGPTTypeMap: Record<
       '- No need to test the function import from other files',
       '- No need to test variable definition',
       '- No need to test function that only return a value',
-      process.env.OPENAI_PROMPT,
+      userPrompt,
       `- Write tests by following typescript code: ${fileContent}`,
       '- Test case:',
     ].join('\n');
@@ -30,11 +30,12 @@ export const huskyGPTTypeMap: Record<
   [HuskyGPTTypeEnum.Review]: (filePath) => {
     // Read the file contents using the fs module
     const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const userPrompt = userOptions.options.openAIPrompt;
 
     return [
       'You are a team leader to review member code.',
       '- if there is bug or can be optimized you should reply, otherwise reply "perfect!" only',
-      process.env.OPENAI_PROMPT,
+      userPrompt,
       `- review following code: ${fileContent}`,
     ].join('\n');
   },

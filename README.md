@@ -1,12 +1,11 @@
 # HuskyGPT
-Review your code or Auto-generating unit tests with OpenAI (GPT-4)
+Auto Review your code or Auto generate unit tests by OpenAI api gpt (GPT-4)
 
 # Key Features
 - 🤖 Generates test cases using the OpenAI API
 - 🤖 Review your code using the OpenAI API
 - 🧠 Supports multiple OpenAI models and customizing the prompt
-- 📂 Supports reading test files from `directories` or `git stage files`
-- 📝 Generates test files with customizable file extensions
+- 📂 Supports reading test files from `directories` or `git staged files`
 
 # Usage
 - [Command Line Usage Click Me](https://github.com/luffy-xu/huskygpt/tree/main/package

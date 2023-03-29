@@ -1,12 +1,13 @@
 {
   "name": "huskygpt",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Automatically generate unit tests for your code using openai gpt-4",
   "main": "lib/index.js",
   "scripts": {
     "test": "jest",
     "build": "rimraf lib && tsc ../test/index.ts --outDir lib --esModuleInterop",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "publish": "npm publish --registry https://registry.npmjs.org"
   },
   "bin": {
     "huskygpt": "./cli.js"

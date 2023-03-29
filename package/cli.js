@@ -8,43 +8,58 @@ const program = new Command();
 
 program
   .version(packageJson.version, '-v, --version', 'output the current version')
-  .description('Generate test cases by openai gpt')
+  .description('Generate unit tests or review your code by openai gpt')
+  .argument('<runType>', 'run type: test or review')
   .option('-k, --api-key <key>', 'Set the OpenAI API key')
   .option('-m, --model <model>', 'OpenAI model to use')
-  .option('-p, --prompt <prompt>', 'OpenAI additional prompt string')
+  .option('-p, --prompt <prompt>', 'OpenAI prompt to use')
+  .option('-t, --max-tokens <tokens>', 'OpenAI max tokens to use')
   .option(
-    '-e, --test-file-extension <extension>',
-    'Generate Test file extension, default is ts'
+    '-e, --file-extensions <extensions>',
+    'File extensions to read, example: .ts,.tsx'
   )
-  .option('-t, --test-file-read-type <type>', 'Read test file type, dir or git')
   .option(
-    '-d, --test-file-read-dir-name <name>',
-    'Read test file dir name, default is src'
+    '-r, --read-type <type>',
+    'Read files from directory or git stage, example: dir or git'
   )
-  .action((options) => {
-    if (options.apiKey) {
-      process.env.OPENAI_API_KEY = options.apiKey;
-    }
-    if (options.model) {
-      process.env.OPENAI_MODEL = options.model;
-    }
-    if (options.prompt) {
-      process.env.OPENAI_PROMPT = options.prompt;
-    }
-    if (options.maxTokens) {
-      process.env.OPENAI_MAX_TOKENS = options.maxTokens;
-    }
-    if (options.testFileExtension) {
-      process.env.TEST_FILE_EXTENSION = options.testFileExtension;
-    }
-    if (options.testFileReadType) {
-      process.env.TEST_FILE_READ_TYPE = options.testFileReadType;
-    }
-    if (options.testFileReadDirName) {
-      process.env.TEST_FILE_READ_DIR_NAME = options.testFileReadDirName;
-    }
+  .option(
+    '-d, --read-dir-name <name>',
+    'Root name of the directory to read files from, example: src'
+  )
+  .option(
+    '-f, --test-file-type <type>',
+    'Generate test file type, example: test or spec'
+  )
+  .option(
+    '-x, --test-file-extension <extension>',
+    'Generate test file name extension, example: .ts or .js'
+  )
+  .option(
+    '-n, --test-file-dir-name <name>',
+    'Generate test file directory name, example: __tests__'
+  )
+  .action((runType, options) => {
+    const userOptions = {
+      huskyGPTType: runType === 'test' ? 'test' : 'review',
+      ...(options.apiKey && { openAIKey: options.apiKey }),
+      ...(options.model && { openAIModel: options.model }),
+      ...(options.prompt && { openAIPrompt: options.prompt }),
+      ...(options.maxTokens && { openAIMaxTokens: Number(options.maxTokens) }),
+      ...(options.fileExtensions && {
+        readFileExtensions: options.fileExtensions,
+      }),
+      ...(options.readType && { readType: options.readType }),
+      ...(options.readDirName && { readFilesRootName: options.readDirName }),
+      ...(options.testFileType && { testFileType: options.testFileType }),
+      ...(options.testFileExtension && {
+        testFileNameExtension: options.testFileExtension,
+      }),
+      ...(options.testFileDirName && {
+        testFileDirName: options.testFileDirName,
+      }),
+    };
 
-    main();
+    main(userOptions);
   });
 
 program.parse(process.argv);

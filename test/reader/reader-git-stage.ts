@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
 import path from 'path';
-import { readRootName } from '../constant';
+import { userOptions } from '../constant';
 
 /**
  * Read the staged files from git only when the file is added
@@ -19,6 +19,9 @@ class StagedFileReader {
       .split('\n')
       .filter(Boolean);
     const stagedFiles: string[] = [];
+    const readRootName = userOptions.options.readFilesRootName;
+
+    if (!readRootName) throw new Error('readFilesRootName is not set');
 
     // Add the path of each added file
     for (const file of files) {

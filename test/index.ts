@@ -1,6 +1,7 @@
 import TestFilePaths from './reader';
 import { HuskyGPTReview, HuskyGPTTest } from './huskygpt';
-import { huskyGPTType, HuskyGPTTypeEnum } from './constant';
+import { HuskyGPTTypeEnum, UserOptions } from './types';
+import { userOptions } from './constant';
 
 const runMap: Record<HuskyGPTTypeEnum, () => void> = {
   [HuskyGPTTypeEnum.Test]: () => {
@@ -26,11 +27,15 @@ const runMap: Record<HuskyGPTTypeEnum, () => void> = {
 /**
  * Main function for huskygpt
  */
-export function main() {
-  const type = huskyGPTType;
+export function main(options?: UserOptions) {
+  userOptions.updateOptions(options);
+  const type = userOptions.huskyGPTType;
 
   if (!runMap[type]) throw new Error('Invalid huskyGPTType: ' + type);
-  console.log('Running huskygpt with type: ' + type);
+  console.log(
+    'Running huskygpt with options: ',
+    JSON.stringify(userOptions.options)
+  );
 
   runMap[type]();
 }
