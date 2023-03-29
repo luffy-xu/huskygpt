@@ -60,4 +60,9 @@ export interface UserOptions {
   testFileNameExtension?: string;
   // Generate test file directory name, default is '__test__'
   testFileDirName?: string;
+
+  /**
+   * Huskygpt review options
+   */
+  reviewReportWebhook?: string;
 }

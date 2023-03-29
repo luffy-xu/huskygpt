@@ -47,7 +47,6 @@ class HuskyGPTTest {
 
       // Write the message to the output file
       fs.writeFileSync(path.join(dirPath, fileName), message);
-      console.log('Message written to file');
     } catch (error) {
       console.error('Error writing message to file:', error);
     }

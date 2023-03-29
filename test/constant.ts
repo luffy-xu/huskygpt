@@ -114,6 +114,10 @@ class UserOptionsClass {
       testFileType: processEnv.TEST_FILE_TYPE || this.userOptionsDefault.testFileType,
       testFileNameExtension: processEnv.TEST_FILE_NAME_EXTENSION || this.userOptionsDefault.testFileNameExtension,
       testFileDirName: processEnv.TEST_FILE_DIR_NAME || this.userOptionsDefault.testFileDirName,
+      /**
+       * Review options
+       */
+      reviewReportWebhook: processEnv.REVIEW_REPORT_WEBHOOK,
     };
   }
 

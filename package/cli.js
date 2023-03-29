@@ -38,6 +38,10 @@ program
     '-n, --test-file-dir-name <name>',
     'Generate test file directory name, example: __tests__'
   )
+  .option(
+    '-w, --review-report-webhook <url>',
+    'Webhook URL to send review report'
+  )
   .action((runType, options) => {
     const userOptions = {
       huskyGPTType: runType === 'test' ? 'test' : 'review',
@@ -56,6 +60,9 @@ program
       }),
       ...(options.testFileDirName && {
         testFileDirName: options.testFileDirName,
+      }),
+      ...(options.reviewReportWebhook && {
+        reviewReportWebhook: options.reviewReportWebhook,
       }),
     };
 

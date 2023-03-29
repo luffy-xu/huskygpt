@@ -1,6 +1,6 @@
 {
   "name": "huskygpt",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Automatically generate unit tests for your code using openai gpt-4",
   "main": "lib/index.js",
   "scripts": {
@@ -34,8 +34,6 @@
     "openai": "^3.2.1"
   },
   "devDependencies": {
-    "@types/jest": "^27.5.2",
-    "jest": "^27.5.1",
     "rimraf": "^4.4.1",
     "typescript": "^5.0.2"
   }

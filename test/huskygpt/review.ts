@@ -1,4 +1,5 @@
 import OpenAIFactory from '../openai';
+import WebhookNotifier from './webhook';
 
 /**
  * Generate a test case for a given file path
@@ -7,10 +8,13 @@ import OpenAIFactory from '../openai';
  */
 class HuskyGPTReview {
   private openai: OpenAIFactory;
+  private publishChannel: WebhookNotifier;
 
   constructor() {
     // Create a new OpenAI API client
     this.openai = new OpenAIFactory();
+
+    this.publishChannel = new WebhookNotifier();
   }
 
   /**
@@ -20,7 +24,7 @@ class HuskyGPTReview {
     filePath: string,
     message: string
   ): Promise<void> {
-    console.log(`Review ${filePath} message: `, message);
+    this.publishChannel.addNoticeTask({ filePath, message });
   }
 
   /**
@@ -28,7 +32,15 @@ class HuskyGPTReview {
    */
   async run({ filePath }: { filePath: string }): Promise<void> {
     const message = await this.openai.run({ filePath });
-    await this.postAIMessage(filePath, message);
+
+    this.postAIMessage(filePath, message);
+  }
+
+  /**
+   * Publish the notices to the webhook channel
+   */
+  public publishNotice(): void {
+    this.publishChannel.publishNotice();
   }
 }
 
