@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 import { userOptions } from '../../constant';
-import { getFileNameByPath, getUserEmail } from '../../utils/files';
+import { deleteFile, getFileNameByPath, getUserEmail } from '../../utils';
 import {
   codeBlocksRegex,
   INoticeTask,
@@ -49,11 +49,14 @@ class WebhookNotifier {
   public publishNotice() {
     if (!this.tasks?.length) return;
     const content = this.tasks.join('\\r\\r');
+    const reviewFilePath = `${path.join(process.cwd(), reviewFileName)}`;
+
+    deleteFile(reviewFilePath);
 
     // Write the output text to a file if there are code blocks
     if (codeBlocksRegex.test(content)) {
       fs.writeFileSync(
-        `${path.join(process.cwd(), reviewFileName)}`,
+        reviewFilePath,
         content,
         'utf-8'
       );

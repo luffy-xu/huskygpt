@@ -22,7 +22,12 @@ export enum ReadTypeEnum {
   GitStage = 'git',
 }
 
-export interface UserOptions {
+export interface IReadFileResult {
+  filePath?: string;
+  fileContent?: string;
+}
+
+export interface IUserOptions {
   /**
    * OpenAI options
    */
@@ -46,6 +51,8 @@ export interface UserOptions {
    */
   // Read files from directory or git stage, default is 'git'
   readType?: ReadTypeEnum;
+  // Read files from git stage, default is 'R, M, A', R = modified, M = modified, A = added
+  readGitStatus?: string;
   // The root name of the directory to read files from, default is 'src'
   readFilesRootName?: string;
   // The file extensions to read, default is '.ts,.tsx'

@@ -1,18 +1,18 @@
 import fs from 'fs';
-import { getFileNameByPath } from '../utils/files';
+import { getFileNameByPath } from '../utils';
 import { userOptions } from '../constant';
-import { HuskyGPTTypeEnum } from '../types';
+import { HuskyGPTTypeEnum, IReadFileResult } from '../types';
 
 export const huskyGPTTypeMap: Record<
   HuskyGPTTypeEnum,
-  (filePath: string) => string
+  (fileResult: IReadFileResult) => string
 > = {
-  [HuskyGPTTypeEnum.Test]: (filePath) => {
+  [HuskyGPTTypeEnum.Test]: (fileResult) => {
     // Read the file contents using the fs module
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const fileContent = fileResult.fileContent || fs.readFileSync(fileResult.filePath!, 'utf-8');
 
     // Get the file name without the extension
-    const fileName = getFileNameByPath(filePath);
+    const fileName = getFileNameByPath(fileResult.filePath!);
     const userPrompt = userOptions.options.openAIPrompt;
 
     return [
@@ -27,16 +27,16 @@ export const huskyGPTTypeMap: Record<
       '- Test case:',
     ].join('\n');
   },
-  [HuskyGPTTypeEnum.Review]: (filePath) => {
+  [HuskyGPTTypeEnum.Review]: (fileResult) => {
     // Read the file contents using the fs module
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const fileContent = fileResult.fileContent || fs.readFileSync(fileResult.filePath!, 'utf-8');
     const userPrompt = userOptions.options.openAIPrompt;
-    const fileExtension = filePath.split('.').pop();
+    const fileExtension = fileResult.filePath?.split('.').pop();
 
     return [
       'You are a programer to review code.',
-      '- if there is bug or can be optimized you should reply key problems with code, else reply "perfect!"',
-      `- if return code, you should reply code with markdown ${fileExtension} language block`,
+      `- If there is bugs or can be optimized you should reply key problems and write code with markdown ${fileExtension} language block , else reply "perfect!" only`,
+      '- Ignore the code snippet is incomplete',
       userPrompt,
       `- review following code: ${fileContent}`,
     ].join('\n');

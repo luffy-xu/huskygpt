@@ -1,16 +1,17 @@
 import path from 'path';
 import { CreateCompletionRequest } from 'openai';
 import { config } from 'dotenv';
-import { HuskyGPTTypeEnum, ReadTypeEnum, UserOptions } from './types';
+import { HuskyGPTTypeEnum, ReadTypeEnum, IUserOptions } from './types';
 
 class UserOptionsClass {
-  options: UserOptions;
+  options: IUserOptions;
 
-  private userOptionsDefault: UserOptions = {
+  private userOptionsDefault: IUserOptions = {
     huskyGPTType: HuskyGPTTypeEnum.Review,
     openAIModel: 'text-davinci-003',
     openAIMaxTokens: 2048,
     readType: ReadTypeEnum.GitStage,
+    readGitStatus: 'R, M, A',
     readFilesRootName: 'src',
     readFileExtensions: '.ts,.tsx',
     testFileType: 'test',
@@ -94,7 +95,7 @@ class UserOptionsClass {
    */
   private convertProcessEnvToUserOptions(
     processEnv: NodeJS.ProcessEnv
-  ): UserOptions {
+  ): IUserOptions {
     return {
       /**
        * OpenAI options
@@ -111,6 +112,8 @@ class UserOptionsClass {
       readType:
         (processEnv.READ_TYPE as ReadTypeEnum) ||
         this.userOptionsDefault.readType,
+      readGitStatus:
+        processEnv.READ_GIT_STATUS || this.userOptionsDefault.readGitStatus,
       readFilesRootName:
         processEnv.READ_FILES_ROOT_NAME ||
         this.userOptionsDefault.readFilesRootName,
@@ -139,7 +142,7 @@ class UserOptionsClass {
    * Initialize the user options
    */
 
-  public init(userOptions: UserOptions = {}) {
+  public init(userOptions: IUserOptions = {}) {
     // Read the .env file
     config();
     config({ path: path.join(process.cwd(), '.env.local') });

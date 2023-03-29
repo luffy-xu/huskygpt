@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { userOptions } from '../constant';
 import OpenAIFactory from '../openai';
+import { IReadFileResult } from '../types';
 
 /**
  * Generate a test case for a given file path
@@ -55,9 +56,9 @@ class HuskyGPTTest {
   /**
    * Generate a test case for a given file
    */
-  async run({ filePath }: { filePath: string }): Promise<void> {
-    const message = await this.openai.run({ filePath });
-    await this.writeTestMessageToFile(filePath, message);
+  async run(fileResult: IReadFileResult): Promise<void> {
+    const message = await this.openai.run(fileResult);
+    await this.writeTestMessageToFile(fileResult.filePath!, message);
   }
 }
 

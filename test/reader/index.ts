@@ -1,12 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import { userOptions } from '../constant';
-import { ReadTypeEnum } from '../types';
-import { getFileNameByPath } from '../utils/files';
+import { ReadTypeEnum, IReadFileResult } from '../types';
+import { getFileNameByPath } from '../utils';
 import ReadTestFilePathsByDirectory from './reader-directory';
 import StagedFileReader from './reader-git-stage';
 
-class TestFilePaths {
+class ReadFiles {
   private dirPath: string;
   private fileExtensions: string[];
 
@@ -18,21 +18,24 @@ class TestFilePaths {
     this.fileExtensions = fileExtensions;
   }
 
-  readTypeMap: Record<ReadTypeEnum, () => string[]> = {
+  readTypeMap: Record<ReadTypeEnum, () => IReadFileResult[]> = {
     [ReadTypeEnum.Directory]: () => this.getTestFilePathByDir(),
     [ReadTypeEnum.GitStage]: () => this.getTestFilePathByGit(),
   };
 
   // Get all file paths by directory
-  private getTestFilePathByDir(): string[] {
+  private getTestFilePathByDir(): IReadFileResult[] {
     const reader = new ReadTestFilePathsByDirectory();
     const filePaths = reader.getFilePaths(this.dirPath);
 
-    return filePaths;
+    return filePaths.map((filePath) => ({
+      filePath,
+      content: ''
+    }));
   }
 
   // Get all file paths by git stage
-  private getTestFilePathByGit(): string[] {
+  private getTestFilePathByGit(): IReadFileResult[] {
     const reader = new StagedFileReader();
 
     return reader.getStagedFiles();
@@ -69,17 +72,18 @@ class TestFilePaths {
   }
 
   // Get all file paths that are not test files
-  public getTestFilePath(): string[] {
+  public getFileResults(): IReadFileResult[] {
     const readFileType = userOptions.readFileType;
 
     if (!this.readTypeMap[readFileType])
       throw new Error('Invalid test file read type');
 
     const filePaths = this.readTypeMap[readFileType]().filter(
-      (filePath) =>
-        !this.fileExistsInTestDir(filePath) &&
-        this.hasValidExtension(filePath) &&
-        !this.isTestFile(filePath)
+      ({ filePath: path }) =>
+        path &&
+        !this.fileExistsInTestDir(path) &&
+        this.hasValidExtension(path) &&
+        !this.isTestFile(path)
     );
 
     if (process.env.DEBUG) {
@@ -89,4 +93,4 @@ class TestFilePaths {
   }
 }
 
-export default TestFilePaths;
+export default ReadFiles;

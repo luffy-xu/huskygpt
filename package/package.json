@@ -1,6 +1,6 @@
 {
   "name": "huskygpt",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "Automatically generate unit tests for your code using openai gpt-4",
   "main": "lib/index.js",
   "scripts": {

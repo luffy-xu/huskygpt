@@ -6,7 +6,7 @@ import {
 } from 'openai';
 import { completionParams, userOptions } from '../constant';
 import { generatePrompt } from '../prompt';
-import { HuskyGPTTypeEnum } from '../types';
+import { HuskyGPTTypeEnum, IReadFileResult } from '../types';
 
 /**
  * OpenAI Factory
@@ -64,10 +64,10 @@ class OpenAIFactory {
   /**
    * Generate prompt for the OpenAI API
    */
-  private generatePrompt(filePath: string): string {
+  private generatePrompt(fileResult: IReadFileResult): string {
     // Set the file content as the prompt for the API request
     const prompt = `
-      ${generatePrompt(filePath)}
+      ${generatePrompt(fileResult)}
       ###
     `;
 
@@ -120,12 +120,11 @@ class OpenAIFactory {
 
   /**
    * Run the OpenAI API
-   * @param filePath
    * @description filePath is the path of the file to be passed to the OpenAI API as the prompt
    * @returns {Promise<string>}
    */
-  async run({ filePath }: { filePath: string }): Promise<string> {
-    const prompt = this.generatePrompt(filePath);
+  async run(fileResult: IReadFileResult): Promise<string> {
+    const prompt = this.generatePrompt(fileResult);
     const message = await this.openAICompletionMap[userOptions.huskyGPTType](
       prompt
     );

@@ -23,6 +23,10 @@ program
     'Read files from directory or git stage, example: dir or git'
   )
   .option(
+    '-s, --read-git-status <name>',
+    'Read files from git stage by status default: A,R,M'
+  )
+  .option(
     '-d, --read-dir-name <name>',
     'Root name of the directory to read files from, example: src'
   )
@@ -53,6 +57,7 @@ program
         readFileExtensions: options.fileExtensions,
       }),
       ...(options.readType && { readType: options.readType }),
+      ...(options.readGitStatus && { readGitStatus: options.readGitStatus }),
       ...(options.readDirName && { readFilesRootName: options.readDirName }),
       ...(options.testFileType && { testFileType: options.testFileType }),
       ...(options.testFileExtension && {
