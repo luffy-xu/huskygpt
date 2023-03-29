@@ -1,4 +1,5 @@
 import OpenAIFactory from '../openai';
+import { IReadFileResult } from '../types';
 import WebhookNotifier from './webhook';
 
 /**
@@ -30,10 +31,10 @@ class HuskyGPTReview {
   /**
    * Generate a test case for a given file
    */
-  async run({ filePath }: { filePath: string }): Promise<void> {
-    const message = await this.openai.run({ filePath });
+  async run(fileResult: IReadFileResult): Promise<void> {
+    const message = await this.openai.run(fileResult);
 
-    this.postAIMessage(filePath, message);
+    this.postAIMessage(fileResult.filePath!, message);
   }
 
   /**
