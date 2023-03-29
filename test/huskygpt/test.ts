@@ -1,9 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import {
-  TEST_DIR_NAME,
-  testFileNameExtension,
-} from '../constant';
+import { TEST_DIR_NAME, testFileNameExtension } from '../constant';
 import OpenAIFactory from '../openai';
 
 /**
@@ -11,7 +8,7 @@ import OpenAIFactory from '../openai';
  * using the OpenAI API
  * Usage: new TestGenerator().generateTestCase({ filePath: 'path/to/file' });
  */
-class TestGenerator {
+class HuskyGPTTest {
   private openai: OpenAIFactory;
 
   constructor() {
@@ -55,10 +52,10 @@ class TestGenerator {
   /**
    * Generate a test case for a given file
    */
-  async generateTestCase({ filePath }: { filePath: string }): Promise<void> {
+  async run({ filePath }: { filePath: string }): Promise<void> {
     const message = await this.openai.run({ filePath });
     await this.writeTestMessageToFile(filePath, message);
   }
 }
 
-export default TestGenerator;
+export default HuskyGPTTest;

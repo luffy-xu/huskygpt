@@ -25,7 +25,10 @@ class StagedFileReader {
       const fileSplitArr = file.split('\t');
       const status = fileSplitArr[0].slice(0, 1);
       const filePath = fileSplitArr.slice(-1)[0];
-      if (['A', 'R'].includes(status) && filePath.startsWith(`${readRootName}/`)) {
+      if (
+        ['A', 'R'].includes(status) &&
+        filePath.startsWith(`${readRootName}/`)
+      ) {
         const fullPath = path.join(process.cwd(), filePath);
         stagedFiles.push(fullPath);
       }
