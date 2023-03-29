@@ -146,8 +146,8 @@ export const userOptions = new UserOptionsClass();
  * The parameters for the OpenAI API request
  */
 export const completionParams: Partial<CreateCompletionRequest> = {
-  temperature: 0,
-  top_p: 1,
+  temperature: 0.2,
+  top_p: 0.4,
   n: 1,
   frequency_penalty: 0,
   presence_penalty: 0,

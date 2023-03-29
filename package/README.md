@@ -1,6 +1,6 @@
 # huskygpt
 
-`huskygpt` is a command line tool that generates unit tests or reviews code using the OpenAI API. It is designed to help developers automate the process of generating test cases for their code.
+`huskygpt` is a command line tool that generates unit tests or reviews code using the OpenAI API with custom model (gpt3, gpt4).
 
 ## Installation
 

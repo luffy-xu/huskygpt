@@ -33,8 +33,8 @@ export const huskyGPTTypeMap: Record<
     const userPrompt = userOptions.options.openAIPrompt;
 
     return [
-      'You are a team leader to review member code.',
-      '- if there is bug or can be optimized you should reply, otherwise reply "perfect!" only',
+      'You are a programer to review code.',
+      '- if there is bug or can be optimized you should reply key problems with code, otherwise reply "perfect!" only',
       userPrompt,
       `- review following code: ${fileContent}`,
     ].join('\n');
