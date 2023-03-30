@@ -76,44 +76,41 @@ class StagedFileReader {
       .toString()
       .split('\n')
       .filter(Boolean);
-    const stagedFiles: IReadFileResult[] = [];
     const readRootName = userOptions.options.readFilesRootName;
-    const readGitStatus = userOptions.options.readGitStatus?.split(',') || [];
+    const readGitStatus = userOptions.options.readGitStatus?.split(',').map((el) => el.trim()) || [];
 
     if (!readRootName) throw new Error('readFilesRootName is not set');
     if (!readGitStatus.length) {
       console.warn('readGitStatus is not set, no reading staged files');
-      return stagedFiles;
+      return [];
     }
 
     // Add the path of each added, renamed, or modified file
-    for (const file of files) {
+    return files.reduce<IReadFileResult[]>((acc, file) => {
       const fileSplitArr = file.split('\t');
       const status = fileSplitArr[0].slice(0, 1);
       const filePath = fileSplitArr.slice(-1)[0];
-      if (
-        readGitStatus.includes(status) &&
-        filePath.startsWith(`${readRootName}/`)
-      ) {
-        const fullPath = path.join(process.cwd(), filePath);
-        const contents = fs.readFileSync(fullPath, 'utf-8');
 
-        if (status === 'M') {
-          const modifiedContents =
-            this.extractModifiedFunction(fullPath, contents) || '';
-          stagedFiles.push({
-            filePath: fullPath,
-            fileContent: modifiedContents,
-          });
-          continue;
-        }
-
-        stagedFiles.push({ filePath: fullPath, fileContent: contents });
+      // Only read the files under the specified root directory and the specified status
+      if (!readGitStatus.includes(status) || !filePath.startsWith(`${readRootName}/`)) {
+        return acc;
       }
-    }
 
-    this.stagedFiles = stagedFiles;
-    return stagedFiles;
+      const fullPath = path.join(process.cwd(), filePath);
+      const contents = fs.readFileSync(fullPath, 'utf-8');
+
+      if (status !== 'M') {
+        return [...acc, { filePath: fullPath, fileContent: contents }];
+      }
+
+      const modifiedContents =
+        this.extractModifiedFunction(fullPath, contents) || '';
+      return [...acc, {
+        filePath: fullPath,
+        fileContent: modifiedContents,
+      }];
+
+    }, []);
   }
 
   public getStagedFiles(): IReadFileResult[] {
