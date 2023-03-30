@@ -78,7 +78,7 @@ class ReadFiles {
     if (!this.readTypeMap[readFileType])
       throw new Error('Invalid test file read type');
 
-    const filePaths = this.readTypeMap[readFileType]().filter(
+    const fileResults = this.readTypeMap[readFileType]().filter(
       ({ filePath: path }) =>
         path &&
         !this.fileExistsInTestDir(path) &&
@@ -87,9 +87,12 @@ class ReadFiles {
     );
 
     if (process.env.DEBUG) {
-      console.log('Need gen test files ===>', filePaths);
+      console.log(
+        'Need gen test files ===>',
+        fileResults.map((r) => r.filePath)
+      );
     }
-    return filePaths;
+    return fileResults;
   }
 }
 

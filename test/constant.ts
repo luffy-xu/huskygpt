@@ -175,3 +175,11 @@ export const completionParams: Partial<CreateCompletionRequest> = {
   presence_penalty: 0,
   stop: ['###'],
 };
+
+/**
+ * Review result configs
+ */
+export const codeBlocksRegex = /```([\s\S]*?)```/g;
+
+// Write the output text to a file if there are code blocks
+export const reviewFileName = '.huskygpt_review.md';

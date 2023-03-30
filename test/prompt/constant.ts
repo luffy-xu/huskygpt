@@ -4,6 +4,8 @@ import { userOptions } from '../constant';
 import { HuskyGPTTypeEnum, IReadFileResult } from '../types';
 import { CodePicker } from './pick-code';
 
+export const PERFECT_KEYWORDS = 'perfect!';
+
 export const huskyGPTTypeMap: Record<
   HuskyGPTTypeEnum,
   (fileResult: IReadFileResult) => string[]
@@ -40,9 +42,11 @@ export const huskyGPTTypeMap: Record<
 
     // The base prompt for each code snippet
     const basePrompt = `
-      You are a programer to review code
-      - If there is bugs or can be optimized you should reply key problems and write code with markdown ${fileExtension} language block , else reply "function name or class name perfect!" only
-      - Ignore the code snippet is incomplete
+      You are a programer to review code.
+      - If there is bugs or can be optimized you should reply main points and reply optimized code, else only reply "${PERFECT_KEYWORDS}".
+      - Ignore the code snippet is incomplete.
+      - If reply code, must write in markdown ${fileExtension} language block.
+      - Should reply start with "{function name} or {class name}: " and end with "###"
       ${userPrompt || ''}
       - review following code:
     `;

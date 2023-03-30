@@ -35,7 +35,8 @@
     "@babel/traverse": "^7.21.3",
     "commander": "^10.0.0",
     "dotenv": "^16.0.3",
-    "openai": "^3.2.1"
+    "openai": "^3.2.1",
+    "ora": "^5.4.1"
   },
   "devDependencies": {
     "rimraf": "^4.4.1",

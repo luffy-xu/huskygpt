@@ -1,6 +1,6 @@
 import OpenAIFactory from '../openai';
 import { IReadFileResult } from '../types';
-import WebhookNotifier from './webhook';
+import WebhookNotifier from '../webhook';
 
 /**
  * Generate a test case for a given file path
