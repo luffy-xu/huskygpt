@@ -2,7 +2,7 @@ import { userOptions } from '../constant';
 import { IReadFileResult } from '../types';
 import { huskyGPTTypeMap } from './constant';
 
-export const generatePrompt = (fileResult: IReadFileResult): string => {
+export const generatePrompt = (fileResult: IReadFileResult): string[] => {
   const huskyGPTType = userOptions.huskyGPTType;
 
   if (!fileResult) throw new Error('File path is required for generatePrompt');

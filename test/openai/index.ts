@@ -64,12 +64,9 @@ class OpenAIFactory {
   /**
    * Generate prompt for the OpenAI API
    */
-  private generatePrompt(fileResult: IReadFileResult): string {
+  private generatePrompt(fileResult: IReadFileResult): string[] {
     // Set the file content as the prompt for the API request
-    const prompt = `
-      ${generatePrompt(fileResult)}
-      ###
-    `;
+    const prompt = generatePrompt(fileResult);
 
     if (process.env.DEBUG) {
       console.log('prompt ===>', prompt);
@@ -124,12 +121,16 @@ class OpenAIFactory {
    * @returns {Promise<string>}
    */
   async run(fileResult: IReadFileResult): Promise<string> {
-    const prompt = this.generatePrompt(fileResult);
-    const message = await this.openAICompletionMap[userOptions.huskyGPTType](
-      prompt
-    );
+    const promptArray = this.generatePrompt(fileResult);
+    const messageArray: string[] = [];
+    for (const prompt of promptArray) {
+      const message = await this.openAICompletionMap[userOptions.huskyGPTType](
+        prompt
+      );
+      messageArray.push(message);
+    }
 
-    return message;
+    return messageArray.join('\n');
   }
 }
 

@@ -30,6 +30,9 @@
   },
   "homepage": "https://github.com/luffy-xu/huskygpt#readme",
   "dependencies": {
+    "@babel/generator": "^7.21.3",
+    "@babel/parser": "^7.21.3",
+    "@babel/traverse": "^7.21.3",
     "commander": "^10.0.0",
     "dotenv": "^16.0.3",
     "openai": "^3.2.1"

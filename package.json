@@ -55,9 +55,15 @@
     "jest",
     "unit test"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettier"
+    }
+  },
   "devDependencies": {
     "@types/node": "^18.15.10",
     "dotenv": "^16.0.3",
+    "husky": "^8.0.3",
     "openai": "^3.2.1",
     "prettier": "^2.8.7",
     "ts-node": "^10.9.1",

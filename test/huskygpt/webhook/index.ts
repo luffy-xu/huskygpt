@@ -50,7 +50,7 @@ class WebhookNotifier {
    */
   public publishNotice() {
     if (!this.tasks?.length) return;
-    const content = this.tasks.join('\\r\\r');
+    const content = this.tasks.join('\\r\\r\\n');
     const reviewFilePath = `${path.join(process.cwd(), reviewFileName)}`;
 
     deleteFile(reviewFilePath);

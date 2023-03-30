@@ -28,13 +28,11 @@ interface Dependency {
 }
 
 class DependencyReader {
-  private filePath: string;
   private fileContent: string;
   private basePath: string;
   private dependencies: Dependency[];
 
   constructor(filePath: string) {
-    this.filePath = filePath;
     this.fileContent = this.readFileIgnoreExtension(filePath);
     this.basePath = path.dirname(filePath);
     this.dependencies = this.extractDependencies();
