@@ -11,7 +11,7 @@ export interface INoticeTask {
 export const codeBlocksRegex = /```([\s\S]*?)```/g;
 
 // Write the output text to a file if there are code blocks
-export const reviewFileName = 'huskygpt_review.md';
+export const reviewFileName = '.huskygpt_review.md';
 
 // Send simple data to the webhook channel
 export const simplyData = (data: string) => {

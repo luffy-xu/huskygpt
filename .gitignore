@@ -1,5 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# review
+.huskygpt_review.md
+
 # dependencies
 node_modules
 /.pnp
