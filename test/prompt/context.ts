@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { getFileNameByPath } from '../utils/files';
+import { getFileNameByPath } from '../utils';
 
 /**
  * Prompt example:

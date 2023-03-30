@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 import { userOptions } from '../../constant';
-import { deleteFile, getFileNameByPath, getUserEmail } from '../../utils';
+import { deleteFile, getUserEmail } from '../../utils';
 import {
   codeBlocksRegex,
   INoticeTask,
@@ -39,7 +39,9 @@ class WebhookNotifier {
     if (!task) return;
 
     this.tasks.push(
-      `__${getFileNameByPath(task.filePath)}__ \\r• ${task.message}`
+      `__${path.dirname(task.filePath).split('/').pop()}/${path.basename(
+        task.filePath
+      )}__ \\r• ${task.message}`
     );
   }
 
