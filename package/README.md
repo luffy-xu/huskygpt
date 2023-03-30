@@ -68,9 +68,9 @@ huskygpt test --api-key --model text-davinci-002 --max-tokens 2048 --file-extens
 huskygpt [options]
 Replace `<runType>` with either `test` or `review`, depending on whether you want to generate unit tests or review code. The following options are available:
 
-- `-k, --api-key <key>`: Set the [OpenAI API key](#https://platform.openai.com/account/api-keys
+- `-k, --api-key <key>`: Set the [OpenAI API key](https://platform.openai.com/account/api-keys
 )
-- `-m, --model <model>`: [OpenAI model](#https://platform.openai.com/docs/models/overview
+- `-m, --model <model>`: [OpenAI model](https://platform.openai.com/docs/models/overview
 ) to use
 - `-p, --prompt <prompt>`: OpenAI prompt to use
 - `-t, --max-tokens <tokens>`: OpenAI max tokens to use
@@ -88,7 +88,7 @@ Replace `<runType>` with either `test` or `review`, depending on whether you wan
 - `-h, --help`: Display help for command
 
 ## Note
-1. Also can set all options in [.env](#https://github.com/luffy-xu/huskygpt/blob/main/.env), that will be used as default options.
+1. Also can set all options in [.env](https://github.com/luffy-xu/huskygpt/blob/main/.env), that will be used as default options.
 1. Command options will override the default options.
 1. Webhook currently only test in `seaTalk`, if other channel need to use, please rise `PR` by yourself or ask [me](swhd0501@gmail.com) for help.
 
