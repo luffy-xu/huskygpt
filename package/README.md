@@ -88,8 +88,7 @@ Replace `<runType>` with either `test` or `review`, depending on whether you wan
 - `-h, --help`: Display help for command
 
 ## Note
-1. Also can set all options in [.env](#https://github.com/luffy-xu/huskygpt/blob/main/.env
-), that will be used as default options.
+1. Also can set all options in [.env](#https://github.com/luffy-xu/huskygpt/blob/main/.env), that will be used as default options.
 1. Command options will override the default options.
 1. Webhook currently only test in `seaTalk`, if other channel need to use, please rise `PR` by yourself or ask [me](swhd0501@gmail.com) for help.
 
