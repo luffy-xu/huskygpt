@@ -46,9 +46,14 @@ program
     '-w, --review-report-webhook <url>',
     'Webhook URL to send review report'
   )
+  .option(
+    '-y, --review-typing <value>',
+    'Enable or disable review typing in console, default: true'
+  )
   .action((runType, options) => {
     const userOptions = {
       huskyGPTType: runType === 'test' ? 'test' : 'review',
+      reviewTyping: options.reviewTyping,
       ...(options.apiKey && { openAIKey: options.apiKey }),
       ...(options.model && { openAIModel: options.model }),
       ...(options.prompt && { openAIPrompt: options.prompt }),

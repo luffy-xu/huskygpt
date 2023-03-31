@@ -77,7 +77,9 @@ class StagedFileReader {
       .split('\n')
       .filter(Boolean);
     const readRootName = userOptions.options.readFilesRootName;
-    const readGitStatus = userOptions.options.readGitStatus?.split(',').map((el) => el.trim()) || [];
+    const readGitStatus =
+      userOptions.options.readGitStatus?.split(',').map((el) => el.trim()) ||
+      [];
 
     if (!readRootName) throw new Error('readFilesRootName is not set');
     if (!readGitStatus.length) {
@@ -92,7 +94,10 @@ class StagedFileReader {
       const filePath = fileSplitArr.slice(-1)[0];
 
       // Only read the files under the specified root directory and the specified status
-      if (!readGitStatus.includes(status) || !filePath.startsWith(`${readRootName}/`)) {
+      if (
+        !readGitStatus.includes(status) ||
+        !filePath.startsWith(`${readRootName}/`)
+      ) {
         return acc;
       }
 
@@ -105,11 +110,13 @@ class StagedFileReader {
 
       const modifiedContents =
         this.extractModifiedFunction(fullPath, contents) || '';
-      return [...acc, {
-        filePath: fullPath,
-        fileContent: modifiedContents,
-      }];
-
+      return [
+        ...acc,
+        {
+          filePath: fullPath,
+          fileContent: modifiedContents,
+        },
+      ];
     }, []);
   }
 

@@ -17,6 +17,8 @@ class UserOptionsClass {
     testFileType: 'test',
     testFileNameExtension: '.ts',
     testFileDirName: '__test__',
+    reviewReportWebhook: '',
+    reviewTyping: 'true',
   };
 
   /**
@@ -135,6 +137,8 @@ class UserOptionsClass {
        * Review options
        */
       reviewReportWebhook: processEnv.REVIEW_REPORT_WEBHOOK,
+      reviewTyping:
+        processEnv.REVIEW_TYPING || this.userOptionsDefault.reviewTyping,
     };
   }
 
@@ -175,3 +179,11 @@ export const completionParams: Partial<CreateCompletionRequest> = {
   presence_penalty: 0,
   stop: ['###'],
 };
+
+/**
+ * Review result configs
+ */
+export const codeBlocksRegex = /```([\s\S]*?)```/g;
+
+// Write the output text to a file if there are code blocks
+export const reviewFileName = '.huskygpt_review.md';

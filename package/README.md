@@ -86,6 +86,8 @@ Replace `<runType>` with either `test` or `review`, depending on whether you wan
     execSync(`curl -i -X POST -H 'Content-Type: application/json' -d '{ "tag": "markdown", "markdown": {"content": "${content}"}}}' ${webhook}`);
     ```
 - `-h, --help`: Display help for command
+- `-y, --review-typing <value>`: Enable or disable review typing in console, default: true
+
 
 ## Note
 1. Also can set all options in [.env](https://github.com/luffy-xu/huskygpt/blob/main/.env), that will be used as default options.

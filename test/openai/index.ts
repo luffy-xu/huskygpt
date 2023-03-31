@@ -7,6 +7,10 @@ import {
 import { completionParams, userOptions } from '../constant';
 import { generatePrompt } from '../prompt';
 import { HuskyGPTTypeEnum, IReadFileResult } from '../types';
+import { replaceCodeBlock } from '../utils';
+import TypingSpinner from '../text-typing';
+import ora from 'ora';
+import { PERFECT_KEYWORDS } from '../prompt/constant';
 
 /**
  * OpenAI Factory
@@ -17,6 +21,7 @@ import { HuskyGPTTypeEnum, IReadFileResult } from '../types';
 class OpenAIFactory {
   private configuration: Configuration;
   private openai: OpenAIApi;
+  private typingSpinner: TypingSpinner;
 
   constructor() {
     // Create a new OpenAI API client configuration
@@ -26,6 +31,9 @@ class OpenAIFactory {
 
     // Create a new OpenAI API client
     this.openai = new OpenAIApi(this.configuration);
+
+    // Create a new typing spinner
+    this.typingSpinner = new TypingSpinner();
   }
 
   private openAICompletionMap: Record<
@@ -64,16 +72,9 @@ class OpenAIFactory {
   /**
    * Generate prompt for the OpenAI API
    */
-  private generatePrompt(fileResult: IReadFileResult): string {
+  private generatePrompt(fileResult: IReadFileResult): string[] {
     // Set the file content as the prompt for the API request
-    const prompt = `
-      ${generatePrompt(fileResult)}
-      ###
-    `;
-
-    if (process.env.DEBUG) {
-      console.log('prompt ===>', prompt);
-    }
+    const prompt = generatePrompt(fileResult);
 
     return prompt;
   }
@@ -119,17 +120,52 @@ class OpenAIFactory {
   }
 
   /**
+   * Typing the result message with spinner
+   */
+  private async typingResultMessage(messages: string[]): Promise<void> {
+    if (userOptions.options.reviewTyping === 'false') return;
+
+    const typingMessageArray = messages.map((message) =>
+      replaceCodeBlock(message)
+    );
+
+    for (const typingMessage of typingMessageArray) {
+      await this.typingSpinner.run(
+        typingMessage,
+        typingMessage.includes(PERFECT_KEYWORDS) ? 'succeed' : 'fail'
+      );
+    }
+  }
+
+  /**
    * Run the OpenAI API
    * @description filePath is the path of the file to be passed to the OpenAI API as the prompt
    * @returns {Promise<string>}
    */
   async run(fileResult: IReadFileResult): Promise<string> {
-    const prompt = this.generatePrompt(fileResult);
-    const message = await this.openAICompletionMap[userOptions.huskyGPTType](
-      prompt
-    );
+    const promptArray = this.generatePrompt(fileResult);
 
-    return message;
+    // Create completion request for each prompt
+    const messagePromises = promptArray.map(async (prompt) => {
+      if (process.env.DEBUG) {
+        console.log('prompt ===>', prompt);
+      }
+
+      const message = await this.openAICompletionMap[userOptions.huskyGPTType](
+        prompt
+      );
+      return message;
+    });
+
+    // Start review
+    const reviewSpinner = ora('Huskygpt start review your code').start();
+    const messageArray = await Promise.all(messagePromises);
+    reviewSpinner.succeed('Huskygpt review your code successfully as follow: ');
+
+    // Typing the result message
+    await this.typingResultMessage(messageArray);
+
+    return messageArray.join('\n');
   }
 }
 

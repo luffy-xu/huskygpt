@@ -1,14 +1,9 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
-import { userOptions } from '../../constant';
-import { deleteFile, getUserEmail } from '../../utils';
-import {
-  codeBlocksRegex,
-  INoticeTask,
-  ISeatalkNoticeOptions,
-  reviewFileName,
-  simplyData,
-} from './constant';
+import { codeBlocksRegex, reviewFileName, userOptions } from '../constant';
+import { deleteFile, getUserEmail } from '../utils';
+import { INoticeTask, ISeatalkNoticeOptions } from './constant';
+import { simplyReviewData } from '../utils/simply-result';
 import path from 'path';
 
 /**
@@ -50,7 +45,7 @@ class WebhookNotifier {
    */
   public publishNotice() {
     if (!this.tasks?.length) return;
-    const content = this.tasks.join('\\r\\r');
+    const content = this.tasks.join('\\r\\r\\n');
     const reviewFilePath = `${path.join(process.cwd(), reviewFileName)}`;
 
     deleteFile(reviewFilePath);
@@ -66,7 +61,7 @@ class WebhookNotifier {
 
     const data = `<mention-tag target=\\"seatalk://user?email=${
       this.userEmail || getUserEmail()
-    }\\" />\\r\\r${simplyData(content)}`;
+    }\\" />\\r\\r${simplyReviewData(content)}`;
 
     execSync(
       `curl -i -X POST -H 'Content-Type: application/json' -d '{ "tag": "markdown", "markdown": {"content": "${data}"}}' ${this.channel}`
