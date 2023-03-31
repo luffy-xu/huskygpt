@@ -14,7 +14,10 @@ Auto Review your code or Auto generate unit tests by OpenAI api gpt (GPT-4)
 
 ## Requirements
 - Node.js 14.0 or higher
-- An [OpenAI API key](https://platform.openai.com/account/api-keys)
+- An [OpenAI API key](https://platform.openai.com/account/api-keys), then set config:
+    ```
+    npm config set OPENAI_API_KEY <YOUR_OPENAI_KEY> -g
+    ```
 
 ## Getting started
 1. Install the required dependencies by running the following command in your terminal:

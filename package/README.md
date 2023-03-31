@@ -10,7 +10,12 @@ npm install -g huskygpt
 ```
 
 ## Configuration
-1. Create a `.env.local` file in the project root directory, and add the it to the `.gitignore` file.:
+1. Set the [OpenAI API key](https://platform.openai.com/account/api-keys by npm config set -g
+)
+    ```
+    npm config set OPENAI_API_KEY <YOUR_OPENAI_KEY> -g
+    ```
+1. (Unnecessary If npm config set -g)Create a `.env.local` file in the project root directory, and add the it to the `.gitignore` file.:
     ```
     OPENAI_API_KEY=<your api key>
     ···
