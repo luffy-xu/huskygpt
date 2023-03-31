@@ -17,6 +17,8 @@ class UserOptionsClass {
     testFileType: 'test',
     testFileNameExtension: '.ts',
     testFileDirName: '__test__',
+    reviewReportWebhook: '',
+    reviewTyping: 'true',
   };
 
   /**
@@ -135,6 +137,8 @@ class UserOptionsClass {
        * Review options
        */
       reviewReportWebhook: processEnv.REVIEW_REPORT_WEBHOOK,
+      reviewTyping:
+        processEnv.REVIEW_TYPING || this.userOptionsDefault.reviewTyping,
     };
   }
 

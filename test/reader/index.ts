@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import ora from 'ora';
 import { userOptions } from '../constant';
 import { ReadTypeEnum, IReadFileResult } from '../types';
 import { getFileNameByPath } from '../utils';
@@ -78,6 +79,7 @@ class ReadFiles {
     if (!this.readTypeMap[readFileType])
       throw new Error('Invalid test file read type');
 
+    const readSpinner = ora('Reading files...').start();
     const fileResults = this.readTypeMap[readFileType]().filter(
       ({ filePath: path }) =>
         path &&
@@ -92,6 +94,10 @@ class ReadFiles {
         fileResults.map((r) => r.filePath)
       );
     }
+
+    fileResults.length > 0
+      ? readSpinner.succeed('Read files successfully!')
+      : readSpinner.warn('Read no files!');
     return fileResults;
   }
 }

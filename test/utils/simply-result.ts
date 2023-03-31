@@ -1,6 +1,9 @@
 import { codeBlocksRegex, reviewFileName } from '../constant';
 
-export const replaceCodeBlock = (data: string, placeholder: string = `check your local __${reviewFileName}__`) => {
+export const replaceCodeBlock = (
+  data: string,
+  placeholder: string = `check your local __${reviewFileName}__`
+) => {
   return data.replace(codeBlocksRegex, placeholder);
 };
 
@@ -11,4 +14,3 @@ export const simplyReviewData = (data: string) => {
     .replace(/`/g, '__')
     .replace(/\n/g, '\\r');
 };
-

@@ -57,7 +57,7 @@ class TypingSpinner {
    */
   public run = async (text: string, stopType?: IStopType): Promise<void> => {
     if (!text) return;
-    if (this.spinner) this.stop();
+    // if (this.spinner) this.stop();
     this.text = text;
     this.stopType = stopType || 'succeed';
 
