@@ -2,6 +2,9 @@ import path from 'path';
 import { CreateCompletionRequest } from 'openai';
 import { config } from 'dotenv';
 import { HuskyGPTTypeEnum, ReadTypeEnum, IUserOptions } from './types';
+import { execSync } from 'child_process';
+
+export const OPENAI_API_KEY_NAME = 'OPENAI_API_KEY';
 
 class UserOptionsClass {
   options: IUserOptions;
@@ -31,13 +34,33 @@ class UserOptionsClass {
     return this.options.huskyGPTType;
   }
 
+  // get open AI key from npm config
+  get openAIKeyFromNpmConfig(): string {
+    try {
+      return execSync(`npm config get ${OPENAI_API_KEY_NAME}`)
+        .toString()
+        .trim();
+    } catch (error) {
+      return '';
+    }
+  }
+
   /**
    * Get OpenAI API key
    * @example
    * // returns 'sk-1234567890'
    */
   get openAIKey(): string {
+    if (!this.options.openAIKey) {
+      const npmKey = this.openAIKeyFromNpmConfig;
+      this.options.openAIKey = npmKey;
+    }
+
     if (!this.options.openAIKey) throw new Error('openAIKey is not set');
+
+    if (process.env.DEBUG)
+      console.log(`openAI key: "${this.options.openAIKey}"`);
+
     return this.options.openAIKey;
   }
 

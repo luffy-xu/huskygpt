@@ -37,23 +37,28 @@ export class CodePicker {
    * Pick function or class code from the given code
    */
   public pickFunctionOrClassCodeArray(code: string): string[] {
-    const ast = parse(code, {
-      sourceType: 'module',
-      plugins: ['typescript', 'jsx'],
-    });
+    try {
+      const ast = parse(code, {
+        sourceType: 'module',
+        plugins: ['typescript', 'jsx'],
+      });
 
-    traverse(ast, {
-      enter: (nodePath) => {
-        // If current node already in the remaining code, skip it
-        if (Number(nodePath.node.start) <= this.remainingEndIndex) return;
+      traverse(ast, {
+        enter: (nodePath) => {
+          // If current node already in the remaining code, skip it
+          if (Number(nodePath.node.start) <= this.remainingEndIndex) return;
 
-        if (this.isFunctionOrClass(nodePath)) {
-          this.remainingCode.push(generate(nodePath.node).code);
-          this.remainingEndIndex = Number(nodePath.node.end);
-        }
-      },
-    });
+          if (this.isFunctionOrClass(nodePath)) {
+            this.remainingCode.push(generate(nodePath.node).code);
+            this.remainingEndIndex = Number(nodePath.node.end);
+          }
+        },
+      });
 
-    return this.remainingCode;
+      return this.remainingCode;
+    } catch (e) {
+      console.error('Babel parse error: ', e);
+      return [code];
+    }
   }
 }

@@ -26,7 +26,7 @@ class OpenAIFactory {
   constructor() {
     // Create a new OpenAI API client configuration
     this.configuration = new Configuration({
-      apiKey: userOptions.openAIKey,
+      apiKey: userOptions.openAIKey.trim(),
     });
 
     // Create a new OpenAI API client
@@ -132,7 +132,7 @@ class OpenAIFactory {
     for (const typingMessage of typingMessageArray) {
       await this.typingSpinner.run(
         typingMessage,
-        typingMessage.includes(PERFECT_KEYWORDS) ? 'succeed' : 'fail'
+        typingMessage.split(' ').includes(PERFECT_KEYWORDS) ? 'succeed' : 'fail'
       );
     }
   }
@@ -158,14 +158,23 @@ class OpenAIFactory {
     });
 
     // Start review
-    const reviewSpinner = ora('Huskygpt start review your code').start();
-    const messageArray = await Promise.all(messagePromises);
-    reviewSpinner.succeed('Huskygpt review your code successfully as follow: ');
+    const reviewSpinner = ora('[huskygpt] Start review your code: \n').start();
 
-    // Typing the result message
-    await this.typingResultMessage(messageArray);
+    try {
+      const messageArray = await Promise.all(messagePromises);
+      reviewSpinner.succeed(
+        '[huskygpt] Review your code successfully as follow: '
+      );
 
-    return messageArray.join('\n');
+      // Typing the result message
+      await this.typingResultMessage(messageArray);
+
+      return messageArray.join('\n\n---\n\n');
+    } catch (error) {
+      console.error('run error:', error);
+      reviewSpinner.fail('[huskygpt] Review your code failed!\n');
+      return '[huskygpt] Call OpenAI API failed!';
+    }
   }
 }
 

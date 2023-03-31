@@ -79,7 +79,7 @@ class ReadFiles {
     if (!this.readTypeMap[readFileType])
       throw new Error('Invalid test file read type');
 
-    const readSpinner = ora('Reading files...').start();
+    const readSpinner = ora('[huskygpt] Reading files...').start();
     const fileResults = this.readTypeMap[readFileType]().filter(
       ({ filePath: path }) =>
         path &&
@@ -96,8 +96,8 @@ class ReadFiles {
     }
 
     fileResults.length > 0
-      ? readSpinner.succeed('Read files successfully!')
-      : readSpinner.warn('Read no files!');
+      ? readSpinner.succeed('[huskygpt] Read files successfully!')
+      : readSpinner.warn('[huskygpt] Read no files!');
     return fileResults;
   }
 }
