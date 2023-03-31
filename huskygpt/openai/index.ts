@@ -156,9 +156,7 @@ class OpenAIFactory {
         console.log('prompt ===>', prompt);
       }
 
-      const message = await this.openAIChatCompletion(
-        prompt
-      );
+      const message = await this.openAIChatCompletion(prompt);
       return message;
     });
 
@@ -167,10 +165,9 @@ class OpenAIFactory {
       text: `[huskygpt] start ${userOptions.huskyGPTType} your code...`,
       spinner: {
         interval: 800,
-        frames: ['🚀', '🤖', '🚀', '🤖', '🚀', '🤖', '🚀', '🤖']
-      }
-    }
-    ).start();
+        frames: ['🚀', '🤖', '🚀', '🤖', '🚀', '🤖', '🚀', '🤖'],
+      },
+    }).start();
 
     try {
       const messageArray = await Promise.all(messagePromises);

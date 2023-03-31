@@ -3,7 +3,6 @@
 `huskygpt` is a command line tool that generates unit tests or reviews code using the OpenAI API with custom model (gpt3, gpt4).
 
 ## Installation
-
 To install `huskygpt`, run the following command:
 ```
 npm install -g huskygpt
@@ -14,32 +13,16 @@ npm install -g huskygpt
     ```
     npm config set OPENAI_API_KEY <YOUR_OPENAI_KEY> -g
     ```
-1. (Unnecessary If npm config set -g)Create a `.env.local` file in the project root directory, and add the it to the `.gitignore` file.:
-    ```
-    OPENAI_API_KEY=<your api key>
-    ···
-1. More optional configurations, see [.env](#https://github.com/luffy-xu/huskygpt/blob/main/.env
-)
-
-
-## Enjoying huskygpt with AI
-- Run the following command to review your git staged files:
-    ```
-    npm run huskygpt-review --model gpt-3.5-turbo --max-tokens 2048
-    ```
-- Run the following command to generate unit tests:
-    ```
-    npm run huskygpt-test --model gpt-3.5-turbo --max-tokens 2048 --file-extensions .ts,.tsx --read-type dir --read-dir-name src --test-file-type test --test-file-extension .ts --test-file-dir-name tests
-    ```
-
-
-
 ## Usage
+- Run the following command to review your git staged files:
+  ```
+  huskygpt review --model gpt-3.5-turbo --max-tokens 2048
+  ```
+- Run the following command to generate unit tests:
+  ```
+  huskygpt test --model gpt-3.5-turbo --max-tokens 2048 --file-extensions .ts,.tsx --read-type dir --read-dir-name src --test-file-type test --test-file-extension .ts --test-file-dir-name tests
+  ```
 
-To generate unit tests or review code, run the following command:
-```
-huskygpt test --api-key --model gpt-3.5-turbo --max-tokens 2048 --file-extensions .ts,.tsx --read-type dir --read-dir-name src --test-file-type test --test-file-extension .ts --test-file-dir-name tests
-```
 
 huskygpt [options]
 Replace `<runType>` with either `test` or `review`, depending on whether you want to generate unit tests or review code. The following options are available:
