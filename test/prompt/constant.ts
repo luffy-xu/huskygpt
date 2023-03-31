@@ -21,15 +21,15 @@ export const huskyGPTTypeMap: Record<
 
     return [
       `
-        Please Write a unit tests by jest by typescript
+        As a programer to write unit test code:
         - The test should import the test function from "../${fileName}"
         - Should include at least one test case for each function or class
         - No need to test the function import from other files
         - No need to test variable definition
         - No need to test function that only return a value
         ${userPrompt || ''}
-        - Write tests by following typescript code: ${fileContent}
-        - Test case:
+        - Only return test code
+        - Write test by following code: ${fileContent}
       `,
     ];
   },

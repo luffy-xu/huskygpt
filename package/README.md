@@ -10,8 +10,7 @@ npm install -g huskygpt
 ```
 
 ## Configuration
-1. Set the [OpenAI API key](https://platform.openai.com/account/api-keys by npm config set -g
-)
+1. Set the [OpenAI API key](https://platform.openai.com/account/api-keys) by npm config set -g
     ```
     npm config set OPENAI_API_KEY <YOUR_OPENAI_KEY> -g
     ```
@@ -19,13 +18,6 @@ npm install -g huskygpt
     ```
     OPENAI_API_KEY=<your api key>
     ···
-1. Add the following to `scripts` in `package.json`:
-    ```
-    "scripts": {
-      "huskygpt-review": "huskygpt review",
-      "huskygpt-test": "huskygpt test"
-    }
-    ```
 1. More optional configurations, see [.env](#https://github.com/luffy-xu/huskygpt/blob/main/.env
 )
 
@@ -33,32 +25,11 @@ npm install -g huskygpt
 ## Enjoying huskygpt with AI
 - Run the following command to review your git staged files:
     ```
-    npm run huskygpt-review --model text-davinci-002 --max-tokens 2048
+    npm run huskygpt-review --model gpt-3.5-turbo --max-tokens 2048
     ```
 - Run the following command to generate unit tests:
     ```
-    npm run huskygpt-test --model text-davinci-002 --max-tokens 2048 --file-extensions .ts,.tsx --read-type dir --read-dir-name src --test-file-type test --test-file-extension .ts --test-file-dir-name tests
-    ```
-- Auto run when you commit, add the following to `husky` in `package.json`:
-    ```
-    "husky": {
-      "hooks": {
-        "pre-commit": "npm run huskygpt-review"
-      }
-    }
-    ```
-- Auto run when you commit, use lint-staged
-    ```
-    "husky": {
-      "hooks": {
-        "pre-commit": "lint-staged"
-      }
-    },
-    "lint-staged": {
-      "*.{ts,tsx}": [
-        "npm run huskygpt-review"
-      ]
-    }
+    npm run huskygpt-test --model gpt-3.5-turbo --max-tokens 2048 --file-extensions .ts,.tsx --read-type dir --read-dir-name src --test-file-type test --test-file-extension .ts --test-file-dir-name tests
     ```
 
 
@@ -67,7 +38,7 @@ npm install -g huskygpt
 
 To generate unit tests or review code, run the following command:
 ```
-huskygpt test --api-key --model text-davinci-002 --max-tokens 2048 --file-extensions .ts,.tsx --read-type dir --read-dir-name src --test-file-type test --test-file-extension .ts --test-file-dir-name tests
+huskygpt test --api-key --model gpt-3.5-turbo --max-tokens 2048 --file-extensions .ts,.tsx --read-type dir --read-dir-name src --test-file-type test --test-file-extension .ts --test-file-dir-name tests
 ```
 
 huskygpt [options]

@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import ora from 'ora';
 import { userOptions } from '../constant';
-import { ReadTypeEnum, IReadFileResult } from '../types';
+import { ReadTypeEnum, IReadFileResult, HuskyGPTTypeEnum } from '../types';
 import { getFileNameByPath } from '../utils';
 import ReadTestFilePathsByDirectory from './reader-directory';
 import StagedFileReader from './reader-git-stage';
@@ -57,6 +57,9 @@ class ReadFiles {
 
   // Check if a file exists in the test directory
   private fileExistsInTestDir(filePath: string): boolean {
+    // Only type Test needs to check
+    if (userOptions.huskyGPTType !== HuskyGPTTypeEnum.Test) return false;
+
     const fileName = getFileNameByPath(filePath);
     const pathName = path.dirname(filePath);
     const testFileDirName = userOptions.options.testFileDirName;
@@ -79,7 +82,9 @@ class ReadFiles {
     if (!this.readTypeMap[readFileType])
       throw new Error('Invalid test file read type');
 
-    const readSpinner = ora('[huskygpt] Reading files...').start();
+    const readSpinner = ora({
+      text: '🚀 [huskygpt] Reading files...',
+    }).start();
     const fileResults = this.readTypeMap[readFileType]().filter(
       ({ filePath: path }) =>
         path &&
@@ -90,14 +95,14 @@ class ReadFiles {
 
     if (process.env.DEBUG) {
       console.log(
-        'Need gen test files ===>',
+        '[huskygpt] read files ===>',
         fileResults.map((r) => r.filePath)
       );
     }
 
     fileResults.length > 0
-      ? readSpinner.succeed('[huskygpt] Read files successfully!')
-      : readSpinner.warn('[huskygpt] Read no files!');
+      ? readSpinner.succeed('🌟🌟 [huskygpt] read files successfully! 🌟🌟')
+      : readSpinner.warn('🤔🤔 [huskygpt] read no files! 🤔🤔');
     return fileResults;
   }
 }

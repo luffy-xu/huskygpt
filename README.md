@@ -1,11 +1,19 @@
 # huskygpt
-Auto Review your code or Auto generate unit tests by OpenAI api gpt (GPT-4)
+Auto Review your code or Auto generate unit tests by OpenAI api gpt3.5 (GPT-4)
+
+## Demo
+- `huskygpt review`: Review your code using the OpenAI API
+  ![huskygpt-review](https://user-images.githubusercontent.com/105559892/229142794-a85a024c-faff-46cf-8de5-839aff983d9f.gif)
+- `huskygpt test`: Generates unit test using the OpenAI API
+  ![huskygpt-test](https://user-images.githubusercontent.com/105559892/229142867-fb5768dc-d2d6-429c-8a20-b2adec087b6d.gif)
 
 ## Key Features
-- 🤖 Generates test cases using the OpenAI API
+- 🤖 Generates unit test using the OpenAI API
 - 🤖 Review your code using the OpenAI API
 - 🧠 Supports multiple OpenAI models and customizing the prompt
 - 📂 Supports reading test files from `directories` or `git staged files`
+- 🍺 Only pick up the `functions` or `class` code to OpenAI api for `security` and low `cost`
+- 💻 Supports typing review comments in the terminal
 
 ## Usage
 - [Command Line NPM Usage Click Me](https://github.com/luffy-xu/huskygpt/tree/main/package
