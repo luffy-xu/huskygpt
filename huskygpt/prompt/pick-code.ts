@@ -57,7 +57,7 @@ export class CodePicker {
 
       return this.remainingCode;
     } catch (e) {
-      console.error('Babel parse error: ', e);
+      // console.error('Babel parse error: ', e);
       return [code];
     }
   }

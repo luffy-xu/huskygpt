@@ -1,12 +1,12 @@
 {
   "name": "huskygpt",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Automatically generate unit tests for your code using openai gpt-4",
   "main": "lib/index.js",
   "scripts": {
     "test": "jest",
-    "build": "rimraf lib && tsc ../test/index.ts --outDir lib --esModuleInterop",
-    "build-watch": "rimraf lib && tsc ../test/index.ts --outDir lib --esModuleInterop --watch",
+    "build": "rimraf lib && tsc ../huskygpt/index.ts --outDir lib --esModuleInterop",
+    "build-watch": "rimraf lib && tsc ../huskygpt/index.ts --outDir lib --esModuleInterop --watch",
     "prepublishOnly": "npm run build"
   },
   "bin": {

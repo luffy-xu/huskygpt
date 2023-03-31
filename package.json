@@ -12,7 +12,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "huskygpt": "ts-node test/execute.ts",
+    "huskygpt": "ts-node huskygpt/execute.ts",
     "eject": "react-scripts eject",
     "prepare": "husky install",
     "prettier": "prettier --write \"**/*.(js|ts|tsx)\""
