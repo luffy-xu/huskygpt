@@ -5,6 +5,7 @@ import { HuskyGPTTypeEnum, ReadTypeEnum, IUserOptions } from './types';
 import { execSync } from 'child_process';
 
 export const OPENAI_API_KEY_NAME = 'OPENAI_API_KEY';
+export const OPENAI_SESSION_TOKEN_NAME = 'OPENAI_SESSION_TOKEN';
 
 class UserOptionsClass {
   options: IUserOptions;
@@ -35,11 +36,9 @@ class UserOptionsClass {
   }
 
   // get open AI key from npm config
-  get openAIKeyFromNpmConfig(): string {
+  getOpenAIKeyFromNpmConfig(key = OPENAI_SESSION_TOKEN_NAME): string {
     try {
-      return execSync(`npm config get ${OPENAI_API_KEY_NAME}`)
-        .toString()
-        .trim();
+      return execSync(`npm config get ${key}`).toString().trim();
     } catch (error) {
       return '';
     }
@@ -48,12 +47,12 @@ class UserOptionsClass {
   /**
    * Get OpenAI API key
    * @example
-   * // returns 'sk-1234567890'
+   * @returns 'sk-1234567890'
    */
   get openAIKey(): string {
     if (!this.options.openAIKey) {
-      const npmKey = this.openAIKeyFromNpmConfig;
-      this.options.openAIKey = npmKey;
+      this.options.openAIKey =
+        this.getOpenAIKeyFromNpmConfig(OPENAI_API_KEY_NAME);
     }
 
     if (!this.options.openAIKey) throw new Error('openAIKey is not set');
@@ -62,6 +61,20 @@ class UserOptionsClass {
       console.log(`openAI key: "${this.options.openAIKey}"`);
 
     return this.options.openAIKey;
+  }
+
+  /**
+   * Get OpenAI session token
+   */
+  get openAISessionToken(): string {
+    if (!this.options.openAISessionToken) {
+      this.options.openAISessionToken = this.getOpenAIKeyFromNpmConfig();
+    }
+
+    if (process.env.DEBUG)
+      console.log(`openAI key: "${this.options.openAISessionToken}"`);
+
+    return this.options.openAISessionToken;
   }
 
   /**
@@ -122,10 +135,8 @@ class UserOptionsClass {
     processEnv: NodeJS.ProcessEnv
   ): IUserOptions {
     return {
-      /**
-       * OpenAI options
-       */
       openAIKey: processEnv.OPENAI_API_KEY,
+      openAISessionToken: processEnv.OPENAI_SESSION_TOKEN,
       openAIModel:
         processEnv.OPENAI_MODEL || this.userOptionsDefault.openAIModel,
       openAIMaxTokens: Number(

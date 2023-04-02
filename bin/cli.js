@@ -1,10 +1,14 @@
 #!/usr/bin/env node
+import { Command } from 'commander'
+import fs from 'fs'
+import path from 'path'
 
-const { Command } = require('commander');
-const { main } = require('./lib/index');
-const packageJson = require('./package.json');
+import { main } from '../build/index.js'
 
-const program = new Command();
+const packageJson = JSON.parse(
+  fs.readFileSync(path.join(process.cwd(), './package.json'), 'utf8')
+)
+const program = new Command()
 
 program
   .version(packageJson.version, '-v, --version', 'output the current version')
@@ -59,24 +63,24 @@ program
       ...(options.prompt && { openAIPrompt: options.prompt }),
       ...(options.maxTokens && { openAIMaxTokens: Number(options.maxTokens) }),
       ...(options.fileExtensions && {
-        readFileExtensions: options.fileExtensions,
+        readFileExtensions: options.fileExtensions
       }),
       ...(options.readType && { readType: options.readType }),
       ...(options.readGitStatus && { readGitStatus: options.readGitStatus }),
       ...(options.readDirName && { readFilesRootName: options.readDirName }),
       ...(options.testFileType && { testFileType: options.testFileType }),
       ...(options.testFileExtension && {
-        testFileNameExtension: options.testFileExtension,
+        testFileNameExtension: options.testFileExtension
       }),
       ...(options.testFileDirName && {
-        testFileDirName: options.testFileDirName,
+        testFileDirName: options.testFileDirName
       }),
       ...(options.reviewReportWebhook && {
-        reviewReportWebhook: options.reviewReportWebhook,
-      }),
-    };
+        reviewReportWebhook: options.reviewReportWebhook
+      })
+    }
 
-    main(userOptions);
-  });
+    main(userOptions)
+  })
 
-program.parse(process.argv);
+program.parse(process.argv)

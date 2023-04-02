@@ -1,19 +1,20 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "*": ["src/*", "src/types/*"]
-    },
-    "outDir": "./dist/",
-    "sourceMap": true,
-    "noImplicitAny": true,
+    "target": "es2020",
+    "lib": ["esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "lib": ["dom", "es7"],
-    "module": "commonjs",
-    "target": "es5",
-    "allowSyntheticDefaultImports": true,
-    "jsx": "react"
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "outDir": "build",
+    "noEmit": true
   },
-  "include": ["./src/**/*"]
+  "exclude": ["node_modules", "build"],
+  "include": ["**/*.ts", "bin/cli.js", "bin/cli.js"]
 }

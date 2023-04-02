@@ -15,9 +15,6 @@ Auto Review your code or Auto generate unit tests by OpenAI api gpt3.5 (GPT-4)
 - 🍺 Only pick up the `functions` or `class` code to OpenAI api for `security` and low `cost`
 - 💻 Supports typing review comments in the terminal
 
-## Usage
-- [Command Line Usage](https://github.com/luffy-xu/huskygpt/tree/main/package)
-
 ## Requirements
 - Node.js 14.0 or higher
 - An [OpenAI API key](https://platform.openai.com/account/api-keys)

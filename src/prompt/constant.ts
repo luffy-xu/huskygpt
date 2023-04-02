@@ -43,18 +43,20 @@ export const huskyGPTTypeMap: Record<
     // The base prompt for each code snippet
     const basePrompt = `
       As a programer to review code:
-      - If there is bugs or can be optimized you should reply main points and reply optimized code, else only reply "${PERFECT_KEYWORDS}".
-      - Skip the optimization about ternary operator.
-      - If reply code, must write using markdown's ${fileExtension} syntax code block.
+      - If there is bugs or can be optimized you should reply main points and reply optimized code.
+      - Note that If reply code, must write using markdown's ${fileExtension} syntax code block.
       - Note that we may provide incomplete code snippets, so please ignore any missing pieces.
+      - Note that skip the optimization about ternary operator.
+      - Note that if there is no need optimized or no bugs only need reply "${PERFECT_KEYWORDS}".
       - Please start your feedback with the function or class name, followed by a colon and a space.
       ${userPrompt || ''}
+      Please review following code:
     `;
 
     const codePicker = new CodePicker();
 
     return codePicker.pickFunctionOrClassCodeArray(fileContent).map((code) => {
-      return `${basePrompt}.Please review following code: "${code}"`;
+      return `${basePrompt} "${code}"`;
     });
   },
 };

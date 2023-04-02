@@ -1,7 +1,10 @@
+import 'isomorphic-fetch';
+
 import ReadFiles from './reader';
 import { HuskyGPTReview, HuskyGPTTest } from './huskygpt';
 import { HuskyGPTTypeEnum, IUserOptions } from './types';
 import { userOptions } from './constant';
+import { chatgptDemo } from './chatgpt';
 
 const runMap: Record<HuskyGPTTypeEnum, () => void> = {
   [HuskyGPTTypeEnum.Test]: () => {
@@ -44,7 +47,8 @@ export function main(options?: IUserOptions) {
     );
   }
 
-  runMap[type]();
+  chatgptDemo();
+  // runMap[type]();
 }
 
 export default main;

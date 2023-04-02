@@ -31,8 +31,22 @@ export interface IUserOptions {
   /**
    * OpenAI options
    */
-  // OpenAI API key
+
+  /**
+   * OpenAI options
+   * @see https://platform.openai.com/account/api-keys
+   */
+  /**
+   * @name openAIKey
+   */
   openAIKey?: string;
+  /**
+   * @name openAISessionToken
+   * @description OpenAI session token, 2 setp to get token, If you don't set this, will use OPENAI_API_KEY, will cause fee by api key
+   * @description 1. visit https://chat.openai.com/chat and login
+   * @description 2. Visit https://chat.openai.com/api/auth/session to get token
+   */
+  openAISessionToken?: string;
   // OpenAI model to use, default is 'text-davinci-003'
   openAIModel?: string;
   // OpenAI prompt to use, default is ''
