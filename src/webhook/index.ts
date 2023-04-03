@@ -1,11 +1,11 @@
-import { execSync } from 'child_process'
-import fs from 'fs'
-import path from 'path'
+import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
 
-import { codeBlocksRegex, reviewFileName, userOptions } from '../constant'
-import { deleteFile, getUserEmail } from '../utils'
-import { simplyReviewData } from '../utils/simply-result'
-import { INoticeTask, ISeatalkNoticeOptions } from './constant'
+import { codeBlocksRegex, reviewFileName, userOptions } from '../constant';
+import { deleteFile, getUserEmail } from '../utils';
+import { simplyReviewData } from '../utils/simply-result';
+import { INoticeTask, ISeatalkNoticeOptions } from './constant';
 
 /**
  * Webhook notifier
@@ -13,61 +13,61 @@ import { INoticeTask, ISeatalkNoticeOptions } from './constant'
  * @param {string} userEmail The user email
  */
 class WebhookNotifier {
-  private readonly userEmail: string
-  private readonly channel: string
-  private tasks: string[]
+  private readonly userEmail: string;
+  private readonly channel: string;
+  private tasks: string[];
 
   constructor({
     channel = userOptions.options.reviewReportWebhook,
-    userEmail = ''
+    userEmail = '',
   }: ISeatalkNoticeOptions = {}) {
-    this.tasks = []
+    this.tasks = [];
 
-    if (!channel) return
-    this.userEmail = userEmail
-    this.channel = channel
+    if (!channel) return;
+    this.userEmail = userEmail;
+    this.channel = channel;
   }
 
   /**
    * Add a notice task
    */
   public addNoticeTask(task: INoticeTask) {
-    if (!task) return
+    if (!task) return;
 
     this.tasks.push(
       `__${path.dirname(task.filePath).split('/').pop()}/${path.basename(
-        task.filePath
-      )}__ \\r• ${task.message}`
-    )
+        task.filePath,
+      )}__ \\r• ${task.message}`,
+    );
   }
 
   /**
    * Publish all notices to the webhook channel
    */
   public publishNotice() {
-    if (!this.tasks?.length) return
-    const content = this.tasks.join('\\r\\r\\n')
-    const reviewFilePath = `${path.join(process.cwd(), reviewFileName)}`
+    if (!this.tasks?.length) return;
+    const content = this.tasks.join('\\r\\r\\n');
+    const reviewFilePath = `${path.join(process.cwd(), reviewFileName)}`;
 
-    deleteFile(reviewFilePath)
+    deleteFile(reviewFilePath);
 
     // Write the output text to a file if there are code blocks
     if (codeBlocksRegex.test(content)) {
-      fs.writeFileSync(reviewFilePath, content, 'utf-8')
+      fs.writeFileSync(reviewFilePath, content, 'utf-8');
     }
 
     // If no channel is provided, log the content to the console
     if (!this.channel || userOptions.options.debug)
-      return console.log('publishNotice: ', content)
+      return console.log('publishNotice: ', content);
 
     const data = `<mention-tag target=\\"seatalk://user?email=${
       this.userEmail || getUserEmail()
-    }\\" />\\r\\r${simplyReviewData(content)}`
+    }\\" />\\r\\r${simplyReviewData(content)}`;
 
     execSync(
-      `curl -i -X POST -H 'Content-Type: application/json' -d '{ "tag": "markdown", "markdown": {"content": "${data}"}}' ${this.channel}`
-    )
+      `curl -i -X POST -H 'Content-Type: application/json' -d '{ "tag": "markdown", "markdown": {"content": "${data}"}}' ${this.channel}`,
+    );
   }
 }
 
-export default WebhookNotifier
+export default WebhookNotifier;

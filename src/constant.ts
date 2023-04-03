@@ -1,15 +1,15 @@
-import { ChatGPTAPIOptions } from 'chatgpt'
-import { execSync } from 'child_process'
-import { config } from 'dotenv'
-import path from 'path'
+import { ChatGPTAPIOptions } from 'chatgpt';
+import { execSync } from 'child_process';
+import { config } from 'dotenv';
+import path from 'path';
 
-import { HuskyGPTTypeEnum, IUserOptions, ReadTypeEnum } from './types'
+import { HuskyGPTTypeEnum, IUserOptions, ReadTypeEnum } from './types';
 
-export const OPENAI_API_KEY_NAME = 'OPENAI_API_KEY'
-export const OPENAI_SESSION_TOKEN_NAME = 'OPENAI_SESSION_TOKEN'
+export const OPENAI_API_KEY_NAME = 'OPENAI_API_KEY';
+export const OPENAI_SESSION_TOKEN_NAME = 'OPENAI_SESSION_TOKEN';
 
 class UserOptionsClass {
-  options: IUserOptions
+  options: IUserOptions;
 
   private userOptionsDefault: IUserOptions = {
     debug: false,
@@ -27,7 +27,7 @@ class UserOptionsClass {
     testFileOverwrite: true,
     reviewReportWebhook: '',
     reviewTyping: 'true',
-  }
+  };
 
   /**
    * Get huskygpt run type
@@ -35,16 +35,16 @@ class UserOptionsClass {
    * // returns 'test'
    */
   get huskyGPTType(): HuskyGPTTypeEnum {
-    if (!this.options.huskyGPTType) throw new Error('huskyGPTType is not set')
-    return this.options.huskyGPTType
+    if (!this.options.huskyGPTType) throw new Error('huskyGPTType is not set');
+    return this.options.huskyGPTType;
   }
 
   // get open AI key from npm config
   getOpenAIKeyFromNpmConfig(key: string): string {
     try {
-      return execSync(`npm config get ${key}`).toString().trim()
+      return execSync(`npm config get ${key}`).toString().trim();
     } catch (error) {
-      return ''
+      return '';
     }
   }
 
@@ -56,15 +56,15 @@ class UserOptionsClass {
   get openAIKey(): string {
     if (!this.options.openAIKey) {
       this.options.openAIKey =
-        this.getOpenAIKeyFromNpmConfig(OPENAI_API_KEY_NAME)
+        this.getOpenAIKeyFromNpmConfig(OPENAI_API_KEY_NAME);
     }
 
-    if (!this.options.openAIKey) throw new Error('openAIKey is not set')
+    if (!this.options.openAIKey) throw new Error('openAIKey is not set');
 
     if (process.env.DEBUG)
-      console.log(`openAI key: "${this.options.openAIKey}"`)
+      console.log(`openAI key: "${this.options.openAIKey}"`);
 
-    return this.options.openAIKey
+    return this.options.openAIKey;
   }
 
   /**
@@ -73,21 +73,21 @@ class UserOptionsClass {
   get openAISessionToken(): string {
     if (!this.options.openAISessionToken) {
       this.options.openAISessionToken = this.getOpenAIKeyFromNpmConfig(
-        OPENAI_SESSION_TOKEN_NAME
-      )
+        OPENAI_SESSION_TOKEN_NAME,
+      );
     }
 
     if (process.env.DEBUG)
-      console.log(`openAI session token: {${this.options.openAISessionToken}}`)
+      console.log(`openAI session token: {${this.options.openAISessionToken}}`);
 
-    return this.options.openAISessionToken
+    return this.options.openAISessionToken;
   }
 
   /**
    * Get OpenAI options
    */
   get openAIOptions(): ChatGPTAPIOptions['completionParams'] {
-    if (!this.options.openAIModel) throw new Error('openAIModel is not set')
+    if (!this.options.openAIModel) throw new Error('openAIModel is not set');
 
     return {
       temperature: 0.2,
@@ -95,7 +95,7 @@ class UserOptionsClass {
       stop: ['###'],
       model: this.options.openAIModel,
       max_tokens: this.options.openAIMaxTokens,
-    }
+    };
   }
 
   /**
@@ -105,8 +105,8 @@ class UserOptionsClass {
    */
   get readFilesRoot(): string {
     if (!this.options.readFilesRootName)
-      throw new Error('readFilesRootName is not set')
-    return path.join(process.cwd(), this.options.readFilesRootName)
+      throw new Error('readFilesRootName is not set');
+    return path.join(process.cwd(), this.options.readFilesRootName);
   }
 
   /**
@@ -116,16 +116,16 @@ class UserOptionsClass {
    */
   get readFilesExtensions(): string[] {
     if (!this.options.readFileExtensions)
-      throw new Error('readFileExtensions is not set')
-    return this.options.readFileExtensions.split(',')
+      throw new Error('readFileExtensions is not set');
+    return this.options.readFileExtensions.split(',');
   }
 
   /**
    * File read type, either 'dir' or 'git'
    */
   get readFileType(): ReadTypeEnum {
-    if (!this.options.readType) throw new Error('readType is not set')
-    return this.options.readType
+    if (!this.options.readType) throw new Error('readType is not set');
+    return this.options.readType;
   }
 
   /**
@@ -134,14 +134,14 @@ class UserOptionsClass {
    * // returns '.test.ts'
    */
   get testFileNameSuffix(): string {
-    return `.${this.options.testFileType}${this.options.testFileNameExtension}`
+    return `.${this.options.testFileType}${this.options.testFileNameExtension}`;
   }
 
   /**
    * Convert the process.env to user options
    */
   private convertProcessEnvToUserOptions(
-    processEnv: NodeJS.ProcessEnv
+    processEnv: NodeJS.ProcessEnv,
   ): IUserOptions {
     return {
       debug: process.env.DEBUG === 'true',
@@ -151,7 +151,7 @@ class UserOptionsClass {
       openAIModel:
         processEnv.OPENAI_MODEL || this.userOptionsDefault.openAIModel,
       openAIMaxTokens: Number(
-        processEnv.OPENAI_MAX_TOKENS || this.userOptionsDefault.openAIMaxTokens
+        processEnv.OPENAI_MAX_TOKENS || this.userOptionsDefault.openAIMaxTokens,
       ),
       /**
        * Read file options
@@ -187,7 +187,7 @@ class UserOptionsClass {
       reviewReportWebhook: processEnv.REVIEW_REPORT_WEBHOOK,
       reviewTyping:
         processEnv.REVIEW_TYPING || this.userOptionsDefault.reviewTyping,
-    }
+    };
   }
 
   /**
@@ -196,30 +196,30 @@ class UserOptionsClass {
 
   public init(userOptions: IUserOptions = {}) {
     // Read the .env file
-    config()
-    config({ path: path.join(process.cwd(), '.env.local') })
-    const envUserOptions = this.convertProcessEnvToUserOptions(process.env)
+    config();
+    config({ path: path.join(process.cwd(), '.env.local') });
+    const envUserOptions = this.convertProcessEnvToUserOptions(process.env);
 
     if (process.env.DEBUG) {
-      console.log('envUserOptions: ', envUserOptions)
-      console.log('userOptions: ', userOptions)
+      console.log('envUserOptions: ', envUserOptions);
+      console.log('userOptions: ', userOptions);
     }
 
     this.options = Object.assign(
       {},
       this.userOptionsDefault,
       envUserOptions,
-      userOptions
-    )
+      userOptions,
+    );
   }
 }
 
-export const userOptions = new UserOptionsClass()
+export const userOptions = new UserOptionsClass();
 
 /**
  * Review result configs
  */
-export const codeBlocksRegex = /```([\s\S]*?)```/g
+export const codeBlocksRegex = /```([\s\S]*?)```/g;
 
 // Write the output text to a file if there are code blocks
-export const reviewFileName = '.huskygpt_review.md'
+export const reviewFileName = '.huskygpt_review.md';

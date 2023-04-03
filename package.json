@@ -23,6 +23,7 @@
     "pre-commit": "lint-staged",
     "prepare": "husky install",
     "prepublishOnly": "run-s build",
+    "prettier": "prettier --write ./src",
     "test": "run-p test:*",
     "test:prettier": "prettier '**/*.{js,jsx,ts,tsx}' --check"
   },

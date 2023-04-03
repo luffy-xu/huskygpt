@@ -1,6 +1,7 @@
 import { execSync } from 'child_process';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+
 import { userOptions } from '../constant';
 import { IReadFileResult } from '../types';
 
@@ -20,7 +21,7 @@ class StagedFileReader {
    */
   private extractModifiedFunction(
     filePath: string,
-    contents: string
+    contents: string,
   ): string | null {
     const diffOutput = execSync(`git diff --cached ${filePath}`).toString();
     const diffLines = diffOutput.split('\n');

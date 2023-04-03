@@ -21,7 +21,7 @@ class TypingSpinner {
   private timeoutId: NodeJS.Timeout | null;
 
   constructor(
-    { interval, timeout = 10000 }: TypingSpinnerOptions = { interval: 100 }
+    { interval, timeout = 10000 }: TypingSpinnerOptions = { interval: 100 },
   ) {
     this.interval = interval;
     this.timeout = timeout;
