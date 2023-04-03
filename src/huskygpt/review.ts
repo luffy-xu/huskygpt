@@ -1,6 +1,8 @@
-import OpenAIFactory from '../openai';
-import { IReadFileResult } from '../types';
-import WebhookNotifier from '../webhook';
+import { ChatgptProxyAPI } from 'src/chatgpt'
+
+import OpenAIFactory from '../openai'
+import { IReadFileResult } from '../types'
+import WebhookNotifier from '../webhook'
 
 /**
  * Generate a test case for a given file path
@@ -8,14 +10,14 @@ import WebhookNotifier from '../webhook';
  * Usage: new TestGenerator().generateTestCase({ filePath: 'path/to/file' });
  */
 class HuskyGPTReview {
-  private openai: OpenAIFactory;
-  private publishChannel: WebhookNotifier;
+  private openai: ChatgptProxyAPI
+  private publishChannel: WebhookNotifier
 
   constructor() {
     // Create a new OpenAI API client
-    this.openai = new OpenAIFactory();
+    this.openai = new ChatgptProxyAPI()
 
-    this.publishChannel = new WebhookNotifier();
+    this.publishChannel = new WebhookNotifier()
   }
 
   /**
@@ -25,24 +27,24 @@ class HuskyGPTReview {
     filePath: string,
     message: string
   ): Promise<void> {
-    this.publishChannel.addNoticeTask({ filePath, message });
+    this.publishChannel.addNoticeTask({ filePath, message })
   }
 
   /**
    * Generate a test case for a given file
    */
   async run(fileResult: IReadFileResult): Promise<void> {
-    const message = await this.openai.run(fileResult);
+    const message = await this.openai.run(fileResult)
 
-    this.postAIMessage(fileResult.filePath!, message);
+    this.postAIMessage(fileResult.filePath!, message)
   }
 
   /**
    * Publish the notices to the webhook channel
    */
   public publishNotice(): void {
-    this.publishChannel.publishNotice();
+    this.publishChannel.publishNotice()
   }
 }
 
-export default HuskyGPTReview;
+export default HuskyGPTReview
