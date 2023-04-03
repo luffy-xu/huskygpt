@@ -92,6 +92,4 @@ export interface IUserOptions {
    * Huskygpt review options
    */
   reviewReportWebhook?: string;
-  // Typing review in the console, 'true' or 'false', default is 'true'
-  reviewTyping?: string;
 }

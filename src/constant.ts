@@ -26,7 +26,6 @@ class UserOptionsClass {
     testFileDirName: '__test__',
     testFileOverwrite: true,
     reviewReportWebhook: '',
-    reviewTyping: 'true',
   };
 
   /**
@@ -185,8 +184,6 @@ class UserOptionsClass {
        * Review options
        */
       reviewReportWebhook: processEnv.REVIEW_REPORT_WEBHOOK,
-      reviewTyping:
-        processEnv.REVIEW_TYPING || this.userOptionsDefault.reviewTyping,
     };
   }
 
