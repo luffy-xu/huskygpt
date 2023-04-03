@@ -6,14 +6,14 @@ import ReadFiles from './reader'
 import { HuskyGPTTypeEnum, IUserOptions } from './types'
 
 const runMap: Record<HuskyGPTTypeEnum, () => void> = {
-  [HuskyGPTTypeEnum.Test]: () => {
+  [HuskyGPTTypeEnum.Test]: async () => {
     const testFilePaths = new ReadFiles()
     const huskygpt = new HuskyGPTTest()
 
     // Generate a test case for each file path
-    testFilePaths.getFileResults().map(async ({ filePath }) => {
-      await huskygpt.run({ filePath })
-    })
+    for (const fileResult of testFilePaths.getFileResults()) {
+      await huskygpt.run(fileResult)
+    }
   },
   [HuskyGPTTypeEnum.Review]: async () => {
     const reviewFiles = new ReadFiles()
@@ -26,7 +26,7 @@ const runMap: Record<HuskyGPTTypeEnum, () => void> = {
 
     // Publish the notices to the webhook channel
     huskygpt.publishNotice()
-  }
+  },
 }
 
 /**

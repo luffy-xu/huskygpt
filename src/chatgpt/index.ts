@@ -1,11 +1,10 @@
 import chalk from 'chalk'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI, ChatMessage } from 'chatgpt'
 import ora from 'ora'
-import { PERFECT_KEYWORDS } from 'src/prompt/constant'
+import { HuskyGPTPrompt, PERFECT_KEYWORDS } from 'src/prompt'
 
 import { userOptions } from '../constant'
-import { generatePrompt } from '../prompt'
-import { IReadFileResult } from '../types'
+import { HuskyGPTTypeEnum, IReadFileResult } from '../types'
 
 export class ChatgptProxyAPI {
   private api: ChatGPTUnofficialProxyAPI | ChatGPTAPI
@@ -23,7 +22,7 @@ export class ChatgptProxyAPI {
       this.api = new ChatGPTAPI({
         apiKey: userOptions.openAIKey,
         completionParams: userOptions.openAIOptions,
-        debug: userOptions.options.debug
+        debug: userOptions.options.debug,
       })
       return
     }
@@ -32,7 +31,7 @@ export class ChatgptProxyAPI {
     this.api = new ChatGPTUnofficialProxyAPI({
       model: userOptions.options.openAIModel,
       accessToken: userOptions.openAISessionToken,
-      apiReverseProxyUrl: userOptions.options.openAIProxyUrl
+      apiReverseProxyUrl: userOptions.options.openAIProxyUrl,
     })
   }
 
@@ -41,15 +40,16 @@ export class ChatgptProxyAPI {
    */
   private generatePrompt(fileResult: IReadFileResult): string[] {
     // Set the file content as the prompt for the API request
-    const prompt = generatePrompt(fileResult)
+    const huskyGPTType = new HuskyGPTPrompt(userOptions.huskyGPTType)
 
-    return prompt
+    return huskyGPTType.generatePrompt(fileResult)
   }
 
   /**
    * Is the review passed?
    */
   private isReviewPassed(message: string): boolean {
+    if (userOptions.huskyGPTType !== HuskyGPTTypeEnum.Review) return true
     return message.split('\n').includes(PERFECT_KEYWORDS)
   }
 
@@ -61,8 +61,8 @@ export class ChatgptProxyAPI {
       text,
       spinner: {
         interval: 800,
-        frames: ['🚀', '🤖', '🚀', '🤖', '🚀', '🤖', '🚀', '🤖']
-      }
+        frames: ['🚀', '🤖', '🚀', '🤖', '🚀', '🤖', '🚀', '🤖'],
+      },
     }).start()
   }
 
@@ -78,7 +78,7 @@ export class ChatgptProxyAPI {
       ...prevMessage,
       onProgress: (partialResponse) => {
         reviewSpinner.text = partialResponse.text
-      }
+      },
     })
 
     const isReviewPassed = this.isReviewPassed(res.text)
@@ -95,7 +95,7 @@ export class ChatgptProxyAPI {
   /**
    * Generate a prompt for a given file, then send it to the OpenAI API
    */
-  async sendFileResult(fileResult: IReadFileResult): Promise<string> {
+  async sendFileResult(fileResult: IReadFileResult): Promise<string[]> {
     const promptArray = this.generatePrompt(fileResult)
     const messageArray: string[] = []
     let message: ChatMessage
@@ -103,18 +103,18 @@ export class ChatgptProxyAPI {
     for (const prompt of promptArray) {
       message = await this.sendMessage(prompt, {
         conversationId: message?.conversationId,
-        parentMessageId: message?.id
+        parentMessageId: message?.id,
       })
       messageArray.push(message.text)
     }
 
-    return messageArray.join('\n\n---\n\n')
+    return messageArray
   }
 
   /**
    * Start the huskygpt process
    */
-  async run(fileResult: IReadFileResult): Promise<string> {
+  async run(fileResult: IReadFileResult): Promise<string[]> {
     const reviewSpinner = this.oraStart(
       chalk.cyan(`[huskygpt] start ${userOptions.huskyGPTType} your code... \n`)
     )
@@ -135,7 +135,7 @@ export class ChatgptProxyAPI {
             `🤔🤔 [huskygpt] ${userOptions.huskyGPTType} your code failed! 🤔🤔\n`
           )
         )
-        return '[huskygpt] call OpenAI API failed!'
+        return ['[huskygpt] call OpenAI API failed!']
       })
   }
 }

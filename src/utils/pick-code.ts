@@ -8,9 +8,14 @@ import { userOptions } from 'src/constant'
  */
 export class CodePicker {
   // Store the remaining code after picking
-  private remainingCode: string[] = []
+  private remainingCode: string[]
   // Store the end index of the remaining code
-  private remainingEndIndex = 0
+  private remainingEndIndex
+
+  constructor() {
+    this.remainingCode = []
+    this.remainingEndIndex = 0
+  }
 
   /**
    * Check if the node is a function or class
@@ -41,7 +46,7 @@ export class CodePicker {
     try {
       const ast = parse(code, {
         sourceType: 'module',
-        plugins: ['typescript', 'jsx']
+        plugins: ['typescript', 'jsx'],
       })
 
       traverse.default(ast, {
@@ -53,7 +58,7 @@ export class CodePicker {
             this.remainingCode.push(generate.default(nodePath.node).code)
             this.remainingEndIndex = Number(nodePath.node.end)
           }
-        }
+        },
       })
 
       return this.remainingCode

@@ -5,7 +5,7 @@
  */
 export enum HuskyGPTTypeEnum {
   Test = 'test',
-  Review = 'review'
+  Review = 'review',
 }
 
 /**
@@ -19,7 +19,7 @@ export enum HuskyGPTTypeEnum {
  */
 export enum ReadTypeEnum {
   Directory = 'dir',
-  GitStage = 'git'
+  GitStage = 'git',
 }
 
 export interface IReadFileResult {
@@ -85,6 +85,8 @@ export interface IUserOptions {
   testFileNameExtension?: string
   // Generate test file directory name, default is '__test__'
   testFileDirName?: string
+  // Generate test file overwrite, default is true
+  testFileOverwrite?: boolean
 
   /**
    * Huskygpt review options

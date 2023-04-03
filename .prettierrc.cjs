@@ -8,7 +8,6 @@ module.exports = {
   bracketSpacing: true,
   bracketSameLine: false,
   arrowParens: 'always',
-  trailingComma: 'none',
   importOrder: ['^node:.*', '<THIRD_PARTY_MODULES>', '^[./]'],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,

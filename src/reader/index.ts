@@ -14,7 +14,7 @@ class ReadFiles {
 
   constructor({
     dirPath = userOptions.readFilesRoot,
-    fileExtensions = userOptions.readFilesExtensions
+    fileExtensions = userOptions.readFilesExtensions,
   } = {}) {
     this.dirPath = dirPath
     this.fileExtensions = fileExtensions
@@ -22,7 +22,7 @@ class ReadFiles {
 
   readTypeMap: Record<ReadTypeEnum, () => IReadFileResult[]> = {
     [ReadTypeEnum.Directory]: () => this.getTestFilePathByDir(),
-    [ReadTypeEnum.GitStage]: () => this.getTestFilePathByGit()
+    [ReadTypeEnum.GitStage]: () => this.getTestFilePathByGit(),
   }
 
   // Get all file paths by directory
@@ -32,7 +32,7 @@ class ReadFiles {
 
     return filePaths.map((filePath) => ({
       filePath,
-      content: ''
+      content: '',
     }))
   }
 
@@ -59,7 +59,12 @@ class ReadFiles {
   // Check if a file exists in the test directory
   private fileExistsInTestDir(filePath: string): boolean {
     // Only type Test needs to check
-    if (userOptions.huskyGPTType !== HuskyGPTTypeEnum.Test) return false
+    if (
+      userOptions.options.testFileOverwrite ||
+      userOptions.huskyGPTType !== HuskyGPTTypeEnum.Test
+    ) {
+      return false
+    }
 
     const fileName = getFileNameByPath(filePath)
     const pathName = path.dirname(filePath)
@@ -84,7 +89,7 @@ class ReadFiles {
       throw new Error('Invalid test file read type')
 
     const readSpinner = ora({
-      text: '🚀 [huskygpt] Reading files...'
+      text: '🚀 [huskygpt] Reading files...',
     }).start()
     const fileResults = this.readTypeMap[readFileType]().filter(
       ({ filePath: path }) =>

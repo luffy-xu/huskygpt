@@ -1,22 +1,15 @@
-import { ChatgptProxyAPI } from 'src/chatgpt'
-
-import OpenAIFactory from '../openai'
 import { IReadFileResult } from '../types'
 import WebhookNotifier from '../webhook'
+import HuskyGPTBase from './base'
 
 /**
- * Generate a test case for a given file path
- * using the OpenAI API
- * Usage: new TestGenerator().generateTestCase({ filePath: 'path/to/file' });
+ * Review code for a given file path
  */
-class HuskyGPTReview {
-  private openai: ChatgptProxyAPI
+class HuskyGPTReview extends HuskyGPTBase {
   private publishChannel: WebhookNotifier
 
   constructor() {
-    // Create a new OpenAI API client
-    this.openai = new ChatgptProxyAPI()
-
+    super()
     this.publishChannel = new WebhookNotifier()
   }
 
@@ -33,10 +26,10 @@ class HuskyGPTReview {
   /**
    * Generate a test case for a given file
    */
-  async run(fileResult: IReadFileResult): Promise<void> {
+  public async run(fileResult: IReadFileResult): Promise<void> {
     const message = await this.openai.run(fileResult)
 
-    this.postAIMessage(fileResult.filePath!, message)
+    this.postAIMessage(fileResult.filePath!, message.join('\n\n---\n\n'))
   }
 
   /**

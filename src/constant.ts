@@ -24,8 +24,9 @@ class UserOptionsClass {
     testFileType: 'test',
     testFileNameExtension: '.ts',
     testFileDirName: '__test__',
+    testFileOverwrite: true,
     reviewReportWebhook: '',
-    reviewTyping: 'true'
+    reviewTyping: 'true',
   }
 
   /**
@@ -93,7 +94,7 @@ class UserOptionsClass {
       top_p: 0.4,
       stop: ['###'],
       model: this.options.openAIModel,
-      max_tokens: this.options.openAIMaxTokens
+      max_tokens: this.options.openAIMaxTokens,
     }
   }
 
@@ -143,7 +144,7 @@ class UserOptionsClass {
     processEnv: NodeJS.ProcessEnv
   ): IUserOptions {
     return {
-      debug: Boolean(process.env.DEBUG),
+      debug: process.env.DEBUG === 'true',
       openAIKey: processEnv.OPENAI_API_KEY,
       openAISessionToken: processEnv.OPENAI_SESSION_TOKEN,
       openAIProxyUrl: processEnv.OPENAI_PROXY_URL,
@@ -177,12 +178,15 @@ class UserOptionsClass {
       testFileDirName:
         processEnv.TEST_FILE_DIR_NAME ||
         this.userOptionsDefault.testFileDirName,
+      testFileOverwrite: processEnv.TEST_FILE_OVERWRITE
+        ? processEnv.TEST_FILE_OVERWRITE === 'true'
+        : this.userOptionsDefault.testFileOverwrite,
       /**
        * Review options
        */
       reviewReportWebhook: processEnv.REVIEW_REPORT_WEBHOOK,
       reviewTyping:
-        processEnv.REVIEW_TYPING || this.userOptionsDefault.reviewTyping
+        processEnv.REVIEW_TYPING || this.userOptionsDefault.reviewTyping,
     }
   }
 

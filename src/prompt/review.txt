@@ -1,4 +1,4 @@
-Please review the provided TS/TSX code snippet according to the following guidelines:
+As a expert programmer, Please review the provided code snippet according to the following guidelines:
 
 1. If there are bugs or potential optimizations, provide the main points and the optimized code using markdown's TSX syntax code block.
 2. We might give incomplete code snippets; please ignore any missing pieces.
