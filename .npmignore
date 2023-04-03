@@ -1,0 +1,26 @@
+# Ignore the test directory and its contents
+/test
+
+# Ignore the docs directory and its contents
+/docs
+
+# Ignore the config file
+config.json
+.gitignore
+.env
+.env.local
+.env.development
+.prettierrc.*
+.eslintrc.*
+tsconfig.json
+tsup.config.*
+.husky
+
+# Ignore example files
+/example
+
+# Ignore the package-lock.json file
+package-lock.json
+
+# Ignore the .DS_Store file on macOS
+.DS_Store
