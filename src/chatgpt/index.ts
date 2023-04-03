@@ -1,18 +1,38 @@
-import { ChatGPTUnofficialProxyAPI, ChatMessage } from 'chatgpt'
+import chalk from 'chalk'
+import { ChatGPTAPI, ChatGPTUnofficialProxyAPI, ChatMessage } from 'chatgpt'
 import ora from 'ora'
+import { PERFECT_KEYWORDS } from 'src/prompt/constant'
 
 import { userOptions } from '../constant'
 import { generatePrompt } from '../prompt'
 import { IReadFileResult } from '../types'
 
 export class ChatgptProxyAPI {
-  private api: ChatGPTUnofficialProxyAPI
+  private api: ChatGPTUnofficialProxyAPI | ChatGPTAPI
 
   constructor() {
+    this.initApi()
+  }
+
+  private initApi() {
+    // Use the official api if the session token is not set
+    if (
+      !userOptions.openAISessionToken ||
+      userOptions.openAISessionToken === 'undefined'
+    ) {
+      this.api = new ChatGPTAPI({
+        apiKey: userOptions.openAIKey,
+        completionParams: userOptions.openAIOptions,
+        debug: userOptions.options.debug
+      })
+      return
+    }
+
+    // Use the proxy api
     this.api = new ChatGPTUnofficialProxyAPI({
+      model: userOptions.options.openAIModel,
       accessToken: userOptions.openAISessionToken,
-      apiReverseProxyUrl: 'https://bypass.churchless.tech/api/conversation'
-      // apiReverseProxyUrl: 'https://api.pawan.krd/backend-api/conversation',
+      apiReverseProxyUrl: userOptions.options.openAIProxyUrl
     })
   }
 
@@ -26,18 +46,34 @@ export class ChatgptProxyAPI {
     return prompt
   }
 
-  private async sendMessage(
-    prompt: string,
-    prevMessage: Partial<ChatMessage> = {}
-  ): Promise<ChatMessage> {
-    const reviewSpinner = ora({
-      text: `[huskygpt] start ${userOptions.huskyGPTType} your code... \n ${prompt}`,
+  /**
+   * Is the review passed?
+   */
+  private isReviewPassed(message: string): boolean {
+    return message.split('\n').includes(PERFECT_KEYWORDS)
+  }
+
+  /**
+   * Log the review info
+   */
+  private oraStart(text = ''): ora.Ora {
+    return ora({
+      text,
       spinner: {
         interval: 800,
         frames: ['🚀', '🤖', '🚀', '🤖', '🚀', '🤖', '🚀', '🤖']
       }
     }).start()
+  }
 
+  /**
+   * Run the OpenAI API
+   */
+  private async sendMessage(
+    prompt: string,
+    prevMessage: Partial<ChatMessage> = {}
+  ): Promise<ChatMessage> {
+    const reviewSpinner = this.oraStart()
     const res = await this.api.sendMessage(prompt, {
       ...prevMessage,
       onProgress: (partialResponse) => {
@@ -45,43 +81,61 @@ export class ChatgptProxyAPI {
       }
     })
 
-    reviewSpinner.succeed(`🎉🎉 [huskygpt] ${res.text} 🎉🎉\n `)
+    const isReviewPassed = this.isReviewPassed(res.text)
+    const colorText = isReviewPassed
+      ? chalk.green(res.text)
+      : chalk.yellow(res.text)
+    reviewSpinner[isReviewPassed ? 'succeed' : 'fail'](
+      `[huskygpt] ${colorText} \n `
+    )
 
     return res
   }
 
   /**
-   * Run the OpenAI API
-   * @description filePath is the path of the file to be passed to the OpenAI API as the prompt
-   * @returns {Promise<string>}
+   * Generate a prompt for a given file, then send it to the OpenAI API
+   */
+  async sendFileResult(fileResult: IReadFileResult): Promise<string> {
+    const promptArray = this.generatePrompt(fileResult)
+    const messageArray: string[] = []
+    let message: ChatMessage
+
+    for (const prompt of promptArray) {
+      message = await this.sendMessage(prompt, {
+        conversationId: message?.conversationId,
+        parentMessageId: message?.id
+      })
+      messageArray.push(message.text)
+    }
+
+    return messageArray.join('\n\n---\n\n')
+  }
+
+  /**
+   * Start the huskygpt process
    */
   async run(fileResult: IReadFileResult): Promise<string> {
-    try {
-      const promptArray = this.generatePrompt(fileResult)
+    const reviewSpinner = this.oraStart(
+      chalk.cyan(`[huskygpt] start ${userOptions.huskyGPTType} your code... \n`)
+    )
 
-      console.log('[debug] promptArray:', promptArray.length, promptArray)
-
-      // process.exit(0);
-      const messageArray: string[] = []
-      let message: ChatMessage
-      for (const prompt of promptArray) {
-        message = await this.sendMessage(prompt, {
-          conversationId: message?.conversationId,
-          parentMessageId: message?.id
-        })
-        messageArray.push(message.text)
-      }
-      // reviewSpinner.succeed(
-      //   `🎉🎉 [huskygpt] ${userOptions.huskyGPTType} code successfully! 🎉🎉\n `
-      // );
-
-      return messageArray.join('\n\n---\n\n')
-    } catch (error) {
-      console.error('run error:', error)
-      // reviewSpinner.fail(
-      //   `🤔🤔 [huskygpt] ${userOptions.huskyGPTType} your code failed! 🤔🤔\n`
-      // );
-      return '[huskygpt] call OpenAI API failed!'
-    }
+    return this.sendFileResult(fileResult)
+      .then((res) => {
+        reviewSpinner.succeed(
+          chalk.green(
+            `🎉🎉 [huskygpt] ${userOptions.huskyGPTType} code successfully! 🎉🎉\n `
+          )
+        )
+        return res
+      })
+      .catch((error) => {
+        console.error('run error:', error)
+        reviewSpinner.fail(
+          chalk.red(
+            `🤔🤔 [huskygpt] ${userOptions.huskyGPTType} your code failed! 🤔🤔\n`
+          )
+        )
+        return '[huskygpt] call OpenAI API failed!'
+      })
   }
 }

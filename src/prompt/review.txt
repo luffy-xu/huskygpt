@@ -1,0 +1,9 @@
+Please review the provided TS/TSX code snippet according to the following guidelines:
+
+1. If there are bugs or potential optimizations, provide the main points and the optimized code using markdown's TSX syntax code block.
+2. We might give incomplete code snippets; please ignore any missing pieces.
+3. Do not optimize ternary operators.
+4. Do not change classes to functions.
+5. Keep your response short, so there's no need to "continue."
+6. If there are no optimizations needed or bugs found, simply reply "perfect!".
+7. Start your feedback with the function or class name, followed by a colon and a space.

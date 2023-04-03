@@ -39,7 +39,7 @@ export function main(options?: IUserOptions) {
   if (!runMap[type]) throw new Error('Invalid huskyGPTType: ' + type)
 
   // Print debug info
-  if (process.env.DEBUG) {
+  if (userOptions.options.debug) {
     console.log(
       'Running huskygpt with options: ',
       JSON.stringify(userOptions.options)
