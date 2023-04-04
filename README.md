@@ -24,12 +24,11 @@ npm install -g huskygpt
 
 ## Configuration
 1. Set the `OpenAI Session Token` for free using chatgpt
+    - OpenAI session token, 2 setp to get token
+    - If you don't set this, will use OPENAI_API_KEY, will cause fee by api key
+    1. visit https://chat.openai.com/chat and login
+    2. Visit https://chat.openai.com/api/auth/session to get token
     ```bash
-    # OpenAI session token, 2 setp to get token
-    # If you don't set this, will use OPENAI_API_KEY, will cause fee by api key
-    # 1. visit https://chat.openai.com/chat and login
-    # 2. Visit https://chat.openai.com/api/auth/session to get token
-
     npm config set OPENAI_SESSION_TOKEN <YOUR_OPENAI_SESSION_TOKEN> -g
     ```
 1. Set the [OpenAI API key](https://platform.openai.com/account/api-keys) by npm config set -g
