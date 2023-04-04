@@ -1,5 +1,6 @@
-import { IReadFileResult } from '../types';
-import WebhookNotifier from '../webhook';
+import { IReadFileResult } from 'src/types';
+import WebhookNotifier from 'src/webhook';
+
 import HuskyGPTBase from './base';
 
 /**

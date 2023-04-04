@@ -5,8 +5,10 @@ import path from 'path';
 
 import { main } from '../build/index.js';
 
+// Assuming the current file is located at /home/user/project/app.js
+const dirname = path.join(new URL('.', import.meta.url).pathname);
 const packageJson = JSON.parse(
-  fs.readFileSync(path.join(process.cwd(), './package.json'), 'utf8'),
+  fs.readFileSync(path.join(dirname, '../package.json'), 'utf8'),
 );
 const program = new Command();
 

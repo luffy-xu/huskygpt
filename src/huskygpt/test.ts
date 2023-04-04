@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import { userOptions } from 'src/constant';
+import { IReadFileResult } from 'src/types';
 import { getAllCodeBlock } from 'src/utils';
 
-import { userOptions } from '../constant';
-import { IReadFileResult } from '../types';
 import HuskyGPTBase from './base';
 
 /**

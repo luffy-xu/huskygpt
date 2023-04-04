@@ -1,4 +1,4 @@
-import { codeBlocksRegex, reviewFileName } from '../constant';
+import { codeBlocksRegex, reviewFileName } from 'src/constant';
 
 export const replaceCodeBlock = (
   data: string,

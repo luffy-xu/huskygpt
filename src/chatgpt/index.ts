@@ -1,10 +1,9 @@
 import chalk from 'chalk';
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI, ChatMessage } from 'chatgpt';
 import ora from 'ora';
-import { HuskyGPTPrompt, PERFECT_KEYWORDS } from 'src/prompt';
-
-import { userOptions } from '../constant';
-import { HuskyGPTTypeEnum, IReadFileResult } from '../types';
+import { userOptions } from 'src/constant';
+import { HuskyGPTPrompt, PERFECT_KEYWORDS } from 'src/huskygpt/prompt';
+import { HuskyGPTTypeEnum, IReadFileResult } from 'src/types';
 
 export class ChatgptProxyAPI {
   private api: ChatGPTUnofficialProxyAPI | ChatGPTAPI;

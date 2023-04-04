@@ -1,9 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-
-import { userOptions } from '../constant';
-import { HuskyGPTTypeEnum, IReadFileResult } from '../types';
-import { CodePicker } from '../utils/pick-code';
+import { ROOT_SRC_DIR_PATH, userOptions } from 'src/constant';
+import { HuskyGPTTypeEnum, IReadFileResult } from 'src/types';
+import { CodePicker } from 'src/utils/pick-code';
 
 export const PERFECT_KEYWORDS = 'perfect!';
 
@@ -17,7 +16,7 @@ export class HuskyGPTPrompt {
         fileResult.fileContent ||
         fs.readFileSync(fileResult.filePath!, 'utf-8');
       const testsPrompt = fs.readFileSync(
-        path.join(process.cwd(), 'src/prompt/tests.txt'),
+        path.join(ROOT_SRC_DIR_PATH, '../prompt', 'tests.txt'),
         'utf-8',
       );
       // const fileName = getFileNameByPath(fileResult.filePath!)
@@ -41,7 +40,7 @@ export class HuskyGPTPrompt {
         fileResult.fileContent ||
         fs.readFileSync(fileResult.filePath!, 'utf-8');
       const reviewPrompt = fs.readFileSync(
-        path.join(process.cwd(), 'src/prompt/review.txt'),
+        path.join(ROOT_SRC_DIR_PATH, '../prompt', 'review.txt'),
         'utf-8',
       );
       const basePrompt = `
