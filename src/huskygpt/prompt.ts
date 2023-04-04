@@ -16,7 +16,7 @@ export class HuskyGPTPrompt {
         fileResult.fileContent ||
         fs.readFileSync(fileResult.filePath!, 'utf-8');
       const testsPrompt = fs.readFileSync(
-        path.join(ROOT_SRC_DIR_PATH, '../prompt', 'tests.txt'),
+        path.join(ROOT_SRC_DIR_PATH, './prompt', 'tests.txt'),
         'utf-8',
       );
       // const fileName = getFileNameByPath(fileResult.filePath!)
@@ -40,7 +40,7 @@ export class HuskyGPTPrompt {
         fileResult.fileContent ||
         fs.readFileSync(fileResult.filePath!, 'utf-8');
       const reviewPrompt = fs.readFileSync(
-        path.join(ROOT_SRC_DIR_PATH, '../prompt', 'review.txt'),
+        path.join(ROOT_SRC_DIR_PATH, './prompt', 'review.txt'),
         'utf-8',
       );
       const basePrompt = `

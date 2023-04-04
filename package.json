@@ -14,8 +14,8 @@
     }
   },
   "scripts": {
-    "build": "tsup",
     "dev": "tsup --watch",
+    "build": "tsup && cpy prompt build",
     "clean": "del build",
     "prebuild": "run-s clean",
     "predev": "run-s clean",
@@ -85,6 +85,7 @@
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/node": "^18.15.10",
+    "cpy-cli": "^4.2.0",
     "del-cli": "^5.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
