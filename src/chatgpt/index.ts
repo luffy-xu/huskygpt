@@ -1,8 +1,9 @@
+import { AbortController } from 'abort-controller';
 import chalk from 'chalk';
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI, ChatMessage } from 'chatgpt';
 import ora from 'ora';
 import { userOptions } from 'src/constant';
-import { HuskyGPTPrompt, PERFECT_KEYWORDS } from 'src/huskygpt/prompt';
+import { HuskyGPTPrompt } from 'src/huskygpt/prompt';
 import { HuskyGPTTypeEnum, IReadFileResult } from 'src/types';
 
 export class ChatgptProxyAPI {
@@ -49,7 +50,7 @@ export class ChatgptProxyAPI {
    */
   private isReviewPassed(message: string): boolean {
     if (userOptions.huskyGPTType !== HuskyGPTTypeEnum.Review) return true;
-    return message.split('\n').includes(PERFECT_KEYWORDS);
+    return /perfect!/gi.test(message);
   }
 
   /**
@@ -70,20 +71,36 @@ export class ChatgptProxyAPI {
    */
   private async sendMessage(
     prompt: string,
-    prevMessage: Partial<ChatMessage> = {},
+    prevMessage?: Partial<ChatMessage>,
   ): Promise<ChatMessage> {
+    // If this is the first message, send it directly
+    if (!prevMessage) {
+      return await this.api.sendMessage(prompt);
+    }
+
+    // Send the message with the progress callback
     const reviewSpinner = this.oraStart();
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     const res = await this.api.sendMessage(prompt, {
       ...prevMessage,
+      // Set the timeout to 5 minutes
+      timeoutMs: 1000 * 60 * 5,
+      // @ts-ignore
+      abortSignal: signal,
       onProgress: (partialResponse) => {
         reviewSpinner.text = partialResponse.text;
       },
     });
 
+    // Check if the review is passed
     const isReviewPassed = this.isReviewPassed(res.text);
     const colorText = isReviewPassed
       ? chalk.green(res.text)
       : chalk.yellow(res.text);
+
+    // Stop the spinner
     reviewSpinner[isReviewPassed ? 'succeed' : 'fail'](
       `[huskygpt] ${colorText} \n `,
     );
@@ -97,9 +114,10 @@ export class ChatgptProxyAPI {
   async sendFileResult(fileResult: IReadFileResult): Promise<string[]> {
     const promptArray = this.generatePrompt(fileResult);
     const messageArray: string[] = [];
-    let message: ChatMessage;
+    const [systemPrompt, ...codePrompts] = promptArray;
+    let message = await this.sendMessage(systemPrompt);
 
-    for (const prompt of promptArray) {
+    for (const prompt of codePrompts) {
       message = await this.sendMessage(prompt, {
         conversationId: message?.conversationId,
         parentMessageId: message?.id,

@@ -4,8 +4,6 @@ import { ROOT_SRC_DIR_PATH, userOptions } from 'src/constant';
 import { HuskyGPTTypeEnum, IReadFileResult } from 'src/types';
 import { CodePicker } from 'src/utils/pick-code';
 
-export const PERFECT_KEYWORDS = 'perfect!';
-
 export class HuskyGPTPrompt {
   private huskyGPTTypeMap: Record<
     HuskyGPTTypeEnum,
@@ -24,16 +22,17 @@ export class HuskyGPTPrompt {
       const basePrompt = `
         ${testsPrompt}
         ${userOptions.options.openAIPrompt || ''}
-        Here is the code to write tests for:
       `;
 
       const codePicker = new CodePicker();
 
-      return codePicker
+      const codePrompts = codePicker
         .pickFunctionOrClassCodeArray(fileContent)
         .map((code) => {
-          return `${basePrompt} "${code}"`;
+          return `Here is the code to write tests for: "${code}"`;
         });
+
+      return [basePrompt, ...codePrompts];
     },
     [HuskyGPTTypeEnum.Review]: (fileResult) => {
       const fileContent =
@@ -46,16 +45,17 @@ export class HuskyGPTPrompt {
       const basePrompt = `
         ${reviewPrompt}
         ${userOptions.options.openAIPrompt || ''}
-        Here is the code snippet for review:
       `;
 
       const codePicker = new CodePicker();
 
-      return codePicker
+      const codePrompts = codePicker
         .pickFunctionOrClassCodeArray(fileContent)
         .map((code) => {
-          return `${basePrompt} "${code}"`;
+          return `Here is the code snippet for review: "${code}"`;
         });
+
+      return [basePrompt, ...codePrompts];
     },
   };
 

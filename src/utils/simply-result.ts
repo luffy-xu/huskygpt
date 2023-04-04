@@ -1,4 +1,8 @@
-import { codeBlocksRegex, reviewFileName } from 'src/constant';
+import {
+  codeBlocksMdSymbolRegex,
+  codeBlocksRegex,
+  reviewFileName,
+} from 'src/constant';
 
 export const replaceCodeBlock = (
   data: string,
@@ -11,8 +15,14 @@ export const replaceCodeBlock = (
 export const getAllCodeBlock = (data: string): string => {
   const codeBlocks = data.match(codeBlocksRegex);
   return codeBlocks
-    ? codeBlocks?.map((t) => t.replace(/```/g, '')).join('\n')
-    : '';
+    ? codeBlocks
+        ?.map((t) =>
+          codeBlocksMdSymbolRegex.test(t)
+            ? t.replace(codeBlocksMdSymbolRegex, '')
+            : t,
+        )
+        .join('')
+    : data;
 };
 
 // Send simple data, remove code blocks and replace with a string
