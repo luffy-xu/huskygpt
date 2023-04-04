@@ -26,11 +26,7 @@ export class HuskyGPTPrompt {
 
       const codePicker = new CodePicker();
 
-      const codePrompts = codePicker
-        .pickFunctionOrClassCodeArray(fileContent)
-        .map((code) => {
-          return `Here is the code to write tests for: "${code}"`;
-        });
+      const codePrompts = codePicker.pickFunctionOrClassCodeArray(fileContent);
 
       return [basePrompt, ...codePrompts];
     },
@@ -49,11 +45,7 @@ export class HuskyGPTPrompt {
 
       const codePicker = new CodePicker();
 
-      const codePrompts = codePicker
-        .pickFunctionOrClassCodeArray(fileContent)
-        .map((code) => {
-          return `Here is the code snippet for review: "${code}"`;
-        });
+      const codePrompts = codePicker.pickFunctionOrClassCodeArray(fileContent);
 
       return [basePrompt, ...codePrompts];
     },
