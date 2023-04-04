@@ -1,9 +1,8 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
-
-import { userOptions } from '../constant';
-import { IReadFileResult } from '../types';
+import { userOptions } from 'src/constant';
+import { IReadFileResult } from 'src/types';
 
 /**
  * Read the staged files from git only when the file is added

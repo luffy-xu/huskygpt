@@ -8,6 +8,10 @@ import { HuskyGPTTypeEnum, IUserOptions, ReadTypeEnum } from './types';
 export const OPENAI_API_KEY_NAME = 'OPENAI_API_KEY';
 export const OPENAI_SESSION_TOKEN_NAME = 'OPENAI_SESSION_TOKEN';
 
+export const ROOT_SRC_DIR_PATH = path.join(
+  new URL('.', import.meta.url).pathname,
+);
+
 class UserOptionsClass {
   options: IUserOptions;
 
@@ -146,7 +150,8 @@ class UserOptionsClass {
       debug: process.env.DEBUG === 'true',
       openAIKey: processEnv.OPENAI_API_KEY,
       openAISessionToken: processEnv.OPENAI_SESSION_TOKEN,
-      openAIProxyUrl: processEnv.OPENAI_PROXY_URL,
+      openAIProxyUrl:
+        processEnv.OPENAI_PROXY_URL || this.userOptionsDefault.openAIProxyUrl,
       openAIModel:
         processEnv.OPENAI_MODEL || this.userOptionsDefault.openAIModel,
       openAIMaxTokens: Number(

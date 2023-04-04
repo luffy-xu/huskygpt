@@ -1,10 +1,9 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
+import { codeBlocksRegex, reviewFileName, userOptions } from 'src/constant';
+import { deleteFile, getUserEmail, simplyReviewData } from 'src/utils';
 
-import { codeBlocksRegex, reviewFileName, userOptions } from '../constant';
-import { deleteFile, getUserEmail } from '../utils';
-import { simplyReviewData } from '../utils/simply-result';
 import { INoticeTask, ISeatalkNoticeOptions } from './constant';
 
 /**

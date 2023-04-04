@@ -1,10 +1,10 @@
 import fs from 'fs';
 import ora from 'ora';
 import path from 'path';
+import { userOptions } from 'src/constant';
+import { HuskyGPTTypeEnum, IReadFileResult, ReadTypeEnum } from 'src/types';
+import { getFileNameByPath } from 'src/utils';
 
-import { userOptions } from '../constant';
-import { HuskyGPTTypeEnum, IReadFileResult, ReadTypeEnum } from '../types';
-import { getFileNameByPath } from '../utils';
 import ReadTestFilePathsByDirectory from './reader-directory';
 import StagedFileReader from './reader-git-stage';
 

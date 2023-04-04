@@ -1,6 +1,5 @@
 import { ChatgptProxyAPI } from 'src/chatgpt';
-
-import { IReadFileResult } from '../types';
+import { IReadFileResult } from 'src/types';
 
 /**
  * Base class for HuskyGPT
