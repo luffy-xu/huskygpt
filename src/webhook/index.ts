@@ -56,8 +56,15 @@ class WebhookNotifier {
     }
 
     // If no channel is provided, log the content to the console
-    if (!this.channel || userOptions.options.debug)
-      return console.log('publishNotice: ', content);
+    if (userOptions.options.debug) {
+      console.log(
+        'publishNotice: channel=%s, content=%s',
+        this.channel,
+        content,
+      );
+    }
+
+    if (!this.channel) return;
 
     const data = `<mention-tag target=\\"seatalk://user?email=${
       this.userEmail || getUserEmail()

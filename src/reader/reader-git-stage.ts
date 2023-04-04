@@ -92,16 +92,17 @@ class StagedFileReader {
       const fileSplitArr = file.split('\t');
       const status = fileSplitArr[0].slice(0, 1);
       const filePath = fileSplitArr.slice(-1)[0];
+      const fullPath = path.join(process.cwd(), filePath);
 
       // Only read the files under the specified root directory and the specified status
       if (
         !readGitStatus.includes(status) ||
-        !filePath.startsWith(`${readRootName}/`)
+        !filePath.startsWith(`${readRootName}/`) ||
+        !fs.existsSync(fullPath)
       ) {
         return acc;
       }
 
-      const fullPath = path.join(process.cwd(), filePath);
       const contents = fs.readFileSync(fullPath, 'utf-8');
 
       if (status !== 'M') {

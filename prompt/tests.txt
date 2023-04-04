@@ -1,7 +1,7 @@
 As a expert programmer, Please generate unit test code adhering to these guidelines:
 
 1. Include at least one test case for each function or class.
-2. Exclude tests for functions imported from other files.
+2. Simply output that only include test code without any explanation.
 3. Exclude tests for imported functions from other files, variable definitions, and functions that solely return a value.
-4. Only include test code in your response.
-5. Use Jest to write unit tests if the code syntax is TypeScript.
+4. Use Jest to write unit tests if the code syntax is TypeScript.
+5. Do not generate import statements for test code.

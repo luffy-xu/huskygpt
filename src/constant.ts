@@ -93,7 +93,7 @@ class UserOptionsClass {
     if (!this.options.openAIModel) throw new Error('openAIModel is not set');
 
     return {
-      temperature: 0.2,
+      temperature: 0,
       top_p: 0.4,
       stop: ['###'],
       model: this.options.openAIModel,
@@ -222,6 +222,8 @@ export const userOptions = new UserOptionsClass();
  * Review result configs
  */
 export const codeBlocksRegex = /```([\s\S]*?)```/g;
+
+export const codeBlocksMdSymbolRegex = /```(\w?)*/g;
 
 // Write the output text to a file if there are code blocks
 export const reviewFileName = '.huskygpt_review.md';
