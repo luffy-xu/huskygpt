@@ -1,19 +1,21 @@
 # huskygpt
-Auto Review your code or Auto generate unit tests by OpenAI api gpt3.5 (GPT-4)
+> Node.js CLI tools for `auto review` your code or `auto generate` unit tests by OpenAI `chatgpt3.5` and `GPT-4` Plus Account! ✅
+
+[![NPM](https://img.shields.io/npm/v/huskygpt.svg)](https://www.npmjs.com/package/huskygpt)  [![Prettier Code Formatting](https://img.shields.io/badge/code_style-prettier-brightgreen.svg)](https://prettier.io)
 
 ## Demo
-- `huskygpt review`: Review your code using the OpenAI API
-  ![huskygpt-review](https://user-images.githubusercontent.com/105559892/229581059-184a3ecd-3c08-424e-b449-fdcb9feb00bb.gif)
-- `huskygpt test`: Generates unit test using the OpenAI API
-  ![huskygpt-test](https://user-images.githubusercontent.com/105559892/229142867-fb5768dc-d2d6-429c-8a20-b2adec087b6d.gif)
+- 🤖 Generate unit tests by gpt-4 model:
+![huskygpt-unit-test](https://user-images.githubusercontent.com/105559892/229816192-1cc2c885-b298-41be-9114-7b6b5b2195e8.gif)
+- ✨ The unit test result:
+![format-test](https://user-images.githubusercontent.com/105559892/229817346-66e272ff-e12a-4d6f-9100-fe445ddd79f1.png)
+
 
 ## Key Features
-- 🤖 Generates unit test using the OpenAI API
-- 🤖 Review your code using the OpenAI API
-- ✨ No API key needed, just set the `OpenAI Session Token` for free using chatgpt-3.5 or gpt-4 (Plus Account)
-- ✨ Only pick up the `functions` or `class` code to OpenAI api for `security` and `low cost`
-- 🧠 Supports multiple OpenAI models and customizing the prompt
-- 📂 Supports reading test files from `directories` or `git staged files`
+- 🤖 Review your code or generates unit test using the OpenAI.
+- ✨ No API key needed, just set the `OpenAI Session Token` for free using chatgpt-3.5 or gpt-4 (Plus Account).
+- ✨ Only pick up the `functions` or `class` code to openAI api for `security` and `low cost`.
+- 🧠 Supports multiple OpenAI models and customizing the prompt.
+- 📂 Supports reading test files from `directories` or `git staged files`.
 
 
 ## Installation
@@ -23,7 +25,8 @@ npm install -g huskygpt
 ```
 
 ## Configuration
-1. Set the `OpenAI Session Token` for free using chatgpt
+### OpenAI Key (Choose one)
+- ✅ Set the `OpenAI Session Token` for free using chatgpt
     - OpenAI session token, 2 setp to get token
     - If you don't set this, will use OPENAI_API_KEY, will cause fee by api key
     1. visit https://chat.openai.com/chat and login
@@ -31,9 +34,28 @@ npm install -g huskygpt
     ```bash
     npm config set OPENAI_SESSION_TOKEN <YOUR_OPENAI_SESSION_TOKEN> -g
     ```
-1. Set the [OpenAI API key](https://platform.openai.com/account/api-keys) by npm config set -g
+- Set the [OpenAI API Key](https://platform.openai.com/account/api-keys) by npm config set -g
     ```
     npm config set OPENAI_API_KEY <YOUR_OPENAI_KEY> -g
+    ```
+| Method                      | Free?  | Robust?  | Quality?                |
+| --------------------------- | ------ | -------- | ----------------------- |
+| `OpenAI Session Token`      | ✅ Yes  | ☑️ Maybe   | ✅️ Real ChatGPT  |
+| `OpenAI API Key`            | ❌ No | ✅ Yes | ✅ Real ChatGPT models        |
+
+
+### Pre-Commit
+1. [husky](https://github.com/typicode/husky) and [lint-stage](https://github.com/okonet/lint-staged)
+    ```
+    "husky": {
+      "hooks": {
+        "pre-commit": "huskygpt review && huskygpt test && lint-staged --allow-empty"
+      }
+    },
+    ```
+1. `eslintrc.json`:
+    ```
+    "ignorePatterns": ["**/__test__/*"]
     ```
 
 ## Usage
