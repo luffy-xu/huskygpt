@@ -113,8 +113,10 @@ export class ChatgptProxyAPI {
    */
   async sendFileResult(fileResult: IReadFileResult): Promise<string[]> {
     const promptArray = this.generatePrompt(fileResult);
-    const messageArray: string[] = [];
     const [systemPrompt, ...codePrompts] = promptArray;
+    if (!codePrompts.length) return [];
+
+    const messageArray: string[] = [];
     let message = await this.sendMessage(systemPrompt);
 
     for (const prompt of codePrompts) {

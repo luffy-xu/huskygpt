@@ -112,7 +112,7 @@ class GitDiffExtractor {
    * @returns The number of occurrences of the character in the string.
    */
   private countChar(line: string, char: string): number {
-    return line.split(char).length - 1;
+    return line?.split(char).length - 1 || 0;
   }
 
   /**
@@ -126,7 +126,8 @@ class GitDiffExtractor {
     contents: string,
   ): string | null {
     const diffOutput = this.getGitDiffOutput(filePath);
-    const diffLines = diffOutput.split('\n');
+    const diffLines = diffOutput?.split('\n');
+    if (!diffLines || !contents) return null;
 
     const modifiedLineNumbers = this.getModifiedLineNumbers(diffLines);
 

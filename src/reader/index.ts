@@ -56,31 +56,6 @@ class ReadFiles {
     return file.endsWith(`.${testFileType}${extension}`);
   }
 
-  // Check if a file exists in the test directory
-  private fileExistsInTestDir(filePath: string): boolean {
-    // Only type Test needs to check
-    if (
-      userOptions.options.testFileOverwrite ||
-      userOptions.huskyGPTType !== HuskyGPTTypeEnum.Test
-    ) {
-      return false;
-    }
-
-    const fileName = getFileNameByPath(filePath);
-    const pathName = path.dirname(filePath);
-    const testFileDirName = userOptions.options.testFileDirName;
-
-    if (!testFileDirName) throw new Error('testFileDirName is not set');
-
-    const testFilePath = path.join(
-      pathName,
-      testFileDirName,
-      `${fileName}${userOptions.testFileNameSuffix}`,
-    );
-
-    return fs.existsSync(testFilePath);
-  }
-
   // Get all file paths that are not test files
   public getFileResults(): IReadFileResult[] {
     const readFileType = userOptions.readFileType;
@@ -93,10 +68,7 @@ class ReadFiles {
     }).start();
     const fileResults = this.readTypeMap[readFileType]().filter(
       ({ filePath: path }) =>
-        path &&
-        !this.fileExistsInTestDir(path) &&
-        this.hasValidExtension(path) &&
-        !this.isTestFile(path),
+        path && this.hasValidExtension(path) && !this.isTestFile(path),
     );
 
     if (userOptions.options.debug) {

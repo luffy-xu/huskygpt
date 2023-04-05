@@ -57,10 +57,6 @@ program
     'Generate test file directory name, example: __tests__',
   )
   .option(
-    '-o, --test-file-overwrite <value>',
-    'Generate test file overwrite, default is true',
-  )
-  .option(
     '-w, --review-report-webhook <url>',
     'Webhook URL to send review report',
   )
@@ -93,9 +89,6 @@ program
       }),
       ...(options.openAIProxyUrl && {
         openAIProxyUrl: options.openAIProxyUrl,
-      }),
-      ...(options.testFileOverwrite && {
-        testFileOverwrite: options.testFileOverwrite,
       }),
     };
 

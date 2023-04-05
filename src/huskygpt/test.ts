@@ -21,7 +21,7 @@ class HuskyGPTTest extends HuskyGPTBase {
    * Write a test message to a file
    */
   private async writeTestMessageToFile(
-    filePath: string,
+    { filePath, fileContent }: IReadFileResult,
     message: string,
   ): Promise<void> {
     // Write the message to a file
@@ -33,14 +33,31 @@ class HuskyGPTTest extends HuskyGPTBase {
       const fileName =
         this.getFileNameWithoutExtension(filePath) +
         userOptions.testFileNameSuffix;
+      const testFilePath = path.join(dirPath, fileName);
 
       // Create the output directory if it doesn't exist
       if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(dirPath);
       }
 
-      // Write the message to the output file
-      fs.writeFileSync(path.join(dirPath, fileName), message);
+      // If the test file doesn't exist, create it
+      if (!fs.existsSync(testFilePath)) {
+        // Write the message to the output file
+        fs.writeFileSync(testFilePath, message);
+      }
+
+      // If the file already exists, and file content is not same, merge existing file content
+      const sourceFileContent = fs.readFileSync(filePath, 'utf-8');
+      if (fileContent !== sourceFileContent) {
+        const testFileContent = fs.readFileSync(testFilePath, 'utf-8');
+        return fs.writeFileSync(
+          testFilePath,
+          `${testFileContent}\n${message}\n`,
+        );
+      }
+
+      // If the file already exists, and file content is same, overwrite the file
+      return fs.writeFileSync(testFilePath, message);
     } catch (error) {
       console.error('Error writing message to file:', error);
     }
@@ -51,8 +68,12 @@ class HuskyGPTTest extends HuskyGPTBase {
    */
   public async run(fileResult: IReadFileResult): Promise<void> {
     const message = await this.openai.run(fileResult);
-    const extraTestsCode = message.map((m) => getAllCodeBlock(m)).join('\n\n');
-    await this.writeTestMessageToFile(fileResult.filePath!, extraTestsCode);
+    if (!message?.length) return;
+
+    const extractTestsCode = message
+      .map((m) => getAllCodeBlock(m))
+      .join('\n\n');
+    await this.writeTestMessageToFile(fileResult, extractTestsCode);
   }
 }
 
