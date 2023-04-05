@@ -18,7 +18,7 @@
     "build": "tsup && cpy prompt build",
     "clean": "del build",
     "prebuild": "run-s clean",
-    "predev": "run-s clean",
+    "predev": "run-s clean && cpy prompt build",
     "pretest": "run-s build",
     "pre-commit": "lint-staged",
     "prepare": "husky install",

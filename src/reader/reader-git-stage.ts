@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { userOptions } from 'src/constant';
 import { IReadFileResult } from 'src/types';
+import GitDiffExtractor from 'src/utils/extract-modify-funcs';
 
 /**
  * Read the staged files from git only when the file is added
@@ -13,59 +14,6 @@ class StagedFileReader {
 
   constructor() {
     this.stagedFiles = this.readStagedFiles();
-  }
-
-  /**
-   * Get the modified function from the staged files
-   */
-  private extractModifiedFunction(
-    filePath: string,
-    contents: string,
-  ): string | null {
-    const diffOutput = execSync(`git diff --cached ${filePath}`).toString();
-    const diffLines = diffOutput.split('\n');
-
-    let startLine = -1;
-    let endLine = -1;
-    let inModifiedBlock = false;
-    let modifiedLines: string[] = [];
-
-    for (const line of diffLines) {
-      if (line.startsWith('@@ ')) {
-        const match = line.match(/-(\d+),?/);
-        if (match) {
-          startLine = parseInt(match[1], 10) - 1;
-          endLine = startLine;
-          inModifiedBlock = false;
-        }
-      } else if (line.startsWith('-')) {
-        endLine++;
-        inModifiedBlock = false;
-      } else if (line.startsWith('+')) {
-        if (!inModifiedBlock) {
-          modifiedLines = [];
-          inModifiedBlock = true;
-        }
-        modifiedLines.push(line.substring(1));
-        endLine++;
-      } else {
-        endLine++;
-        inModifiedBlock = false;
-      }
-    }
-
-    if (startLine === -1 || endLine === -1 || modifiedLines.length === 0) {
-      return null;
-    }
-
-    const lines = contents.split('\n');
-    const functionLines: string[] = [];
-
-    for (let i = startLine; i <= endLine; i++) {
-      functionLines.push(lines[i]);
-    }
-
-    return functionLines.join('\n');
   }
 
   /**
@@ -105,12 +53,15 @@ class StagedFileReader {
 
       const contents = fs.readFileSync(fullPath, 'utf-8');
 
+      // If the file is not modified, return the original file content
       if (status !== 'M') {
         return [...acc, { filePath: fullPath, fileContent: contents }];
       }
 
+      // If the file is modified, extract the modified function or class
+      const codeExtractor = new GitDiffExtractor();
       const modifiedContents =
-        this.extractModifiedFunction(fullPath, contents) || '';
+        codeExtractor.extractModifiedFunction(fullPath, contents) || '';
       return [
         ...acc,
         {
