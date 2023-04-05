@@ -63,6 +63,8 @@ export interface IUserOptions {
   huskyGPTType?: HuskyGPTTypeEnum;
   // Debug mode, default is false
   debug?: boolean;
+  // Security regex, if content test not pass, will throw error and not pass to openAI
+  securityRegex?: string;
 
   /**
    * Read files options

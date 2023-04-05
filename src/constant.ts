@@ -42,7 +42,7 @@ class UserOptionsClass {
   }
 
   // get open AI key from npm config
-  getOpenAIKeyFromNpmConfig(key: string): string {
+  private getOpenAIKeyFromNpmConfig(key: string): string {
     try {
       return execSync(`npm config get ${key}`).toString().trim();
     } catch (error) {
@@ -147,6 +147,7 @@ class UserOptionsClass {
   ): IUserOptions {
     return {
       debug: process.env.DEBUG === 'true',
+      securityRegex: process.env.SECURITY_REGEX || '',
       openAIKey: processEnv.OPENAI_API_KEY,
       openAISessionToken: processEnv.OPENAI_SESSION_TOKEN,
       openAIProxyUrl:
@@ -186,6 +187,17 @@ class UserOptionsClass {
        */
       reviewReportWebhook: processEnv.REVIEW_REPORT_WEBHOOK,
     };
+  }
+
+  /**
+   * Security test
+   * If return false, the code does not pass the security test
+   */
+  public securityTest(code: string): true | string {
+    if (!this.options.securityRegex) return true;
+
+    const regex = new RegExp(this.options.securityRegex, 'gi');
+    return code.match(regex)?.[0] || true;
   }
 
   /**
