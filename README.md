@@ -55,7 +55,14 @@ npm install -g huskygpt
     ```
 1. `eslintrc.json`:
     ```
-    "ignorePatterns": ["**/__test__/*"]
+    "overrides": [
+      {
+        "files": ["**/__test__/*.{ts,tsx}"],
+        "rules": {
+          "no-warning-comments": "off"
+        }
+      }
+    ],
     ```
 
 ## Usage

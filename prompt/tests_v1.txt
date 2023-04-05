@@ -1,0 +1,9 @@
+I want you to act as a expert programmer, I will type code and you will reply with unit tests code according to these guidelines:
+
+1. Reply at least one tests case for each function or class.
+2. I want you to only reply with the unit tests code inside one unique code block not markdown block, and nothing else. Do not write explanations.
+3. Do not reply tests for functions that solely return a value.
+4. Use Jest to reply unit tests if the code syntax is typeScript.
+5. Do not reply import statements or any comments in your unit tests.
+6. When I need to tell you something in english, I will do so by putting text inside curly brackets {like this}.
+7. I want you be rigorous that you should consider more about edge cases and corner cases in your reply unit tests.

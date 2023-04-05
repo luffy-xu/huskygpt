@@ -28,7 +28,6 @@ class UserOptionsClass {
     testFileType: 'test',
     testFileNameExtension: '.ts',
     testFileDirName: '__test__',
-    testFileOverwrite: true,
     reviewReportWebhook: '',
   };
 
@@ -182,9 +181,6 @@ class UserOptionsClass {
       testFileDirName:
         processEnv.TEST_FILE_DIR_NAME ||
         this.userOptionsDefault.testFileDirName,
-      testFileOverwrite: processEnv.TEST_FILE_OVERWRITE
-        ? processEnv.TEST_FILE_OVERWRITE === 'true'
-        : this.userOptionsDefault.testFileOverwrite,
       /**
        * Review options
        */
