@@ -11,11 +11,11 @@
 
 
 ## Key Features
-- 🤖 Review your code or generates unit test using the OpenAI.
-- ✨ No API key needed, just set the `OpenAI Session Token` for free using chatgpt-3.5 or gpt-4 (Plus Account).
-- ✨ Only extract the `functions` or `class` code which passed `SECURITY_REGEX` test to openAI api, consider by `security` and `low cost`.
-- 🧠 Supports multiple OpenAI models and customizing the prompt.
-- 📂 Supports reading test files from `directories` or `git staged files`.
+- 🤖 `AI`: Review your code or generates unit test using the OpenAI.
+- ✨ `Free`: No API key needed, just set the `OpenAI Session Token` for free using chatgpt-3.5 or gpt-4 (Plus Account).
+- 🛡️ `Security`: Only extract the `functions` or `class` code which passed `SECURITY_REGEX` test to openAI api.
+- 🧠 `Customizing`: Supports multiple OpenAI models and customizing the prompt.
+- 📂 `File Reader`: Supports reading test files from `directories` or `git staged files`.
 
 
 ## Installation
