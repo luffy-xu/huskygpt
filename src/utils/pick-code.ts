@@ -54,10 +54,22 @@ export class CodePicker {
           // If current node already in the remaining code, skip it
           if (Number(nodePath.node.start) <= this.remainingEndIndex) return;
 
-          if (this.isFunctionOrClass(nodePath)) {
-            this.remainingCode.push(generate.default(nodePath.node).code);
-            this.remainingEndIndex = Number(nodePath.node.end);
+          if (!this.isFunctionOrClass(nodePath)) return;
+
+          this.remainingEndIndex = Number(nodePath.node.end);
+          // If the current node is a function or class, generate the code snippet
+          const codeSnippet = generate.default(nodePath.node).code;
+
+          // If the code snippet is not valid, skip it
+          const securityTest = userOptions.securityTest(codeSnippet);
+          if (securityTest !== true) {
+            console.warn(
+              `Security test failed, skip this code snippet: ${securityTest}`,
+            );
+            return;
           }
+
+          this.remainingCode.push(codeSnippet);
         },
       });
 
