@@ -16,5 +16,5 @@
     "noEmit": true
   },
   "exclude": ["node_modules", "build"],
-  "include": ["**/*.ts", "bin/cli.js", "bin/cli.js"]
+  "include": ["**/*.ts", "bin/cli.js", "bin/cli.js", "./test/**/*.ts"]
 }

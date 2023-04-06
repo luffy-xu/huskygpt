@@ -4,6 +4,7 @@ import { userOptions } from './constant';
 import { HuskyGPTReview, HuskyGPTTest } from './huskygpt';
 import ReadFiles from './reader';
 import { HuskyGPTTypeEnum, IUserOptions } from './types';
+import { CommitRead } from './reader/commit-read';
 
 const runMap: Record<HuskyGPTTypeEnum, () => void> = {
   [HuskyGPTTypeEnum.Test]: async () => {
@@ -26,6 +27,11 @@ const runMap: Record<HuskyGPTTypeEnum, () => void> = {
 
     // Publish the notices to the webhook channel
     huskygpt.publishNotice();
+  },
+  [HuskyGPTTypeEnum.Commit]: async () => {
+    const commitRead = new CommitRead();
+    const ret = commitRead.getFileList();
+    console.log(ret);
   },
 };
 

@@ -11,6 +11,7 @@ const packageJson = JSON.parse(
   fs.readFileSync(path.join(dirname, '../package.json'), 'utf8'),
 );
 const program = new Command();
+const runTypes = ['test', 'review', 'commit'];
 
 program
   .version(packageJson.version, '-v, --version', 'output the current version')
@@ -61,8 +62,16 @@ program
     'Webhook URL to send review report',
   )
   .action((runType, options) => {
+    if (!runTypes.includes(runType)) {
+      // exit with error
+      console.error(
+        `Invalid run type: ${runType}, please use one of ${runTypes.join(',')}`
+      );
+      process.exit(1);
+    }
+
     const userOptions = {
-      huskyGPTType: runType === 'test' ? 'test' : 'review',
+      huskyGPTType: runType,
       reviewTyping: options.reviewTyping,
       ...(options.apiKey && { openAIKey: options.apiKey }),
       ...(options.model && { openAIModel: options.model }),
