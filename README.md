@@ -13,7 +13,7 @@
 ## Key Features
 - 🤖 Review your code or generates unit test using the OpenAI.
 - ✨ No API key needed, just set the `OpenAI Session Token` for free using chatgpt-3.5 or gpt-4 (Plus Account).
-- ✨ Only pick up the `functions` or `class` code to openAI api for `security` and `low cost`.
+- ✨ Only extract the `functions` or `class` code which passed `SECURITY_REGEX` test to openAI api, consider by `security` and `low cost`.
 - 🧠 Supports multiple OpenAI models and customizing the prompt.
 - 📂 Supports reading test files from `directories` or `git staged files`.
 
@@ -93,6 +93,8 @@ npm install -g huskygpt
 - `-o, --test-file-overwrite <value>`: Generate test file overwrite, default is true.
 - `-w, --review-report-webhook <url>`: Webhook URL to send review report.
 
+### Environment Variables options
+See [`.env`](https://github.com/luffy-xu/huskygpt/blob/main/.env) file.
 
 ## Note
 1. Also can set all options in `.env` or `.env.local`, that will be used as default options. Command options will override the default options.
