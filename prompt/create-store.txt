@@ -1,0 +1,32 @@
+Here is a simple example of how to write a "Store":
+
+import { BaseStore } from 'store/base';
+import { getVariable } from 'service/variable';
+
+export class MyStore extends BaseStore {
+  {Below is an example of how to use the @observable decorator to make a variable observable.}
+  @observable
+  public variable: string;
+
+  constructor() {
+    super();
+    this.init();
+  }
+
+  init(level: string) {
+    this.variable = '';
+  }
+
+  {Below is an example of how to use the @action decorator to make a observable variable update.}
+  @action.bound
+  setVariable(val: string) {
+    this.variable = val;
+  }
+
+  {Below is an example of how to get data from the service layer.}
+  @action.bound
+  async getVariable() {
+    const res = await getVariable();
+    this.setVariable(res);
+  }
+}

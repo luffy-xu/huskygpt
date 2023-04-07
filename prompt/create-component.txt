@@ -1,0 +1,18 @@
+Here is a simple example of how to write a "Component":
+1. If the component render is simple, you can write it in one function component.
+export const Component = (props: IProps) => {
+  {Your render chunks or react hooks here}
+  return (
+    {Your main render code here}
+  );
+};
+
+2. If the component render is complex, you can write it in a class component.
+export class Component extends React.Component {
+  {Your render chunks here}
+
+  public render() {
+    {Your main render code here}
+    {Read data from store}
+  }
+}
