@@ -27,10 +27,13 @@ class HuskyGPTReview extends HuskyGPTBase {
   /**
    * Generate a test case for a given file
    */
-  public async run(fileResult: IReadFileResult): Promise<void> {
+  public async run(fileResult: IReadFileResult): Promise<string> {
     const message = await this.openai.run(fileResult);
+    const resMessage = message.join('\n\n---\n\n');
 
-    this.postAIMessage(fileResult.filePath!, message.join('\n\n---\n\n'));
+    this.postAIMessage(fileResult.filePath!, resMessage);
+
+    return resMessage;
   }
 
   /**
