@@ -2,15 +2,22 @@ import { AbortController } from 'abort-controller';
 import chalk from 'chalk';
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI, ChatMessage } from 'chatgpt';
 import ora from 'ora';
+import { HuskyGPTPrompt } from 'src/chatgpt/prompt';
 import { userOptions } from 'src/constant';
-import { HuskyGPTPrompt } from 'src/huskygpt/prompt';
 import { HuskyGPTTypeEnum, IReadFileResult } from 'src/types';
 
 export class ChatgptProxyAPI {
   private api: ChatGPTUnofficialProxyAPI | ChatGPTAPI;
+  private parentMessage?: ChatMessage;
 
   constructor() {
     this.initApi();
+  }
+
+  get needPrintMessage(): boolean {
+    return [HuskyGPTTypeEnum.Review, HuskyGPTTypeEnum.Test].includes(
+      userOptions.huskyGPTType,
+    );
   }
 
   private initApi() {
@@ -56,7 +63,12 @@ export class ChatgptProxyAPI {
   /**
    * Log the review info
    */
-  private oraStart(text = ''): ora.Ora {
+  private oraStart(
+    text = '',
+    needPrintMessage = this.needPrintMessage,
+  ): ora.Ora {
+    if (!needPrintMessage) return ora();
+
     return ora({
       text,
       spinner: {
@@ -117,7 +129,7 @@ export class ChatgptProxyAPI {
     if (!codePrompts.length) return [];
 
     const messageArray: string[] = [];
-    let message = await this.sendMessage(systemPrompt);
+    let message = this.parentMessage || (await this.sendMessage(systemPrompt));
 
     for (const prompt of codePrompts) {
       message = await this.sendMessage(prompt, {
@@ -125,6 +137,8 @@ export class ChatgptProxyAPI {
         parentMessageId: message?.id,
       });
       messageArray.push(message.text);
+
+      this.parentMessage = message;
     }
 
     return messageArray;

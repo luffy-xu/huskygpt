@@ -1,8 +1,8 @@
 import fs from 'fs';
-import path from 'path';
-import { ROOT_SRC_DIR_PATH, userOptions } from 'src/constant';
+import { userOptions } from 'src/constant';
 import { HuskyGPTTypeEnum, IReadFileResult } from 'src/types';
 import { CodePicker } from 'src/utils/pick-code';
+import { readPromptFile } from 'src/utils/read-prompt-file';
 
 export class HuskyGPTPrompt {
   private huskyGPTTypeMap: Record<
@@ -13,10 +13,7 @@ export class HuskyGPTPrompt {
       const fileContent =
         fileResult.fileContent ||
         fs.readFileSync(fileResult.filePath!, 'utf-8');
-      const testsPrompt = fs.readFileSync(
-        path.join(ROOT_SRC_DIR_PATH, './prompt', 'tests.txt'),
-        'utf-8',
-      );
+      const testsPrompt = readPromptFile('tests.txt');
       // const fileName = getFileNameByPath(fileResult.filePath!)
       // - Import the test function from "../${fileName}".
       const basePrompt = `
@@ -34,10 +31,7 @@ export class HuskyGPTPrompt {
       const fileContent =
         fileResult.fileContent ||
         fs.readFileSync(fileResult.filePath!, 'utf-8');
-      const reviewPrompt = fs.readFileSync(
-        path.join(ROOT_SRC_DIR_PATH, './prompt', 'review.txt'),
-        'utf-8',
-      );
+      const reviewPrompt = readPromptFile('review.txt');
       const basePrompt = `
         ${reviewPrompt}
         ${userOptions.options.openAIPrompt || ''}
