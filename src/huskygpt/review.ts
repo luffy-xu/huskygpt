@@ -28,6 +28,8 @@ class HuskyGPTReview extends HuskyGPTBase {
    * Generate a test case for a given file
    */
   public async run(fileResult: IReadFileResult): Promise<string> {
+    // Reset the parent message to avoid the message tokens over limit
+    this.openai.resetParentMessage();
     const message = await this.openai.run(fileResult);
     const resMessage = message.join('\n\n---\n\n');
 

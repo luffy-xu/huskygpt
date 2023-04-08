@@ -178,7 +178,7 @@ export class ChatgptProxyAPI {
   /**
    * Reset the parent message
    */
-  private resetParentMessage() {
+  public resetParentMessage() {
     this.parentMessage = undefined;
   }
 
@@ -191,9 +191,6 @@ export class ChatgptProxyAPI {
         `[huskygpt] start ${userOptions.huskyGPTType} your code... \n`,
       ),
     );
-
-    // Reset the parent message to avoid the message tokens over limit
-    this.resetParentMessage();
 
     return this.sendFileResult(fileResult)
       .then((res) => {
