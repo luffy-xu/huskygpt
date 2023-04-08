@@ -49,7 +49,7 @@ export interface IUserOptions {
   openAISessionToken?: string;
   // More proxy url see https://github.com/transitive-bullshit/chatgpt-api#usage---chatgptunofficialproxyapi
   openAIProxyUrl?: string;
-  // OpenAI model to use, default is 'gpt-4'
+  // OpenAI model to use, api default is 'gpt-3.5-turbo', proxy default is 'text-davinci-002-render-sha'
   openAIModel?: string;
   // OpenAI prompt to use, default is ''
   openAIPrompt?: string;

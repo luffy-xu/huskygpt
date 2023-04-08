@@ -21,11 +21,15 @@ export class ChatgptProxyAPI {
   }
 
   private initApi() {
+    if (process.env.DEBUG)
+      console.log(`openAI session token: {${userOptions.openAISessionToken}}`);
+
+    console.log(
+      '[huskygpt] Using Model:',
+      chalk.green(userOptions.openAIModel),
+    );
     // Use the official api if the session token is not set
-    if (
-      !userOptions.openAISessionToken ||
-      userOptions.openAISessionToken === 'undefined'
-    ) {
+    if (!userOptions.openAISendByProxy) {
       this.api = new ChatGPTAPI({
         apiKey: userOptions.openAIKey,
         completionParams: userOptions.openAIOptions,
@@ -36,7 +40,7 @@ export class ChatgptProxyAPI {
 
     // Use the proxy api
     this.api = new ChatGPTUnofficialProxyAPI({
-      model: userOptions.options.openAIModel,
+      model: userOptions.openAIModel,
       accessToken: userOptions.openAISessionToken,
       apiReverseProxyUrl: userOptions.options.openAIProxyUrl,
     });
@@ -85,9 +89,11 @@ export class ChatgptProxyAPI {
     prompt: string,
     prevMessage?: Partial<ChatMessage>,
   ): Promise<ChatMessage> {
+    const securityPrompt = userOptions.securityPrompt(prompt);
+
     // If this is the first message, send it directly
     if (!prevMessage) {
-      return await this.api.sendMessage(prompt);
+      return await this.api.sendMessage(securityPrompt);
     }
 
     // Send the message with the progress callback
@@ -95,7 +101,7 @@ export class ChatgptProxyAPI {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    const res = await this.api.sendMessage(prompt, {
+    const res = await this.api.sendMessage(securityPrompt, {
       ...prevMessage,
       // Set the timeout to 5 minutes
       timeoutMs: 1000 * 60 * 5,
@@ -145,6 +151,13 @@ export class ChatgptProxyAPI {
   }
 
   /**
+   * Reset the parent message
+   */
+  private resetParentMessage() {
+    this.parentMessage = undefined;
+  }
+
+  /**
    * Start the huskygpt process
    */
   async run(fileResult: IReadFileResult): Promise<string[]> {
@@ -153,6 +166,9 @@ export class ChatgptProxyAPI {
         `[huskygpt] start ${userOptions.huskyGPTType} your code... \n`,
       ),
     );
+
+    // Reset the parent message to avoid the message tokens over limit
+    this.resetParentMessage();
 
     return this.sendFileResult(fileResult)
       .then((res) => {
@@ -171,6 +187,9 @@ export class ChatgptProxyAPI {
           ),
         );
         return ['[huskygpt] call OpenAI API failed!'];
+      })
+      .finally(() => {
+        reviewSpinner.stop();
       });
   }
 }

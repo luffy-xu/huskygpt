@@ -59,16 +59,6 @@ export class CodePicker {
           this.remainingEndIndex = Number(nodePath.node.end);
           // If the current node is a function or class, generate the code snippet
           const codeSnippet = generate.default(nodePath.node).code;
-
-          // If the code snippet is not valid, skip it
-          const securityTest = userOptions.securityTest(codeSnippet);
-          if (securityTest !== true) {
-            console.warn(
-              `Security test failed, skip this code snippet: ${securityTest}`,
-            );
-            return;
-          }
-
           this.remainingCode.push(codeSnippet);
         },
       });

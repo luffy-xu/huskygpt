@@ -8,6 +8,11 @@ import { HuskyGPTTypeEnum, IUserOptions, ReadTypeEnum } from './types';
 export const OPENAI_API_KEY_NAME = 'OPENAI_API_KEY';
 export const OPENAI_SESSION_TOKEN_NAME = 'OPENAI_SESSION_TOKEN';
 
+const DEFAULT_MODELS = {
+  apiModel: 'gpt-3.5-turbo',
+  proxyModel: 'text-davinci-002-render-sha',
+};
+
 export const ROOT_SRC_DIR_PATH = path.join(
   new URL('.', import.meta.url).pathname,
 );
@@ -18,7 +23,7 @@ class UserOptionsClass {
   private userOptionsDefault: IUserOptions = {
     debug: false,
     huskyGPTType: HuskyGPTTypeEnum.Review,
-    openAIModel: 'gpt-3.5-turbo',
+    openAIModel: '',
     openAIProxyUrl: 'https://bypass.churchless.tech/api/conversation',
     openAIMaxTokens: 4096,
     readType: ReadTypeEnum.GitStage,
@@ -79,23 +84,45 @@ class UserOptionsClass {
       );
     }
 
-    if (process.env.DEBUG)
-      console.log(`openAI session token: {${this.options.openAISessionToken}}`);
-
     return this.options.openAISessionToken;
+  }
+
+  /**
+   * Get OpenAI send message type, proxy or api
+   */
+  get openAISendByProxy(): boolean {
+    return (
+      this.options.openAIProxyUrl &&
+      this.openAISessionToken &&
+      this.openAISessionToken !== 'undefined'
+    );
+  }
+
+  get openAIModel(): string {
+    if (this.openAISendByProxy) {
+      if (this.options.openAIModel === DEFAULT_MODELS.apiModel) {
+        console.warn(
+          '[huskygpt] openAIModel is set to gpt-3.5-turbo, but use proxy type, so openAIModel is set to text-davinci-002-render-sha',
+        );
+        return (this.options.openAIModel = DEFAULT_MODELS.proxyModel);
+      }
+
+      return this.options.openAIModel || DEFAULT_MODELS.proxyModel;
+    }
+    return this.options.openAIModel || DEFAULT_MODELS.apiModel;
   }
 
   /**
    * Get OpenAI options
    */
   get openAIOptions(): ChatGPTAPIOptions['completionParams'] {
-    if (!this.options.openAIModel) throw new Error('openAIModel is not set');
+    if (!this.openAIModel) throw new Error('openAIModel is not set');
 
     return {
       temperature: 0,
       top_p: 0.4,
       stop: ['###'],
-      model: this.options.openAIModel,
+      model: this.openAIModel,
       max_tokens: this.options.openAIMaxTokens,
     };
   }
@@ -191,13 +218,14 @@ class UserOptionsClass {
 
   /**
    * Security test
-   * If return false, the code does not pass the security test
+   * If return false, the prompt does not pass the security test
    */
-  public securityTest(code: string): true | string {
-    if (!this.options.securityRegex) return true;
+  public securityPrompt(prompt: string): string {
+    if (!this.options.securityRegex) return prompt;
 
     const regex = new RegExp(this.options.securityRegex, 'gi');
-    return code.match(regex)?.[0] || true;
+
+    return prompt.replace(regex, '***REMOVED***');
   }
 
   /**
