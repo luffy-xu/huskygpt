@@ -20,7 +20,7 @@ export class ChatgptProxyAPI {
   }
 
   get needPrintMessage(): boolean {
-    return [HuskyGPTTypeEnum.Review, HuskyGPTTypeEnum.Test].includes(
+    return [HuskyGPTTypeEnum.Review, HuskyGPTTypeEnum.Test, HuskyGPTTypeEnum.Commit].includes(
       userOptions.huskyGPTType,
     );
   }
@@ -176,19 +176,11 @@ export class ChatgptProxyAPI {
   }
 
   async sendPrompts(prompts: string[]): Promise<string[]> {
-    const [systemPrompt, ...codePrompts] = prompts;
-    if (!codePrompts.length) return [];
+    if (!prompts.length) return [];
 
     const messageArray: string[] = [];
-    let message = await this.sendMessage(systemPrompt);
-    console.log('finish step ', message);
-
-    for (const prompt of codePrompts) {
-      message = await this.sendMessage(prompt, {
-        conversationId: message?.conversationId,
-        parentMessageId: message?.id,
-      });
-      console.log('finish step ', message);
+    for (const prompt of prompts) {
+      const message = await this.sendMessage(prompt);
       messageArray.push(message.text);
     }
 

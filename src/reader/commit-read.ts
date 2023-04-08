@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
-import { ROOT_SRC_DIR_PATH } from 'src/constant';
+import { readPromptFile } from 'src/utils/read-prompt-file';
 
 const filterEmpty = (line: string) => line.trim().length > 0;
 enum EFileDiffType {
@@ -29,6 +29,9 @@ const PriorityFileTypes = {
 
 enum PromptFile {
   summarize_file_diff = 'summarize_file_diff',
+  label = 'commit_label',
+  body = 'commit_body',
+  title = 'commit_title',
 }
 export class CommitRead {
   private read(diffFile?: string) {
@@ -105,22 +108,28 @@ export class CommitRead {
     return sorted;
   }
 
-  getFileDiffParams(diffFile?: string) {
+  getFilePrompts(diffFile?: string, len = 5) {
     const files = this.getFileList(diffFile);
     const prompt = this.getPrompt(PromptFile.summarize_file_diff);
     // no more than 5 files
-    return files.slice(0, 5).map((file, i) => {
-      if (i === 0)
-        return prompt.replace('{{ file_diff }}', file.diff);
-      return `This is anther git diff, please summarize: \n${file.diff}`;
+    return files.slice(0, len).map((file, i) => {
+      return {
+        fileName: file.filename,
+        prompt: prompt.replace('{{ file_diff }}', file.diff)
+      };
     });
   }
 
+  getSummaryPrompts(summary: string) {
+    const label = this.getPrompt(PromptFile.label);
+    const body = this.getPrompt(PromptFile.body);
+    const title = this.getPrompt(PromptFile.title);
+    return [
+      label, title, body
+    ].map((prompt) => prompt.replace('{{ summary_points }}', summary));
+  }
+
   private getPrompt(filename: PromptFile) {
-    const prompt = fs.readFileSync(
-      path.join(ROOT_SRC_DIR_PATH, './prompt', `${filename}.txt`),
-      'utf-8',
-    );
-    return prompt.toString();
+    return readPromptFile(`${filename}.txt`);
   }
 }

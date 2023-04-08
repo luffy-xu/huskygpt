@@ -43,24 +43,8 @@ export class HuskyGPTPrompt {
 
       return [basePrompt, ...codePrompts];
     },
-    [HuskyGPTTypeEnum.Commit]: (fileResult) => {
-      const fileContent =
-        fileResult.fileContent ||
-        fs.readFileSync(fileResult.filePath!, 'utf-8');
-      const reviewPrompt = fs.readFileSync(
-        path.join(ROOT_SRC_DIR_PATH, './prompt', 'summarize_file_diff.txt'),
-        'utf-8',
-      );
-      const basePrompt = `
-        ${reviewPrompt}
-        ${userOptions.options.openAIPrompt || ''}
-      `;
-
-      const codePicker = new CodePicker();
-
-      const codePrompts = codePicker.pickFunctionOrClassCodeArray(fileContent);
-
-      return [basePrompt, ...codePrompts];
+    [HuskyGPTTypeEnum.Commit]: () => {
+      return [];
     },
   };
 

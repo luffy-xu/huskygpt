@@ -5,10 +5,6 @@ import { CommitRead, IFileDiff } from 'src/reader/commit-read';
 import { ChatgptProxyAPI } from 'src/chatgpt';
 import chalk from 'chalk';
 
-enum PromptFile {
-  summarize_file_diff = 'summarize_file_diff',
-}
-
 /**
  * Review code for a given file path
  */
@@ -25,8 +21,9 @@ class HuskyGPTCommit {
    */
   public async run(): Promise<void> {
     const diffFile = userOptions.options.commitDiff;
-    const params = this.read.getFileDiffParams(diffFile);
-    if (!params || !params.length) {
+    // read 3 files for test
+    const files = this.read.getFilePrompts(diffFile, 3);
+    if (!files || !files.length) {
       console.error('No file diff found, skip commit message summary');
       return;
     }
@@ -36,15 +33,22 @@ class HuskyGPTCommit {
       ),
     );
 
-    const messages = await this.openai.sendPrompts(params);
-
-    console.log(messages);
+    const messages = await this.openai.sendPrompts(files.map((o) => o.prompt));
+    await this.summaryCommitMessage(messages, files.map((o) => o.fileName));
 
     reviewSpinner.succeed(
       chalk.green(
         `🎉🎉 [huskygpt] ${userOptions.huskyGPTType} code successfully! 🎉🎉\n `,
       ),
     );
+  }
+
+  private async summaryCommitMessage(messages: string[], files: string[]) {
+    const summary = messages.map((msg, i) => `[${files[i]}]\n${msg}`).join('\n');
+    const prompts = this.read.getSummaryPrompts(summary);
+    const ret = await this.openai.sendPrompts(prompts);
+    console.log(ret);
+    return ret;
   }
 }
 
