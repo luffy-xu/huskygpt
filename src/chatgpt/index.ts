@@ -72,7 +72,7 @@ export class ChatgptProxyAPI {
   /**
    * Log the review info
    */
-  private oraStart(
+  oraStart(
     text = '',
     needPrintMessage = this.needPrintMessage,
   ): ora.Ora {
@@ -90,7 +90,7 @@ export class ChatgptProxyAPI {
   /**
    * Run the OpenAI API
    */
-  private async sendMessage(
+  async sendMessage(
     prompt: string,
     prevMessage?: Partial<ChatMessage>,
   ): Promise<ChatMessage> {
@@ -170,6 +170,26 @@ export class ChatgptProxyAPI {
       messageArray.push(message.text);
 
       this.parentMessage = message;
+    }
+
+    return messageArray;
+  }
+
+  async sendPrompts(prompts: string[]): Promise<string[]> {
+    const [systemPrompt, ...codePrompts] = prompts;
+    if (!codePrompts.length) return [];
+
+    const messageArray: string[] = [];
+    let message = await this.sendMessage(systemPrompt);
+    console.log('finish step ', message);
+
+    for (const prompt of codePrompts) {
+      message = await this.sendMessage(prompt, {
+        conversationId: message?.conversationId,
+        parentMessageId: message?.id,
+      });
+      console.log('finish step ', message);
+      messageArray.push(message.text);
     }
 
     return messageArray;

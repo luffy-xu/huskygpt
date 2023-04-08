@@ -1,7 +1,730 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`commit-read should get file diff params 1`] = `
+[
+  "You are an expert programmer summarizing a git diff.
+A line starting with \`+\` means it was added.
+A line that starting with \`-\` means that line was deleted.
+A line that starts with neither \`+\` nor \`-\` is code given for context and better understanding.
+It is not part of the diff.
+
+Do not use the characters \`[\` or \`]\` in the summary.
+Write every summary comment in a new line.
+Comments should be in a bullet point list, each line starting with a \`-\`.
+The summary should not include comments copied from the code.
+The output should be easily readable. When in doubt, write fewer comments and not more. Do not output comments that
+simply repeat the contents of the file.
+Readability is top priority. Write only the most important comments about the diff.
+
+EXAMPLE SUMMARY COMMENTS:
+\`\`\`
+- Raise the amount of returned recordings from \`10\` to \`100\`
+- Fix a typo in the github action name
+- Move the \`octokit\` initialization to a separate file
+- Add an OpenAI API for completions
+- Lower numeric tolerance for test files
+- Add 2 tests for the inclusive string split function
+\`\`\`
+Most commits will have less comments than this examples list.
+The last comment does not include the file names,
+because there were more than two relevant files in the hypothetical commit.
+Do not include parts of the example in your summary.
+It is given only as an example of appropriate comments.
+
+
+THE GIT DIFF TO BE SUMMARIZED
+\`\`\`
++import { Space, Button } from 'antd';
++import React from 'react';
++import { EServiceType } from 'service/budget';
++interface IProps {
++  serviceType: EServiceType;
++  score: number;
++  usage: number;
++}
++const InsightHH: React.FC<Pick<IProps, 'serviceType'>> = (props) => {
++  return (
++    <div className="flex-1 insight">
++      <div className="info">
++        <span className="font-bold">Insight: </span>
++        Your score falls within the higher range and your usage is high. This could mean that you
++        have effectively utilising the resource
++      </div>
++      <div className="info pt8">
++        <span className="font-bold">Recommendation: </span>
++        You may want to maintain this behaviour by closely monitoring your resource usage.
++      </div>
++      <Space className="pt16">
++        {props.serviceType === EServiceType.HDFS ? (
++          <Button type="primary">Monitor Resource</Button>
++        ) : (
++          <Button type="primary">Resource Monitoring</Button>
++        )}
++      </Space>
++    </div>
++  );
++};
++const shrinkButton = <Button type="primary">Shrink Allocation</Button>;
++const InsightHL: React.FC<Pick<IProps, 'serviceType'>> = (_props) => {
++  return (
++    <div className="flex-1 insight">
++      <div className="info">
++        <span className="font-bold">Insight: </span>
++        Your score falls within the higher range but your usage is low. This could mean that you
++        were allocated with too much resources and may be paying more than what you need.
++      </div>
++      <div className="info pt8">
++        <span className="font-bold">Recommendation: </span>
++        You may raise a request to shrink your resource allocation in order to reduce your cost.
++      </div>
++      <Space className="pt16">{shrinkButton}</Space>
++    </div>
++  );
++};
++
++const InsightLH: React.FC<Pick<IProps, 'serviceType'>> = (props) => {
++  return (
++    <div className="flex-1 insight">
++      <div className="info">
++        <span className="font-bold">Insight: </span>
++        Your score falls within the lower range and your usage is high. This could mean that you are
++        ineffectively utilising the resource and may cause you to be paying more than what you need.
++      </div>
++      <div className="info pt8">
++        <span className="font-bold">Recommendation: </span>
++        You may start by optimising some items that violate a policy, once you free up additional
++        resource, you can then raise a request to shrink your resource allocation in order to reduce
++        your cost.
++      </div>
++      <Space className="pt16">
++        {props.serviceType === EServiceType.HDFS ? (
++          <Button type="primary">Optimise Storage</Button>
++        ) : (
++          <Button type="primary">Optimise Computation</Button>
++        )}
++        {shrinkButton}
++      </Space>
++    </div>
++  );
++};
++
++const InsightLL: React.FC<Pick<IProps, 'serviceType'>> = (props) => {
++  return (
++    <div className="flex-1 insight">
++      <div className="info">
++        <span className="font-bold">Insight: </span>
++        Your score falls within the lower range and your usage is low. This could mean that you are
++        ineffectively utilising the resource and may be paying more than what you need.
++      </div>
++      <div className="info pt8">
++        <span className="font-bold">Recommendation: </span>
++        You may start by raising a request to shrink your resource allocation in order to reduce
++        your cost. Then you can start optimising some items that violate a policy to improve your
++        score.
++      </div>
++      <Space className="pt16">
++        {shrinkButton}
++        {props.serviceType === EServiceType.HDFS ? (
++          <Button type="primary">Optimise Storage</Button>
++        ) : (
++          <Button type="primary">Optimise Computation</Button>
++        )}
++      </Space>
++    </div>
++  );
++};
++
++export const Insight: React.FC<IProps> = (props) => {
++  const { serviceType, score, usage } = props;
++  if (score >= 70 && usage >= 70) {
++    return <InsightHH serviceType={serviceType} />;
++  }
++
++  if (score >= 70 && usage < 70) {
++    return <InsightHL serviceType={serviceType} />;
++  }
++
++  if (score < 70 && usage >= 70) {
++    return <InsightLH serviceType={serviceType} />;
++  }
++
++  if (score < 70 && usage < 70) {
++    return <InsightLL serviceType={serviceType} />;
++  }
++};
+
+\`\`\`
+
+THE SUMMARY:
+",
+]
+`;
+
+exports[`commit-read should get file diff params 2`] = `
+[
+  "You are an expert programmer summarizing a git diff.
+A line starting with \`+\` means it was added.
+A line that starting with \`-\` means that line was deleted.
+A line that starts with neither \`+\` nor \`-\` is code given for context and better understanding.
+It is not part of the diff.
+
+Do not use the characters \`[\` or \`]\` in the summary.
+Write every summary comment in a new line.
+Comments should be in a bullet point list, each line starting with a \`-\`.
+The summary should not include comments copied from the code.
+The output should be easily readable. When in doubt, write fewer comments and not more. Do not output comments that
+simply repeat the contents of the file.
+Readability is top priority. Write only the most important comments about the diff.
+
+EXAMPLE SUMMARY COMMENTS:
+\`\`\`
+- Raise the amount of returned recordings from \`10\` to \`100\`
+- Fix a typo in the github action name
+- Move the \`octokit\` initialization to a separate file
+- Add an OpenAI API for completions
+- Lower numeric tolerance for test files
+- Add 2 tests for the inclusive string split function
+\`\`\`
+Most commits will have less comments than this examples list.
+The last comment does not include the file names,
+because there were more than two relevant files in the hypothetical commit.
+Do not include parts of the example in your summary.
+It is given only as an example of appropriate comments.
+
+
+THE GIT DIFF TO BE SUMMARIZED
+\`\`\`
+import { Space, Button } from 'antd';
++import { Link } from 'component/router';
++import { Routers } from 'lib/constant';
+ import React from 'react';
+ import { EServiceType } from 'service/budget';
+ interface IProps {
+@@ -5,95 +7,116 @@ interface IProps {
+   serviceType: EServiceType;
+   score: number;
+   usage: number;
+ }
+-const InsightHH: React.FC<Pick<IProps, 'serviceType'>> = (props) => {
++type TInsight = Pick<IProps, 'serviceType'>;
++
++const ButtonMonitor: React.FC<TInsight> = (props) => {
++  const url =
++    props.serviceType === EServiceType.HDFS
++      ? Routers.OPTIMISE_STORAGE
++      : Routers.OVERVIEW_RESOURCE_MONITORING;
++  const subPath =
++    props.serviceType === EServiceType.HDFS
++      ? ''
++      : // TODO: add team_code to url
++        \`/\${props.serviceType === EServiceType.PRESTO ? 'presto' : 'yarn'}?team_code=\`;
++  return (
++    <Button type="primary">
++      <Link to={\`\${url}\${subPath}\`}>Monitor Resource</Link>
++    </Button>
++  );
++};
++
++const InsightHH: React.FC<TInsight> = (props) => {
+   return (
+     <div className="flex-1 insight">
+       <div className="info">
+         <span className="font-bold">Insight: </span>
+         Your score falls within the higher range and your usage is high. This could mean that you
+         have effectively utilising the resource
+       </div>
+       <div className="info pt8">
+         <span className="font-bold">Recommendation: </span>
+         You may want to maintain this behaviour by closely monitoring your resource usage.
+       </div>
+-      <Space className="pt16">
+-        {props.serviceType === EServiceType.HDFS ? (
+-          <Button type="primary">Monitor Resource</Button>
+-        ) : (
+-          <Button type="primary">Resource Monitoring</Button>
+-        )}
++      <Space className="pt8">
++        <ButtonMonitor {...props} />
+       </Space>
+     </div>
+   );
+ };
+-const shrinkButton = <Button type="primary">Shrink Allocation</Button>;
+-const InsightHL: React.FC<Pick<IProps, 'serviceType'>> = (_props) => {
++
++const ShrinkButton = () => <Button type="primary">Shrink Allocation</Button>;
++
++const InsightHL: React.FC<TInsight> = (_props) => {
+   return (
+     <div className="flex-1 insight">
+       <div className="info">
+         <span className="font-bold">Insight: </span>
+         Your score falls within the higher range but your usage is low. This could mean that you
+         were allocated with too much resources and may be paying more than what you need.
+       </div>
+       <div className="info pt8">
+         <span className="font-bold">Recommendation: </span>
+         You may raise a request to shrink your resource allocation in order to reduce your cost.
+       </div>
+-      <Space className="pt16">{shrinkButton}</Space>
++      <Space className="pt8">
++        <ShrinkButton />
++      </Space>
+     </div>
+   );
+ };
+ 
++const ButtonOptimize: React.FC<TInsight> = (props) => {
++  const type = props.serviceType;
++  const url = type === EServiceType.HDFS ? Routers.OPTIMISE_STORAGE : Routers.OPTIMISE_COMPUTATION;
++  return (
++    <Button type="primary">
++      <Link to={\`\${url}\`}>Optimise {type === EServiceType.HDFS ? 'Storage' : 'Computation'}</Link>
++    </Button>
++  );
++};
++
+ const InsightLH: React.FC<Pick<IProps, 'serviceType'>> = (props) => {
+   return (
+-    <div className="flex-1 insight">
++    <div className="flex-1 insight lh">
+       <div className="info">
+         <span className="font-bold">Insight: </span>
+         Your score falls within the lower range and your usage is high. This could mean that you are
+         ineffectively utilising the resource and may cause you to be paying more than what you need.
+       </div>
+       <div className="info pt8">
+         <span className="font-bold">Recommendation: </span>
+         You may start by optimising some items that violate a policy, once you free up additional
+         resource, you can then raise a request to shrink your resource allocation in order to reduce
+         your cost.
+       </div>
+-      <Space className="pt16">
+-        {props.serviceType === EServiceType.HDFS ? (
+-          <Button type="primary">Optimise Storage</Button>
+-        ) : (
+-          <Button type="primary">Optimise Computation</Button>
+-        )}
+-        {shrinkButton}
++      <Space className="pt8">
++        <ButtonOptimize {...props} />
++        <ShrinkButton />
+       </Space>
+     </div>
+   );
+ };
+ 
+ const InsightLL: React.FC<Pick<IProps, 'serviceType'>> = (props) => {
+   return (
+-    <div className="flex-1 insight">
++    <div className="flex-1 insight ll">
+       <div className="info">
+         <span className="font-bold">Insight: </span>
+         Your score falls within the lower range and your usage is low. This could mean that you are
+         ineffectively utilising the resource and may be paying more than what you need.
+       </div>
+       <div className="info pt8">
+         <span className="font-bold">Recommendation: </span>
+         You may start by raising a request to shrink your resource allocation in order to reduce
+         your cost. Then you can start optimising some items that violate a policy to improve your
+         score.
+       </div>
+-      <Space className="pt16">
+-        {shrinkButton}
+-        {props.serviceType === EServiceType.HDFS ? (
+-          <Button type="primary">Optimise Storage</Button>
+-        ) : (
+-          <Button type="primary">Optimise Computation</Button>
+-        )}
++      <Space className="pt8">
++        <ShrinkButton />
++        <ButtonOptimize {...props} />
+       </Space>
+     </div>
+   );
+ };
+\`\`\`
+
+THE SUMMARY:
+",
+  "This is anther git diff, please summarize: 
+import { TitleWithLastUpdate } from 'component/title-with-last-update';
+ import { yarnStore } from 'store/resource-monitoring/yarn';
+ import { prestoStore } from 'store/resource-monitoring/presto';
+ import './index.less';
++import { Routers } from 'lib/constant';
+ 
+ interface IParams {
+   id?: string;
++  tab?: string;
+ }
+ 
+ class ResourceMonitoring extends ContentLayout<IParams> {
+   tabPaneMap: Record<ETab, React.ReactElement> = {
+     [ETab.presto]: <Presto />,
+     [ETab.yarn]: <BatchYarn />,
+   };
+ 
+   get store() {
+     const mp: Partial<Record<ETab, typeof prestoStore>> = {
+       [ETab.presto]: prestoStore,
+       [ETab.yarn]: yarnStore,
+     };
+     return mp[resourceMonitoringStore.tabKey];
+   }
+ 
+   get latestUpdatedInfo() {
+     return this.store?.latestUpdatedInfo;
+   }
+ 
+   public renderContentTitle() {
+     return (
+       <TitleWithLastUpdate
+         title="Resource Monitoring"
+         latestUpdatedTime={this.latestUpdatedInfo?.latestUpdatedTime}
+       />
+     );
+   }
+ 
+   public renderTab() {
+     return (
+       <Tabs
+         className="resource-monitoring-tab"
+         activeKey={resourceMonitoringStore.tabKey}
+         onChange={(e) => {
+           resourceMonitoringStore.switchTab(e as ETab);
++          window.history.replaceState(
++            null,
++            '',
++            \`\${Routers.OVERVIEW_RESOURCE_MONITORING}/\${e}\${window.location.search}\`
++          );
+         }}
+       >
+         {Object.entries(ETab).map(([_, v]) => (
+           <Tabs.TabPane key={v} tab={ETabTitle[v]}>
+             {this.tabPaneMap[v]}
+           </Tabs.TabPane>
+         ))}
+       </Tabs>
+     );
+   }
+ 
+   public renderContentCore() {
+     return <div className="resource-monitoring">{this.renderTab()}</div>;
+   }
+ }
+ 
+ export const ResourceMonitoringPage = (props: IRouterProps<IParams>) => {
++  const tab = (props.match.params.tab || ETab.presto) as ETab;
++  resourceMonitoringStore.switchTab(tab);
++
+   return (
+     <Layout {...props}>
+       <ResourceMonitoring id={props.match.params.id} />
+     </Layout>
+   );
+ };",
+  "This is anther git diff, please summarize: 
+export interface ISummaryItemProps {
+ }
+ 
+ export const SummaryInfo: React.FC<{ value: number }> = (props) => {
++  const { value } = props;
+   return (
+     <div className="text-sm">
+-      <span className="red">&uarr;{props.value}%</span>
++      {value > 0 ? (
++        <span className="red">&uarr;{value}%</span>
++      ) : (
++        <span className="green">&darr;{Math.abs(value)}%</span>
++      )}
+       <span className="black45"> vs Last Month</span>
+     </div>
+   );
+ };",
+  "This is anther git diff, please summarize: 
+@import url("/src/styles/variable.less");
+ .team-cost-center {
+   .title {
+     font-size: 16px;
+     font-weight: bold;
+   }
+   .ant-collapse-content-box {
+     background-color: @white;
+   }
+   .ant-collapse-header {
+     border-bottom: 1px solid @gray-5;
+   }
+   .ant-collapse-item {
+     border: none;
+   }
+ 
+   .custom-select-wrapper {
+     min-width: 300px;
+     display: flex;
+     .cs-label {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       border: 1px solid @normal-color;
+       border-right: none;
+       border-top-left-radius: 2px;
+       border-bottom-left-radius: 2px;
+       background-color: @descriptions-bg;
+       padding: 0 11px;
+     }
+     .cs-select {
+       flex: 1;
+     }
+     .ant-select-selector {
+       border-top-left-radius: 0px;
+       border-bottom-left-radius: 0px;
+     }
+   }
+ 
+   .line-chart {
+     height: 314px;
+     min-width: 500px;
+     flex: 1;
+   }
+ 
+   .title {
+     display: flex;
+     justify-content: space-between;
+     margin-right: 16px;
+     width: 116px;
+   }
+ 
+   .mail-tag {
+     margin-right: 8px;
+     border: 1px solid @gray-8;
+     color: @gray-8;
+     border-radius: 2px;
+     height: 18px;
+     line-height: 16px;
+     font-size: 12px;
+     padding-left: 4px;
+     padding-right: 4px;
+     margin-bottom: 4px;
+     display: block;
+   }
+ 
+   .filter {
+     padding-top: 10px;
+     padding-bottom: 10px;
+     .region-filter {
+       margin-left: 50px;
+     }
+   }
+ 
+   .divider {
+     height: 32px;
+     width: 1px;
+     background-color: @gray-4;
+   }
+   .summary-left {
+     width: 280px;
+     box-sizing: border-box;
+     line-height: 32px;
+     .box {
+       padding: 4px 10px;
+       cursor: pointer;
+       border-right: 1px solid @gray-4;
+       padding-right: 10px;
+       &.active {
+         background-color: #f5f9ff;
+         padding-right: 8px;
+         border-right: solid 3px @primary-color;
+       }
+       &:last-child {
+         border-bottom: none;
+       }
+     }
+   }
+   .ant-table .ant-table-expanded-row-fixed {
+     padding: 0;
+   }
+ }
+ 
+ .l1-team-cost {
+   &__table {
+     .current {
+       &::after {
+         content: "\\20";
+         background-color: @blue-menu;
+         opacity: 0.5;
+         display: block;
+         width: 100%;
+         height: 100%;
+         position: absolute;
+         left: 0;
+         top: 0;
+         pointer-events: none;
+       }
+     }
+   }
+ }
+ 
+ .ram-team-cost {
+   .service-detail {
+     background-color: @white;
+     height: 180px;
+     flex: 1;
+     .service-detail {
+       font-size: 14px;
+       line-height: 16px;
+     }
+ 
+     .score {
+       padding: 16px;
+       padding-top: 10px;
+       width: 355px;
+       .legend-wrapper {
+         text-align: left;
+       }
+ 
+       .legend-item {
+         padding-left: 16px;
+         &:first-child {
+           padding-left: 0;
+         }
+       }
+     }
+ 
+     .usage {
+       padding: 16px;
+       padding-top: 10px;
+       border-left: 1px solid @gray-4;
+       border-right: 1px solid @gray-4;
+       .ant-progress-text {
+         display: none;
+       }
+       .ant-progress-outer {
+         padding-right: 0;
+       }
+       .ant-progress-inner {
+         background-color: #e8e8e8;
+       }
+     }
+     .insight {
++      min-width: 430px;
+       padding: 16px;
+       padding-top: 10px;
++      font-size: 14px;
++      &.lh,
++      &.ll {
+         font-size: 12px;
+       }
+     }
++  }
+   .ram-team-cost__table {
+     border: 1px solid @gray-4;
+   }
+ 
+   .progress-box {
+     padding-top: 20px;
+   }
+   .usage-yarn {
+     .ant-progress {
+       line-height: 10px;
+     }
+     .progress-box {
+       line-height: 14px;
+       padding-top: 0;
+       padding-bottom: 8px;
+     }
+   }
+   .service-menu {
+     width: 172px;
+     .ant-menu-item {
+       height: 90px;
+       display: flex;
+       align-items: center;
+       margin-bottom: 0;
+       margin-top: 0;
+     }
+   }
+ }",
+  "This is anther git diff, please summarize: 
+import { hdfsField } from '../l1/table-field';
+ import { IDetailColumn } from './table-columns';
+ 
+ export const titleRender = (title: string, row: IDetailColumn) => {
++  if (row.type === 'total') {
++    return title;
++  }
++
+   if (row.title === EServiceType.HDFS) {
+     // TODO: team code should get from ram team select
+     return (
+       <Row justify="space-between" align="middle">
+         {hdfsField('todo')}
+         <img src={WARN_IMG} width={25} height={25} />
+       </Row>
+     );
+   }
+   return serviceTypeName[title as EServiceType];
+ };",
+]
+`;
+
 exports[`commit-read should read from git 1`] = `
 [
+  {
+    "add": 49,
+    "del": 1,
+    "diff": "+You are an expert programmer summarizing a git diff.
++Reminders about the git diff format:
++For every file, there are a few metadata lines, like (for example):
++\`\`\`
++diff --git a/lib/index.js b/lib/index.js
++index aadf691..bfef603 100644
++--- a/lib/index.js
+++++ b/lib/index.js
++\`\`\`
++This means that \`lib/index.js\` was modified in this commit. Note that this is only an example.
++Then there is a specifier of the lines that were modified.
++A line starting with \`+\` means it was added.
++A line that starting with \`-\` means that line was deleted.
++A line that starts with neither \`+\` nor \`-\` is code given for context and better understanding.
++It is not part of the diff.
++After the git diff of the first file, there will be an empty line, and then the git diff of the next file.
++
++Do not include the file name as another part of the comment.
++Do not use the characters \`[\` or \`]\` in the summary.
++Write every summary comment in a new line.
++Comments should be in a bullet point list, each line starting with a \`-\`.
++The summary should not include comments copied from the code.
++The output should be easily readable. When in doubt, write fewer comments and not more. Do not output comments that
++simply repeat the contents of the file.
++Readability is top priority. Write only the most important comments about the diff.
++
++EXAMPLE SUMMARY COMMENTS:
++\`\`\`
++- Raise the amount of returned recordings from \`10\` to \`100\`
++- Fix a typo in the github action name
++- Move the \`octokit\` initialization to a separate file
++- Add an OpenAI API for completions
++- Lower numeric tolerance for test files
++- Add 2 tests for the inclusive string split function
++\`\`\`
++Most commits will have less comments than this examples list.
++The last comment does not include the file names,
++because there were more than two relevant files in the hypothetical commit.
++Do not include parts of the example in your summary.
++It is given only as an example of appropriate comments.
++
++
++THE GIT DIFF TO BE SUMMARIZED:
++\`\`\`
++{{ file_diff }}
++\`\`\`
++
++THE SUMMARY:",
+    "filename": "/prompt/summarize_file_diff.txt",
+    "mode": "add",
+    "source": "/prompt/summarize_file_diff.txt",
+  },
   {
     "add": 11,
     "del": 2,
@@ -107,69 +830,6 @@ exports[`commit-read should read from git 1`] = `
     "source": "/bin/cli.js",
   },
   {
-    "add": 49,
-    "del": 1,
-    "diff": "+You are an expert programmer summarizing a git diff.
-+Reminders about the git diff format:
-+For every file, there are a few metadata lines, like (for example):
-+\`\`\`
-+diff --git a/lib/index.js b/lib/index.js
-+index aadf691..bfef603 100644
-+--- a/lib/index.js
-++++ b/lib/index.js
-+\`\`\`
-+This means that \`lib/index.js\` was modified in this commit. Note that this is only an example.
-+Then there is a specifier of the lines that were modified.
-+A line starting with \`+\` means it was added.
-+A line that starting with \`-\` means that line was deleted.
-+A line that starts with neither \`+\` nor \`-\` is code given for context and better understanding.
-+It is not part of the diff.
-+After the git diff of the first file, there will be an empty line, and then the git diff of the next file.
-+
-+Do not include the file name as another part of the comment.
-+Do not use the characters \`[\` or \`]\` in the summary.
-+Write every summary comment in a new line.
-+Comments should be in a bullet point list, each line starting with a \`-\`.
-+The summary should not include comments copied from the code.
-+The output should be easily readable. When in doubt, write fewer comments and not more. Do not output comments that
-+simply repeat the contents of the file.
-+Readability is top priority. Write only the most important comments about the diff.
-+
-+EXAMPLE SUMMARY COMMENTS:
-+\`\`\`
-+- Raise the amount of returned recordings from \`10\` to \`100\`
-+- Fix a typo in the github action name
-+- Move the \`octokit\` initialization to a separate file
-+- Add an OpenAI API for completions
-+- Lower numeric tolerance for test files
-+- Add 2 tests for the inclusive string split function
-+\`\`\`
-+Most commits will have less comments than this examples list.
-+The last comment does not include the file names,
-+because there were more than two relevant files in the hypothetical commit.
-+Do not include parts of the example in your summary.
-+It is given only as an example of appropriate comments.
-+
-+
-+THE GIT DIFF TO BE SUMMARIZED:
-+\`\`\`
-+{{ file_diff }}
-+\`\`\`
-+
-+THE SUMMARY:",
-    "filename": "/prompt/summarize_file_diff.txt",
-    "mode": "add",
-    "source": "/prompt/summarize_file_diff.txt",
-  },
-  {
-    "add": 0,
-    "del": 0,
-    "diff": "",
-    "filename": "/src/huskygpt/commit.ts",
-    "mode": "add",
-    "source": "/src/huskygpt/commit.ts",
-  },
-  {
     "add": 10,
     "del": 1,
     "diff": "import { HuskyGPTTypeEnum, IUserOptions } from './types';
@@ -215,6 +875,18 @@ exports[`commit-read should read from git 1`] = `
   },
   {
     "add": 2,
+    "del": 2,
+    "diff": "+++ b/b/b.js
+-consolelog(20)
++consolelog(21)
+ console.log('xx')
+",
+    "filename": "/b/b.js",
+    "mode": "rename",
+    "source": "/b/c.js",
+  },
+  {
+    "add": 2,
     "del": 1,
     "diff": "/**
   * The run mode of the huskygpt
@@ -241,16 +913,12 @@ exports[`commit-read should read from git 1`] = `
     "source": "/src/types.ts",
   },
   {
-    "add": 2,
-    "del": 2,
-    "diff": "+++ b/b/b.js
--consolelog(20)
-+consolelog(21)
- console.log('xx')
-",
-    "filename": "/b/b.js",
-    "mode": "rename",
-    "source": "/b/c.js",
+    "add": 0,
+    "del": 0,
+    "diff": "",
+    "filename": "/src/huskygpt/commit.ts",
+    "mode": "add",
+    "source": "/src/huskygpt/commit.ts",
   },
   {
     "add": 1,

@@ -93,4 +93,6 @@ export interface IUserOptions {
    * Huskygpt review options
    */
   reviewReportWebhook?: string;
+  // commit diff file path
+  commitDiff?: string;
 }

@@ -16,7 +16,7 @@ const runTypes = ['test', 'review', 'commit'];
 program
   .version(packageJson.version, '-v, --version', 'output the current version')
   .description('Generate unit tests or review your code by chatgpt 4')
-  .argument('<runType>', 'run type: test or review')
+  .argument('<runType>', `run type: ${runTypes.join(', ')}`)
   .option('-k, --api-key <key>', 'Set the OpenAI API key')
   .option(
     '-t, --openai-session-token <token>',
@@ -61,6 +61,10 @@ program
     '-w, --review-report-webhook <url>',
     'Webhook URL to send review report',
   )
+  .option(
+    '--commit-diff <name>',
+    'commit diff file path, example: .git/foo.diff',
+  )
   .action((runType, options) => {
     if (!runTypes.includes(runType)) {
       // exit with error
@@ -98,6 +102,9 @@ program
       }),
       ...(options.openAIProxyUrl && {
         openAIProxyUrl: options.openAIProxyUrl,
+      }),
+      ...(options.commitDiff && {
+        commitDiff: options.commitDiff,
       }),
     };
 
