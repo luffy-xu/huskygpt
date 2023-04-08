@@ -24,6 +24,7 @@ const optionShortcuts = {
 
 const messages = {
   selectOption: 'Select an option:',
+  enterDirectoryName: 'Enter a name for module (Directory Name):',
   enterName: (option: string) => `Enter a name for the ${option}:`,
   nameEmpty: 'Name cannot be empty.',
   enterDescription: (option: string) =>
@@ -37,6 +38,7 @@ class CreateCLI {
     private onOptionCreated: (data: {
       option: OptionType;
       name: string;
+      dirName: string;
       description: string;
     }) => void,
   ) {}
@@ -57,12 +59,15 @@ class CreateCLI {
     return option as OptionType;
   }
 
-  private async promptName(option: OptionType): Promise<string> {
+  private async promptName(option?: OptionType): Promise<string> {
     const { name } = await inquirer.prompt([
       {
         type: 'input',
         name: 'name',
-        message: messages.enterName(option),
+        default: option ? 'index' : 'example-module',
+        message: option
+          ? messages.enterName(option)
+          : messages.enterDirectoryName,
         validate: (input: string) => {
           if (input.trim() === '') return messages.nameEmpty;
           if (!/^[a-z]+(?:-[a-z]+)*$|^[a-z]+(?:[A-Z][a-z]*)*$/.test(input))
@@ -80,6 +85,7 @@ class CreateCLI {
       {
         type: 'input',
         name: 'description',
+        default: `Write ${option} by context}`,
         message: messages.enterDescription(option),
         validate: (input: string) =>
           input.trim() !== '' || messages.descriptionEmpty,
@@ -104,6 +110,7 @@ class CreateCLI {
 
   async start() {
     let continuePrompt = true;
+    const dirName = await this.promptName();
 
     while (continuePrompt) {
       const selectedOption = await this.promptOptionSelection();
@@ -111,7 +118,12 @@ class CreateCLI {
       const description = await this.promptOptionDescription(selectedOption);
       const spinner = ora('[huskygpt] Processing...').start();
 
-      await this.onOptionCreated({ option: selectedOption, name, description });
+      await this.onOptionCreated({
+        option: selectedOption,
+        name,
+        dirName,
+        description,
+      });
 
       spinner.stop();
       continuePrompt = await this.promptContinueOrFinish();

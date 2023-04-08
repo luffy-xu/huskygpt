@@ -7,6 +7,7 @@ import CreateCLI, { OptionTypeExtension } from './create';
 import { HuskyGPTCreate, HuskyGPTReview, HuskyGPTTest } from './huskygpt';
 import ReadFiles from './reader';
 import { HuskyGPTTypeEnum, IUserOptions } from './types';
+import { makeDirExist } from './utils';
 import { readPromptFile } from './utils/read-prompt-file';
 
 const runMap: Record<HuskyGPTTypeEnum, () => void> = {
@@ -35,17 +36,26 @@ const runMap: Record<HuskyGPTTypeEnum, () => void> = {
   },
   [HuskyGPTTypeEnum.Create]: async () => {
     const huskygpt = new HuskyGPTCreate();
-    const cli = new CreateCLI(async ({ option, name, description }) => {
-      const message = await huskygpt.run({
-        fileContent: `${readPromptFile(
-          `create-${option}.txt`,
-        )}\n Please reply "${option}" code by following requirements: ${description}`,
-      });
-      fs.writeFileSync(
-        path.join(process.cwd(), `${name}.${OptionTypeExtension[option]}`),
-        message,
-      );
-    });
+    const cli = new CreateCLI(
+      async ({ option, dirName, name, description }) => {
+        const message = await huskygpt.run({
+          fileContent: `${readPromptFile(
+            `create-${option}.txt`,
+          )}\n Please reply "${option}" code by following requirements: ${description}`,
+        });
+        const dirPath = path.join(
+          process.cwd(),
+          userOptions.options.readFilesRootName,
+          option,
+          dirName,
+        );
+        makeDirExist(dirPath);
+        fs.writeFileSync(
+          path.join(dirPath, `${name}.${OptionTypeExtension[option]}`),
+          message,
+        );
+      },
+    );
 
     await cli.start();
   },

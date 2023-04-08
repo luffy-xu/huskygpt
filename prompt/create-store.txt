@@ -1,7 +1,7 @@
 Here is a simple example of how to write a "Store":
 
 import { BaseStore } from 'store/base';
-import { getVariable } from 'service/variable';
+import { getVariable } from 'service/{module name}';
 
 export class MyStore extends BaseStore {
   {Below is an example of how to use the @observable decorator to make a variable observable.}

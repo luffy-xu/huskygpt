@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { userOptions } from 'src/constant';
 import { IReadFileResult } from 'src/types';
-import { getAllCodeBlock } from 'src/utils';
+import { getAllCodeBlock, makeDirExist } from 'src/utils';
 
 import HuskyGPTBase from './base';
 
@@ -42,10 +42,7 @@ class HuskyGPTTest extends HuskyGPTBase {
       }${this.getFileExtension(filePath)}`;
       const testFilePath = path.join(dirPath, fileName);
 
-      // Create the output directory if it doesn't exist
-      if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath);
-      }
+      makeDirExist(dirPath);
 
       // If the test file doesn't exist, create it
       if (!fs.existsSync(testFilePath)) {
