@@ -225,7 +225,7 @@ class UserOptionsClass {
 
     const regex = new RegExp(this.options.securityRegex, 'gi');
 
-    return prompt.replace(regex, '***REMOVED***');
+    return prompt.replace(regex, 'REMOVED');
   }
 
   /**

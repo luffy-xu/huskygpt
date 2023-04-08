@@ -1,9 +1,14 @@
 import { AbortController } from 'abort-controller';
 import chalk from 'chalk';
-import { ChatGPTAPI, ChatGPTUnofficialProxyAPI, ChatMessage } from 'chatgpt';
+import {
+  ChatGPTAPI,
+  ChatGPTUnofficialProxyAPI,
+  ChatMessage,
+  SendMessageOptions,
+} from 'chatgpt';
 import ora from 'ora';
 import { HuskyGPTPrompt } from 'src/chatgpt/prompt';
-import { userOptions } from 'src/constant';
+import { codeBlocksMdSymbolRegex, userOptions } from 'src/constant';
 import { HuskyGPTTypeEnum, IReadFileResult } from 'src/types';
 
 export class ChatgptProxyAPI {
@@ -100,8 +105,7 @@ export class ChatgptProxyAPI {
     const reviewSpinner = this.oraStart();
     const controller = new AbortController();
     const signal = controller.signal;
-
-    const res = await this.api.sendMessage(securityPrompt, {
+    const sendOptions: SendMessageOptions = {
       ...prevMessage,
       // Set the timeout to 5 minutes
       timeoutMs: 1000 * 60 * 5,
@@ -110,20 +114,41 @@ export class ChatgptProxyAPI {
       onProgress: (partialResponse) => {
         reviewSpinner.text = partialResponse.text;
       },
-    });
+    };
+
+    let resMessage = await this.api.sendMessage(securityPrompt, sendOptions);
+
+    // Check if the response contains only one "```" and resend the message with the prompt "continue"
+    if (
+      (resMessage.text.match(codeBlocksMdSymbolRegex) || []).length % 2 ===
+      1
+    ) {
+      const continueMessage = 'continue';
+      const nextMessage = await this.api.sendMessage(continueMessage, {
+        ...sendOptions,
+        conversationId: resMessage.conversationId,
+        parentMessageId: resMessage.id,
+      });
+
+      resMessage = {
+        ...resMessage,
+        ...nextMessage,
+        text: `${resMessage.text}${nextMessage.text}`,
+      };
+    }
 
     // Check if the review is passed
-    const isReviewPassed = this.isReviewPassed(res.text);
+    const isReviewPassed = this.isReviewPassed(resMessage.text);
     const colorText = isReviewPassed
-      ? chalk.green(res.text)
-      : chalk.yellow(res.text);
+      ? chalk.green(resMessage.text)
+      : chalk.yellow(resMessage.text);
 
     // Stop the spinner
     reviewSpinner[isReviewPassed ? 'succeed' : 'fail'](
       `[huskygpt] ${colorText} \n `,
     );
 
-    return res;
+    return resMessage;
   }
 
   /**
