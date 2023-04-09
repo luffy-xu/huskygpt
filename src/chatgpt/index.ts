@@ -20,7 +20,7 @@ export class ChatgptProxyAPI {
   }
 
   get needPrintMessage(): boolean {
-    return [HuskyGPTTypeEnum.Review, HuskyGPTTypeEnum.Test].includes(
+    return [HuskyGPTTypeEnum.Review, HuskyGPTTypeEnum.Test, HuskyGPTTypeEnum.Commit].includes(
       userOptions.huskyGPTType,
     );
   }
@@ -72,7 +72,7 @@ export class ChatgptProxyAPI {
   /**
    * Log the review info
    */
-  private oraStart(
+  oraStart(
     text = '',
     needPrintMessage = this.needPrintMessage,
   ): ora.Ora {
@@ -90,7 +90,7 @@ export class ChatgptProxyAPI {
   /**
    * Run the OpenAI API
    */
-  private async sendMessage(
+  async sendMessage(
     prompt: string,
     prevMessage?: Partial<ChatMessage>,
   ): Promise<ChatMessage> {
@@ -170,6 +170,18 @@ export class ChatgptProxyAPI {
       messageArray.push(message.text);
 
       this.parentMessage = message;
+    }
+
+    return messageArray;
+  }
+
+  async sendPrompts(prompts: string[]): Promise<string[]> {
+    if (!prompts.length) return [];
+
+    const messageArray: string[] = [];
+    for (const prompt of prompts) {
+      const message = await this.sendMessage(prompt);
+      messageArray.push(message.text);
     }
 
     return messageArray;

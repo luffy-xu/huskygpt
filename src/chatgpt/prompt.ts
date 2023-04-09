@@ -43,6 +43,9 @@ export class HuskyGPTPrompt {
 
       return [basePrompt, ...codePrompts];
     },
+    [HuskyGPTTypeEnum.Commit]: () => {
+      return [];
+    },
   };
 
   constructor(private huskyGPTType: HuskyGPTTypeEnum) {}

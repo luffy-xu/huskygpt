@@ -1,0 +1,717 @@
+diff --git a/src/app/main/index.tsx b/src/app/main/index.tsx
+index 6be62b2..ae55e8b 100644
+--- a/src/app/main/index.tsx
++++ b/src/app/main/index.tsx
+@@ -36,97 +36,97 @@ import { WhitelistManagementPage } from 'container/whitelist-management';
+ @observer
+ class Router extends React.Component {
+   public render() {
+     if (!header.isInit) return <Skeleton />;
+     return (
+       <BrowserRouter>
+         <Switch>
+           <NavigateRoute path={`${Routers.DEFAULT}`} exact={true} component={OverviewPage} />
+           <NavigateRoute
+             path={`${Routers.OVERVIEW_SCORE_MONITORING}`}
+             exact={true}
+             component={OverviewPage}
+           />
+           <NavigateRoute
+-            path={`${Routers.OVERVIEW_RESOURCE_MONITORING}`}
++            path={`${Routers.OVERVIEW_RESOURCE_MONITORING}/:tab?`}
+             exact={true}
+             component={ResourceMonitoringPage}
+           />
+           <NavigateRoute
+             path={`${Routers.OPTIMISE_STORAGE}`}
+             exact={true}
+             component={OptimizeStoragePage}
+           />
+           <NavigateRoute
+             path={`${Routers.OPTIMISE_COMPUTATION}`}
+             exact={true}
+             component={OptimizeComputationPage}
+           />
+           <NavigateRoute
+             path={`${Routers.IMPROVE_SERVICE}`}
+             exact={true}
+             component={OptimizeServicePage}
+           />
+           <NavigateRoute
+             path={`${Routers.MAXIMIZE_VALUE}`}
+             exact={true}
+             component={MaximizeValuePage}
+           />
+ 
+           <NavigateRoute path={`${Routers.SUPER_ADMIN}`} exact={true} component={SAMPage} />
+ 
+           <NavigateRoute
+             path={`${Routers.FACTOR_MANAGEMENT}`}
+             exact={true}
+             component={FactorManagementPage}
+           />
+           <NavigateRoute
+             path={`${Routers.TARGET_MANAGEMENT}`}
+             exact={true}
+             component={TargetManagementPage}
+           />
+           <NavigateRoute
+             path={`${Routers.TARGET_MANAGEMENT_EDIT}`}
+             exact={true}
+             component={TargetManagementEditPage}
+           />
+           <NavigateRouteWithAccessPolicy
+             path={`${Routers.BUDGET_CENTER_GLOBAL}/:tab`}
+             exact={true}
+             component={BudgetCenterGlobalPage}
+             accessPolicy={() => header.isAdmin}
+           />
+           <NavigateRouteWithAccessPolicy
+             path={`${Routers.BUDGET_DETAIL}/:id`}
+             exact={true}
+             component={BudgetDetailPage}
+             accessPolicy={() => header.isAdmin}
+           />
+           <NavigateRouteWithAccessPolicy
+             path={`${Routers.BUDGET_APPLY_DETAIL}/:id`}
+             exact={true}
+             component={ApplyBudgetDetailPage}
+             accessPolicy={() => header.isAdmin}
+           />
+ 
+           <NavigateRouteWithAccessPolicy
+             path={`${Routers.BUDGET_CENTER_PLANNING}/:tab`}
+             component={BudgetCenterPlanningPage}
+             accessPolicy={() => header.isAdmin}
+           />
+ 
+           <NavigateRoute path={`${Routers.BUDGET_APPLY}`} component={ApplyBudgetPage} />
+ 
+           <NavigateRoute path={Routers.COST_CENTER} component={CostCenterPage} exact={true} />
+ 
+           <NavigateRoute
+             path={Routers.WHITELIST_MANAGEMENT}
+             component={WhitelistManagementPage}
+             exact={true}
+           />
+ 
+           <Redirect to={`${Routers.DEFAULT}${window.location.search}`} />
+         </Switch>
+       </BrowserRouter>
+     );
+   }
+ }
+diff --git a/src/container/cost-center/team/common/summary-item.tsx b/src/container/cost-center/team/common/summary-item.tsx
+index 260b86b..a59346a 100644
+--- a/src/container/cost-center/team/common/summary-item.tsx
++++ b/src/container/cost-center/team/common/summary-item.tsx
+@@ -14,10 +14,15 @@ export interface ISummaryItemProps {
+ }
+ 
+ export const SummaryInfo: React.FC<{ value: number }> = (props) => {
++  const { value } = props;
+   return (
+     <div className="text-sm">
+-      <span className="red">&uarr;{props.value}%</span>
++      {value > 0 ? (
++        <span className="red">&uarr;{value}%</span>
++      ) : (
++        <span className="green">&darr;{Math.abs(value)}%</span>
++      )}
+       <span className="black45"> vs Last Month</span>
+     </div>
+   );
+ };
+diff --git a/src/container/cost-center/team/index.less b/src/container/cost-center/team/index.less
+index 7464d56..1ec6a2c 100644
+--- a/src/container/cost-center/team/index.less
++++ b/src/container/cost-center/team/index.less
+@@ -1,197 +1,202 @@
+ @import url("/src/styles/variable.less");
+ .team-cost-center {
+   .title {
+     font-size: 16px;
+     font-weight: bold;
+   }
+   .ant-collapse-content-box {
+     background-color: @white;
+   }
+   .ant-collapse-header {
+     border-bottom: 1px solid @gray-5;
+   }
+   .ant-collapse-item {
+     border: none;
+   }
+ 
+   .custom-select-wrapper {
+     min-width: 300px;
+     display: flex;
+     .cs-label {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       border: 1px solid @normal-color;
+       border-right: none;
+       border-top-left-radius: 2px;
+       border-bottom-left-radius: 2px;
+       background-color: @descriptions-bg;
+       padding: 0 11px;
+     }
+     .cs-select {
+       flex: 1;
+     }
+     .ant-select-selector {
+       border-top-left-radius: 0px;
+       border-bottom-left-radius: 0px;
+     }
+   }
+ 
+   .line-chart {
+     height: 314px;
+     min-width: 500px;
+     flex: 1;
+   }
+ 
+   .title {
+     display: flex;
+     justify-content: space-between;
+     margin-right: 16px;
+     width: 116px;
+   }
+ 
+   .mail-tag {
+     margin-right: 8px;
+     border: 1px solid @gray-8;
+     color: @gray-8;
+     border-radius: 2px;
+     height: 18px;
+     line-height: 16px;
+     font-size: 12px;
+     padding-left: 4px;
+     padding-right: 4px;
+     margin-bottom: 4px;
+     display: block;
+   }
+ 
+   .filter {
+     padding-top: 10px;
+     padding-bottom: 10px;
+     .region-filter {
+       margin-left: 50px;
+     }
+   }
+ 
+   .divider {
+     height: 32px;
+     width: 1px;
+     background-color: @gray-4;
+   }
+   .summary-left {
+     width: 280px;
+     box-sizing: border-box;
+     line-height: 32px;
+     .box {
+       padding: 4px 10px;
+       cursor: pointer;
+       border-right: 1px solid @gray-4;
+       padding-right: 10px;
+       &.active {
+         background-color: #f5f9ff;
+         padding-right: 8px;
+         border-right: solid 3px @primary-color;
+       }
+       &:last-child {
+         border-bottom: none;
+       }
+     }
+   }
+   .ant-table .ant-table-expanded-row-fixed {
+     padding: 0;
+   }
+ }
+ 
+ .l1-team-cost {
+   &__table {
+     .current {
+       &::after {
+         content: "\20";
+         background-color: @blue-menu;
+         opacity: 0.5;
+         display: block;
+         width: 100%;
+         height: 100%;
+         position: absolute;
+         left: 0;
+         top: 0;
+         pointer-events: none;
+       }
+     }
+   }
+ }
+ 
+ .ram-team-cost {
+   .service-detail {
+     background-color: @white;
+     height: 180px;
+     flex: 1;
+     .service-detail {
+       font-size: 14px;
+       line-height: 16px;
+     }
+ 
+     .score {
+       padding: 16px;
+       padding-top: 10px;
+       width: 355px;
+       .legend-wrapper {
+         text-align: left;
+       }
+ 
+       .legend-item {
+         padding-left: 16px;
+         &:first-child {
+           padding-left: 0;
+         }
+       }
+     }
+ 
+     .usage {
+       padding: 16px;
+       padding-top: 10px;
+       border-left: 1px solid @gray-4;
+       border-right: 1px solid @gray-4;
+       .ant-progress-text {
+         display: none;
+       }
+       .ant-progress-outer {
+         padding-right: 0;
+       }
+       .ant-progress-inner {
+         background-color: #e8e8e8;
+       }
+     }
+     .insight {
++      min-width: 430px;
+       padding: 16px;
+       padding-top: 10px;
++      font-size: 14px;
++      &.lh,
++      &.ll {
+         font-size: 12px;
+       }
+     }
++  }
+   .ram-team-cost__table {
+     border: 1px solid @gray-4;
+   }
+ 
+   .progress-box {
+     padding-top: 20px;
+   }
+   .usage-yarn {
+     .ant-progress {
+       line-height: 10px;
+     }
+     .progress-box {
+       line-height: 14px;
+       padding-top: 0;
+       padding-bottom: 8px;
+     }
+   }
+   .service-menu {
+     width: 172px;
+     .ant-menu-item {
+       height: 90px;
+       display: flex;
+       align-items: center;
+       margin-bottom: 0;
+       margin-top: 0;
+     }
+   }
+ }
+diff --git a/src/container/cost-center/team/l1/table-field.tsx b/src/container/cost-center/team/l1/table-field.tsx
+index d473900..2c94677 100644
+--- a/src/container/cost-center/team/l1/table-field.tsx
++++ b/src/container/cost-center/team/l1/table-field.tsx
+@@ -10,20 +10,20 @@ import { detailHdfsTip } from '../common/tips';
+ export const hdfsField = (team: string) => {
+   return (
+     <Space>
+       <div>
+         <Tooltip title="Click to go to resource page">
+           <Link to={`${Routers.OPTIMISE_STORAGE}?team_code=${team}`}>HDFS</Link>
+         </Tooltip>
+         <br />
+         <Tooltip title="Click to go to resource page">
+-          <Link to={`${Routers.OVERVIEW_RESOURCE_MONITORING}/batch_yarn?team_code=${team}`}>
++          <Link to={`${Routers.OVERVIEW_RESOURCE_MONITORING}/yarn?team_code=${team}`}>
+             Batch YARN
+           </Link>
+         </Tooltip>
+         <br />
+         Streaming YARN
+       </div>
+       <LabelTip title={detailHdfsTip} />
+     </Space>
+   );
+ };
+diff --git a/src/container/cost-center/team/ram/insight.tsx b/src/container/cost-center/team/ram/insight.tsx
+index a8d1e80..aef3895 100644
+--- a/src/container/cost-center/team/ram/insight.tsx
++++ b/src/container/cost-center/team/ram/insight.tsx
+@@ -1,4 +1,6 @@
+ import { Space, Button } from 'antd';
++import { Link } from 'component/router';
++import { Routers } from 'lib/constant';
+ import React from 'react';
+ import { EServiceType } from 'service/budget';
+ interface IProps {
+@@ -5,95 +7,116 @@ interface IProps {
+   serviceType: EServiceType;
+   score: number;
+   usage: number;
+ }
+-const InsightHH: React.FC<Pick<IProps, 'serviceType'>> = (props) => {
++type TInsight = Pick<IProps, 'serviceType'>;
++
++const ButtonMonitor: React.FC<TInsight> = (props) => {
++  const url =
++    props.serviceType === EServiceType.HDFS
++      ? Routers.OPTIMISE_STORAGE
++      : Routers.OVERVIEW_RESOURCE_MONITORING;
++  const subPath =
++    props.serviceType === EServiceType.HDFS
++      ? ''
++      : // TODO: add team_code to url
++        `/${props.serviceType === EServiceType.PRESTO ? 'presto' : 'yarn'}?team_code=`;
++  return (
++    <Button type="primary">
++      <Link to={`${url}${subPath}`}>Monitor Resource</Link>
++    </Button>
++  );
++};
++
++const InsightHH: React.FC<TInsight> = (props) => {
+   return (
+     <div className="flex-1 insight">
+       <div className="info">
+         <span className="font-bold">Insight: </span>
+         Your score falls within the higher range and your usage is high. This could mean that you
+         have effectively utilising the resource
+       </div>
+       <div className="info pt8">
+         <span className="font-bold">Recommendation: </span>
+         You may want to maintain this behaviour by closely monitoring your resource usage.
+       </div>
+-      <Space className="pt16">
+-        {props.serviceType === EServiceType.HDFS ? (
+-          <Button type="primary">Monitor Resource</Button>
+-        ) : (
+-          <Button type="primary">Resource Monitoring</Button>
+-        )}
++      <Space className="pt8">
++        <ButtonMonitor {...props} />
+       </Space>
+     </div>
+   );
+ };
+-const shrinkButton = <Button type="primary">Shrink Allocation</Button>;
+-const InsightHL: React.FC<Pick<IProps, 'serviceType'>> = (_props) => {
++
++const ShrinkButton = () => <Button type="primary">Shrink Allocation</Button>;
++
++const InsightHL: React.FC<TInsight> = (_props) => {
+   return (
+     <div className="flex-1 insight">
+       <div className="info">
+         <span className="font-bold">Insight: </span>
+         Your score falls within the higher range but your usage is low. This could mean that you
+         were allocated with too much resources and may be paying more than what you need.
+       </div>
+       <div className="info pt8">
+         <span className="font-bold">Recommendation: </span>
+         You may raise a request to shrink your resource allocation in order to reduce your cost.
+       </div>
+-      <Space className="pt16">{shrinkButton}</Space>
++      <Space className="pt8">
++        <ShrinkButton />
++      </Space>
+     </div>
+   );
+ };
+ 
++const ButtonOptimize: React.FC<TInsight> = (props) => {
++  const type = props.serviceType;
++  const url = type === EServiceType.HDFS ? Routers.OPTIMISE_STORAGE : Routers.OPTIMISE_COMPUTATION;
++  return (
++    <Button type="primary">
++      <Link to={`${url}`}>Optimise {type === EServiceType.HDFS ? 'Storage' : 'Computation'}</Link>
++    </Button>
++  );
++};
++
+ const InsightLH: React.FC<Pick<IProps, 'serviceType'>> = (props) => {
+   return (
+-    <div className="flex-1 insight">
++    <div className="flex-1 insight lh">
+       <div className="info">
+         <span className="font-bold">Insight: </span>
+         Your score falls within the lower range and your usage is high. This could mean that you are
+         ineffectively utilising the resource and may cause you to be paying more than what you need.
+       </div>
+       <div className="info pt8">
+         <span className="font-bold">Recommendation: </span>
+         You may start by optimising some items that violate a policy, once you free up additional
+         resource, you can then raise a request to shrink your resource allocation in order to reduce
+         your cost.
+       </div>
+-      <Space className="pt16">
+-        {props.serviceType === EServiceType.HDFS ? (
+-          <Button type="primary">Optimise Storage</Button>
+-        ) : (
+-          <Button type="primary">Optimise Computation</Button>
+-        )}
+-        {shrinkButton}
++      <Space className="pt8">
++        <ButtonOptimize {...props} />
++        <ShrinkButton />
+       </Space>
+     </div>
+   );
+ };
+ 
+ const InsightLL: React.FC<Pick<IProps, 'serviceType'>> = (props) => {
+   return (
+-    <div className="flex-1 insight">
++    <div className="flex-1 insight ll">
+       <div className="info">
+         <span className="font-bold">Insight: </span>
+         Your score falls within the lower range and your usage is low. This could mean that you are
+         ineffectively utilising the resource and may be paying more than what you need.
+       </div>
+       <div className="info pt8">
+         <span className="font-bold">Recommendation: </span>
+         You may start by raising a request to shrink your resource allocation in order to reduce
+         your cost. Then you can start optimising some items that violate a policy to improve your
+         score.
+       </div>
+-      <Space className="pt16">
+-        {shrinkButton}
+-        {props.serviceType === EServiceType.HDFS ? (
+-          <Button type="primary">Optimise Storage</Button>
+-        ) : (
+-          <Button type="primary">Optimise Computation</Button>
+-        )}
++      <Space className="pt8">
++        <ShrinkButton />
++        <ButtonOptimize {...props} />
+       </Space>
+     </div>
+   );
+ };
+diff --git a/src/container/cost-center/team/ram/service-detail.tsx b/src/container/cost-center/team/ram/service-detail.tsx
+index f1e1ed2..247bd3f 100644
+--- a/src/container/cost-center/team/ram/service-detail.tsx
++++ b/src/container/cost-center/team/ram/service-detail.tsx
+@@ -32,23 +32,22 @@ const ServiceDetail: React.FC<IProps> = (props) => {
+ const BatchYarnUsageAllocation: React.FC = () => {
+   return (
+     <div className="flex-1 usage usage-yarn">
+       <div className="line-bottom">
+         <div className="service-title">Memory(Usage/Allocation)</div>
+         <div className="font-bold">237 TB/1,907 TB</div>
+         <div className="progress-box">
+           <div className="text-center">30%</div>
+-          <br />
+           <Progress percent={30} />
+         </div>
+       </div>
+       <div>
+         <div className="service-title">VCore(Usage/Allocation)</div>
+         <div className="font-bold">237 GB/107 GB</div>
+         <div className="progress-box">
+           <div className="text-center">30%</div>
+           <Progress percent={30} />
+         </div>
+       </div>
+     </div>
+   );
+ };
+@@ -56,16 +55,16 @@ const BatchYarnUsageAllocation: React.FC = () => {
+ const DistUsageAllocation: React.FC<{
+   title: string;
+ }> = (props) => {
+   return (
+     <div className="flex-1 usage">
+       <div className="service-title">{props.title} Disk(Usage/Allocation)</div>
+       <div className="font-bold">237 TB/1,907 TB</div>
+       <div className="progress-box">
+         30%
+         <br />
+         <Progress percent={30} />
+       </div>
+-      <SummaryInfo value={31.5} />
++      <SummaryInfo value={-31.5} />
+     </div>
+   );
+ };
+diff --git a/src/container/cost-center/team/ram/table-field.tsx b/src/container/cost-center/team/ram/table-field.tsx
+index 04af09e..70e228f 100644
+--- a/src/container/cost-center/team/ram/table-field.tsx
++++ b/src/container/cost-center/team/ram/table-field.tsx
+@@ -6,14 +6,18 @@ import { hdfsField } from '../l1/table-field';
+ import { IDetailColumn } from './table-columns';
+ 
+ export const titleRender = (title: string, row: IDetailColumn) => {
++  if (row.type === 'total') {
++    return title;
++  }
++
+   if (row.title === EServiceType.HDFS) {
+     // TODO: team code should get from ram team select
+     return (
+       <Row justify="space-between" align="middle">
+         {hdfsField('todo')}
+         <img src={WARN_IMG} width={25} height={25} />
+       </Row>
+     );
+   }
+   return serviceTypeName[title as EServiceType];
+ };
+diff --git a/src/container/resource-monitoring/index.tsx b/src/container/resource-monitoring/index.tsx
+index 87958fa..cc56cdb 100644
+--- a/src/container/resource-monitoring/index.tsx
++++ b/src/container/resource-monitoring/index.tsx
+@@ -11,65 +11,75 @@ import { TitleWithLastUpdate } from 'component/title-with-last-update';
+ import { yarnStore } from 'store/resource-monitoring/yarn';
+ import { prestoStore } from 'store/resource-monitoring/presto';
+ import './index.less';
++import { Routers } from 'lib/constant';
+ 
+ interface IParams {
+   id?: string;
++  tab?: string;
+ }
+ 
+ class ResourceMonitoring extends ContentLayout<IParams> {
+   tabPaneMap: Record<ETab, React.ReactElement> = {
+     [ETab.presto]: <Presto />,
+     [ETab.yarn]: <BatchYarn />,
+   };
+ 
+   get store() {
+     const mp: Partial<Record<ETab, typeof prestoStore>> = {
+       [ETab.presto]: prestoStore,
+       [ETab.yarn]: yarnStore,
+     };
+     return mp[resourceMonitoringStore.tabKey];
+   }
+ 
+   get latestUpdatedInfo() {
+     return this.store?.latestUpdatedInfo;
+   }
+ 
+   public renderContentTitle() {
+     return (
+       <TitleWithLastUpdate
+         title="Resource Monitoring"
+         latestUpdatedTime={this.latestUpdatedInfo?.latestUpdatedTime}
+       />
+     );
+   }
+ 
+   public renderTab() {
+     return (
+       <Tabs
+         className="resource-monitoring-tab"
+         activeKey={resourceMonitoringStore.tabKey}
+         onChange={(e) => {
+           resourceMonitoringStore.switchTab(e as ETab);
++          window.history.replaceState(
++            null,
++            '',
++            `${Routers.OVERVIEW_RESOURCE_MONITORING}/${e}${window.location.search}`
++          );
+         }}
+       >
+         {Object.entries(ETab).map(([_, v]) => (
+           <Tabs.TabPane key={v} tab={ETabTitle[v]}>
+             {this.tabPaneMap[v]}
+           </Tabs.TabPane>
+         ))}
+       </Tabs>
+     );
+   }
+ 
+   public renderContentCore() {
+     return <div className="resource-monitoring">{this.renderTab()}</div>;
+   }
+ }
+ 
+ export const ResourceMonitoringPage = (props: IRouterProps<IParams>) => {
++  const tab = (props.match.params.tab || ETab.presto) as ETab;
++  resourceMonitoringStore.switchTab(tab);
++
+   return (
+     <Layout {...props}>
+       <ResourceMonitoring id={props.match.params.id} />
+     </Layout>
+   );
+ };
+diff --git a/src/styles/predefined.less b/src/styles/predefined.less
+index a2f6a95..1e5ceb6 100644
+--- a/src/styles/predefined.less
++++ b/src/styles/predefined.less
+@@ -1,49 +1,52 @@
+ @import "./variable.less";
+ 
+ .flex {
+   display: flex;
+ }
+ .flex-1 {
+   flex: 1;
+ }
+ .font-bold {
+   font-weight: bold;
+ }
+ .gray-8 {
+   color: @gray-8;
+ }
+ .black45 {
+   color: @black45;
+ }
+ .red {
+   color: @primary-red;
+ }
++.green {
++  color: @green-1;
++}
+ 
+ .line-bottom {
+   border-bottom: 1px solid @gray-4;
+ }
+ 
+ .mb16 {
+   margin-bottom: 16px;
+ }
+ .mb32 {
+   margin-bottom: 16px;
+ }
+ .pt8 {
+   padding-top: 8px;
+ }
+ .pt16 {
+   padding-top: 16px;
+ }
+ .pb16 {
+   padding-bottom: 16px;
+ }
+ .text-lg {
+   font-size: 18px;
+ }
+ .text-sm {
+   font-size: 12px;
+ }
+ .text-center {
+   text-align: center;
+ }

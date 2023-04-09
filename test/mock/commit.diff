@@ -1,0 +1,124 @@
+diff --git a/src/container/cost-center/team/ram/insight.tsx b/src/container/cost-center/team/ram/insight.tsx
+new file mode 100644
+index 0000000..a8d1e80
+--- /dev/null
++++ b/src/container/cost-center/team/ram/insight.tsx
+@@ -0,0 +1,118 @@
++import { Space, Button } from 'antd';
++import React from 'react';
++import { EServiceType } from 'service/budget';
++interface IProps {
++  serviceType: EServiceType;
++  score: number;
++  usage: number;
++}
++const InsightHH: React.FC<Pick<IProps, 'serviceType'>> = (props) => {
++  return (
++    <div className="flex-1 insight">
++      <div className="info">
++        <span className="font-bold">Insight: </span>
++        Your score falls within the higher range and your usage is high. This could mean that you
++        have effectively utilising the resource
++      </div>
++      <div className="info pt8">
++        <span className="font-bold">Recommendation: </span>
++        You may want to maintain this behaviour by closely monitoring your resource usage.
++      </div>
++      <Space className="pt16">
++        {props.serviceType === EServiceType.HDFS ? (
++          <Button type="primary">Monitor Resource</Button>
++        ) : (
++          <Button type="primary">Resource Monitoring</Button>
++        )}
++      </Space>
++    </div>
++  );
++};
++const shrinkButton = <Button type="primary">Shrink Allocation</Button>;
++const InsightHL: React.FC<Pick<IProps, 'serviceType'>> = (_props) => {
++  return (
++    <div className="flex-1 insight">
++      <div className="info">
++        <span className="font-bold">Insight: </span>
++        Your score falls within the higher range but your usage is low. This could mean that you
++        were allocated with too much resources and may be paying more than what you need.
++      </div>
++      <div className="info pt8">
++        <span className="font-bold">Recommendation: </span>
++        You may raise a request to shrink your resource allocation in order to reduce your cost.
++      </div>
++      <Space className="pt16">{shrinkButton}</Space>
++    </div>
++  );
++};
++
++const InsightLH: React.FC<Pick<IProps, 'serviceType'>> = (props) => {
++  return (
++    <div className="flex-1 insight">
++      <div className="info">
++        <span className="font-bold">Insight: </span>
++        Your score falls within the lower range and your usage is high. This could mean that you are
++        ineffectively utilising the resource and may cause you to be paying more than what you need.
++      </div>
++      <div className="info pt8">
++        <span className="font-bold">Recommendation: </span>
++        You may start by optimising some items that violate a policy, once you free up additional
++        resource, you can then raise a request to shrink your resource allocation in order to reduce
++        your cost.
++      </div>
++      <Space className="pt16">
++        {props.serviceType === EServiceType.HDFS ? (
++          <Button type="primary">Optimise Storage</Button>
++        ) : (
++          <Button type="primary">Optimise Computation</Button>
++        )}
++        {shrinkButton}
++      </Space>
++    </div>
++  );
++};
++
++const InsightLL: React.FC<Pick<IProps, 'serviceType'>> = (props) => {
++  return (
++    <div className="flex-1 insight">
++      <div className="info">
++        <span className="font-bold">Insight: </span>
++        Your score falls within the lower range and your usage is low. This could mean that you are
++        ineffectively utilising the resource and may be paying more than what you need.
++      </div>
++      <div className="info pt8">
++        <span className="font-bold">Recommendation: </span>
++        You may start by raising a request to shrink your resource allocation in order to reduce
++        your cost. Then you can start optimising some items that violate a policy to improve your
++        score.
++      </div>
++      <Space className="pt16">
++        {shrinkButton}
++        {props.serviceType === EServiceType.HDFS ? (
++          <Button type="primary">Optimise Storage</Button>
++        ) : (
++          <Button type="primary">Optimise Computation</Button>
++        )}
++      </Space>
++    </div>
++  );
++};
++
++export const Insight: React.FC<IProps> = (props) => {
++  const { serviceType, score, usage } = props;
++  if (score >= 70 && usage >= 70) {
++    return <InsightHH serviceType={serviceType} />;
++  }
++
++  if (score >= 70 && usage < 70) {
++    return <InsightHL serviceType={serviceType} />;
++  }
++
++  if (score < 70 && usage >= 70) {
++    return <InsightLH serviceType={serviceType} />;
++  }
++
++  if (score < 70 && usage < 70) {
++    return <InsightLL serviceType={serviceType} />;
++  }
++};

@@ -11,10 +11,13 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "baseUrl": ".",
     "outDir": "build",
-    "noEmit": true
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "src/*": ["src/*"]
+    }
   },
   "exclude": ["node_modules", "build"],
-  "include": ["**/*.ts", "bin/cli.js", "bin/cli.js"]
+  "include": ["**/*.ts", "bin/cli.js", "bin/cli.js", "./test/**/*.ts"]
 }
