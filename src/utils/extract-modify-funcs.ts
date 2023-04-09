@@ -50,8 +50,8 @@ class GitDiffExtractor {
     let startLine = lineNumber;
     let endLine = lineNumber;
     const blockPattern =
-      /^\s*(?:export\s+)?(?:async\s+)?(?:function\b|class\b|.*=>|\(.*\)\s*=>|\(\s*\)\s*=>)/;
-    const classPattern = /^\s*(?:export\s+)?class\b/;
+      /^\s*(?:export\s+)?(?:default\s+)?(?:async\s+)?(?:function\b|class\b|.*=>|\(.*\)\s*=>|\(\s*\)\s*=>)/;
+    const classPattern = /^\s*(?:export\s+)?(?:default\s+)?class\b/;
 
     // Search for the beginning of a code block (function, class, or arrow function)
     while (startLine >= 0 && !lines[startLine].match(blockPattern)) {
@@ -116,10 +116,34 @@ class GitDiffExtractor {
   }
 
   /**
-   * Extracts modified functions or classes from a file.
-   * @param filePath - The file path of the target file.
-   * @param contents - The contents of the target file.
-   * @returns The modified functions or classes as a string or null if none are found.
+   * Checks if the specified code block is contained in any of the existing code blocks.
+   */
+  private isCodeBlockContainedInExistingBlocks(
+    codeBlock: string,
+    existingBlocks: string[],
+  ): boolean {
+    for (const existingBlock of existingBlocks) {
+      if (existingBlock.includes(codeBlock)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Adds the specified code block to the array of extracted code blocks if it is not already contained in the array.
+   */
+  private addCodeBlockIfNotContained(blocks: string[], newBlock: string): void {
+    if (
+      !this.isCodeBlockContainedInExistingBlocks(newBlock, blocks) &&
+      !blocks.includes(newBlock)
+    ) {
+      blocks.push(newBlock);
+    }
+  }
+
+  /**
+   * Extracts the modified functions from the specified file.
    */
   public extractModifiedFunction(
     filePath: string,
@@ -130,18 +154,15 @@ class GitDiffExtractor {
     if (!diffLines || !contents) return null;
 
     const modifiedLineNumbers = this.getModifiedLineNumbers(diffLines);
-
-    if (modifiedLineNumbers.length === 0) {
-      return null;
-    }
+    if (modifiedLineNumbers.length === 0) return null;
 
     const lines = contents.split('\n');
     const extractedCodeBlocks: string[] = [];
 
     for (const lineNumber of modifiedLineNumbers) {
       const codeBlock = this.extractCodeBlock(lines, lineNumber);
-      if (codeBlock && !extractedCodeBlocks.includes(codeBlock)) {
-        extractedCodeBlocks.push(codeBlock);
+      if (codeBlock) {
+        this.addCodeBlockIfNotContained(extractedCodeBlocks, codeBlock);
       }
     }
 
