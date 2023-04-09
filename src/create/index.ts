@@ -33,6 +33,9 @@ const messages = {
   continueOrFinish: 'Do you want to continue or finish?',
 };
 
+/**
+ * Huskygpt Create CLI
+ */
 class CreateCLI {
   constructor(
     private onOptionCreated: (data: {
@@ -43,6 +46,9 @@ class CreateCLI {
     }) => void,
   ) {}
 
+  /**
+   * Prompt option selection from user
+   */
   private async promptOptionSelection(): Promise<OptionType> {
     const { option } = await inquirer.prompt([
       {
@@ -59,6 +65,9 @@ class CreateCLI {
     return option as OptionType;
   }
 
+  /**
+   * Prompt name from user
+   */
   private async promptName(option?: OptionType): Promise<string> {
     const { name } = await inquirer.prompt([
       {
@@ -80,12 +89,15 @@ class CreateCLI {
     return name;
   }
 
+  /**
+   * Prompt description from user
+   */
   private async promptOptionDescription(option: OptionType): Promise<string> {
     const { description } = await inquirer.prompt([
       {
         type: 'input',
         name: 'description',
-        default: `Write ${option} by context}`,
+        default: `Write ${option} by pervious contexts and requirements`,
         message: messages.enterDescription(option),
         validate: (input: string) =>
           input.trim() !== '' || messages.descriptionEmpty,
@@ -95,6 +107,9 @@ class CreateCLI {
     return description;
   }
 
+  /**
+   * Prompt continue or finish from user
+   */
   private async promptContinueOrFinish(): Promise<boolean> {
     const { action } = await inquirer.prompt([
       {
@@ -108,10 +123,15 @@ class CreateCLI {
     return action === 'Continue';
   }
 
+  /**
+   * Start CLI
+   */
   async start() {
+    // Prompt user for a directory name
     let continuePrompt = true;
     const dirName = await this.promptName();
 
+    // If user says yes, prompt for options and create a file
     while (continuePrompt) {
       const selectedOption = await this.promptOptionSelection();
       const name = await this.promptName(selectedOption);
