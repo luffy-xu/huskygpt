@@ -53,7 +53,7 @@ npm install -g huskygpt
       }
     },
     ```
-1. `eslintrc.json`:
+2. `eslintrc.json`:
     ```
     "overrides": [
       {
@@ -64,6 +64,15 @@ npm install -g huskygpt
       }
     ],
     ```
+3. `.gitignore`: 
+   ```
+   # review
+   .huskygpt_review.md
+   .env.local
+   ```
+    
+    
+ 
 
 ## Usage
 - Run the following command to review your git staged files:
@@ -98,5 +107,5 @@ See [`.env`](https://github.com/luffy-xu/huskygpt/blob/main/.env) file.
 
 ## Note
 1. Also can set all options in `.env` or `.env.local`, that will be used as default options. Command options will override the default options.
-1. Webhook currently only test in `seaTalk`, if other channel need to use, please rise `PR` by yourself or ask [me](swhd0501@gmail.com) for help.
+2. Webhook currently only test in `seaTalk`, if other channel need to use, please rise `PR` by yourself or ask [me](swhd0501@gmail.com) for help.
 
