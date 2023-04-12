@@ -1,6 +1,6 @@
 {
   "name": "huskygpt",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Automatically generate unit tests or review your code using openai chatgpt",
   "main": "lib/index.js",
   "type": "module",
