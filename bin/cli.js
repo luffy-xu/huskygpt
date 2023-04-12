@@ -49,10 +49,6 @@ program
     'Generate test file type, example: test or spec',
   )
   .option(
-    '-x, --test-file-extension <extension>',
-    'Generate test file name extension, example: .ts or .js',
-  )
-  .option(
     '-n, --test-file-dir-name <name>',
     'Generate test file directory name, example: __tests__',
   )
@@ -75,9 +71,6 @@ program
       ...(options.readGitStatus && { readGitStatus: options.readGitStatus }),
       ...(options.readDirName && { readFilesRootName: options.readDirName }),
       ...(options.testFileType && { testFileType: options.testFileType }),
-      ...(options.testFileExtension && {
-        testFileNameExtension: options.testFileExtension,
-      }),
       ...(options.testFileDirName && {
         testFileDirName: options.testFileDirName,
       }),

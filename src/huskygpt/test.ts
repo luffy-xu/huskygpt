@@ -18,6 +18,13 @@ class HuskyGPTTest extends HuskyGPTBase {
   }
 
   /**
+   * Get the file extension
+   */
+  private getFileExtension(filePath: string): string {
+    return path.extname(filePath);
+  }
+
+  /**
    * Write a test message to a file
    */
   private async writeTestMessageToFile(
@@ -30,9 +37,9 @@ class HuskyGPTTest extends HuskyGPTBase {
       if (!testFileDirName) throw new Error('testFileDirName is not set');
 
       const dirPath = path.join(path.dirname(filePath), testFileDirName);
-      const fileName =
-        this.getFileNameWithoutExtension(filePath) +
-        userOptions.testFileNameSuffix;
+      const fileName = `${this.getFileNameWithoutExtension(filePath)}.${
+        userOptions.options.testFileType
+      }${this.getFileExtension(filePath)}`;
       const testFilePath = path.join(dirPath, fileName);
 
       // Create the output directory if it doesn't exist

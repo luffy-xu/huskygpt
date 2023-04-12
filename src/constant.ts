@@ -31,7 +31,6 @@ class UserOptionsClass {
     readFilesRootName: 'src',
     readFileExtensions: '.ts,.tsx',
     testFileType: 'test',
-    testFileNameExtension: '.ts',
     testFileDirName: '__test__',
     reviewReportWebhook: '',
   };
@@ -158,15 +157,6 @@ class UserOptionsClass {
   }
 
   /**
-   * Get the file name suffix to use for test files
-   * @example
-   * // returns '.test.ts'
-   */
-  get testFileNameSuffix(): string {
-    return `.${this.options.testFileType}${this.options.testFileNameExtension}`;
-  }
-
-  /**
    * Convert the process.env to user options
    */
   private convertProcessEnvToUserOptions(
@@ -203,9 +193,6 @@ class UserOptionsClass {
        */
       testFileType:
         processEnv.TEST_FILE_TYPE || this.userOptionsDefault.testFileType,
-      testFileNameExtension:
-        processEnv.TEST_FILE_NAME_EXTENSION ||
-        this.userOptionsDefault.testFileNameExtension,
       testFileDirName:
         processEnv.TEST_FILE_DIR_NAME ||
         this.userOptionsDefault.testFileDirName,
