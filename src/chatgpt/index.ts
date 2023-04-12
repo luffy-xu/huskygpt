@@ -8,7 +8,11 @@ import {
 } from 'chatgpt';
 import ora from 'ora';
 import { HuskyGPTPrompt } from 'src/chatgpt/prompt';
-import { codeBlocksMdSymbolRegex, userOptions } from 'src/constant';
+import {
+  OPENAI_MAX_RETRY,
+  codeBlocksMdSymbolRegex,
+  userOptions,
+} from 'src/constant';
 import { HuskyGPTTypeEnum, IReadFileResult } from 'src/types';
 
 export class ChatgptProxyAPI {
@@ -90,7 +94,73 @@ export class ChatgptProxyAPI {
   /**
    * Run the OpenAI API
    */
-  private async sendMessage(
+
+  // Helper function to perform the API call with retries, handling specific status codes
+  private async sendMessageWithRetry(
+    message: string,
+    options?: SendMessageOptions,
+    retries = OPENAI_MAX_RETRY,
+    retryDelay = 3000,
+  ): Promise<ChatMessage> {
+    for (let retry = 0; retry < retries; retry++) {
+      try {
+        return await this.api.sendMessage(message, options);
+      } catch (error) {
+        if (error.statusCode === 401) {
+          // If statusCode is 401, do not retry
+          throw error;
+        } else if (error.statusCode === 429) {
+          // If statusCode is 429, sleep for retryDelay milliseconds then try again
+          await new Promise((resolve) => setTimeout(resolve, retryDelay));
+        } else {
+          // If not a specified status code, and we've reached the maximum number of retries, throw the error
+          if (retry === retries) {
+            throw error;
+          }
+          console.log(
+            `[huskygpt] sendMessage failed, retrying... (${
+              retry + 1
+            }/${retries})`,
+          );
+        }
+      }
+    }
+    throw new Error('sendMessage failed after retries');
+  }
+
+  // Handle continue message if needed
+  private async handleContinueMessage(
+    message: ChatMessage,
+    sendOptions: SendMessageOptions,
+    maxContinueAttempts = 5,
+  ): Promise<ChatMessage> {
+    let resMessage = message;
+    let continueAttempts = 0;
+
+    while (
+      (resMessage.text.match(codeBlocksMdSymbolRegex) || []).length % 2 === 1 &&
+      continueAttempts < maxContinueAttempts
+    ) {
+      const continueMessage = 'continue';
+      const nextMessage = await this.sendMessageWithRetry(
+        continueMessage,
+        sendOptions,
+      );
+
+      resMessage = {
+        ...resMessage,
+        ...nextMessage,
+        text: `${resMessage.text}${nextMessage.text}`,
+      };
+
+      continueAttempts++;
+    }
+
+    return resMessage;
+  }
+
+  // Send the prompt to the API
+  private async sendPrompt(
     prompt: string,
     prevMessage?: Partial<ChatMessage>,
   ): Promise<ChatMessage> {
@@ -98,7 +168,7 @@ export class ChatgptProxyAPI {
 
     // If this is the first message, send it directly
     if (!prevMessage) {
-      return await this.api.sendMessage(securityPrompt);
+      return await this.sendMessageWithRetry(securityPrompt);
     }
 
     // Send the message with the progress callback
@@ -116,39 +186,37 @@ export class ChatgptProxyAPI {
       },
     };
 
-    let resMessage = await this.api.sendMessage(securityPrompt, sendOptions);
+    try {
+      let resMessage = await this.sendMessageWithRetry(
+        securityPrompt,
+        sendOptions,
+      );
 
-    // Check if the response contains only one "```" and resend the message with the prompt "continue"
-    if (
-      (resMessage.text.match(codeBlocksMdSymbolRegex) || []).length % 2 ===
-      1
-    ) {
-      const continueMessage = 'continue';
-      const nextMessage = await this.api.sendMessage(continueMessage, {
+      // Handle continue message logic
+      resMessage = await this.handleContinueMessage(resMessage, {
         ...sendOptions,
         conversationId: resMessage.conversationId,
         parentMessageId: resMessage.id,
-      });
+      } as SendMessageOptions);
 
-      resMessage = {
-        ...resMessage,
-        ...nextMessage,
-        text: `${resMessage.text}${nextMessage.text}`,
-      };
+      // Check if the review is passed
+      const isReviewPassed = this.isReviewPassed(resMessage.text);
+      const colorText = isReviewPassed
+        ? chalk.green(resMessage.text)
+        : chalk.yellow(resMessage.text);
+
+      // Stop the spinner
+      reviewSpinner[isReviewPassed ? 'succeed' : 'fail'](
+        `[huskygpt] ${colorText} \n `,
+      );
+
+      return resMessage;
+    } catch (error) {
+      // Stop the spinner
+      reviewSpinner.fail(`[huskygpt] ${error.message} \n `);
+      controller.abort();
+      throw error;
     }
-
-    // Check if the review is passed
-    const isReviewPassed = this.isReviewPassed(resMessage.text);
-    const colorText = isReviewPassed
-      ? chalk.green(resMessage.text)
-      : chalk.yellow(resMessage.text);
-
-    // Stop the spinner
-    reviewSpinner[isReviewPassed ? 'succeed' : 'fail'](
-      `[huskygpt] ${colorText} \n `,
-    );
-
-    return resMessage;
   }
 
   /**
@@ -160,10 +228,10 @@ export class ChatgptProxyAPI {
     if (!codePrompts.length) return [];
 
     const messageArray: string[] = [];
-    let message = this.parentMessage || (await this.sendMessage(systemPrompt));
+    let message = this.parentMessage || (await this.sendPrompt(systemPrompt));
 
     for (const prompt of codePrompts) {
-      message = await this.sendMessage(prompt, {
+      message = await this.sendPrompt(prompt, {
         conversationId: message?.conversationId,
         parentMessageId: message?.id,
       });

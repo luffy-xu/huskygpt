@@ -49,7 +49,7 @@ export class CodePicker {
         plugins: ['typescript', 'jsx'],
       });
 
-      traverse.default(ast, {
+      traverse(ast, {
         enter: (nodePath) => {
           // If current node already in the remaining code, skip it
           if (Number(nodePath.node.start) <= this.remainingEndIndex) return;
@@ -58,14 +58,14 @@ export class CodePicker {
 
           this.remainingEndIndex = Number(nodePath.node.end);
           // If the current node is a function or class, generate the code snippet
-          const codeSnippet = generate.default(nodePath.node).code;
+          const codeSnippet = generate(nodePath.node).code;
           this.remainingCode.push(codeSnippet);
         },
       });
 
       return this.remainingCode;
     } catch (e) {
-      if (userOptions.options.debug) console.error('Babel parse error: ', e);
+      if (userOptions.options.debug) console.error('Babel parse error: ', code);
       return [code];
     }
   }

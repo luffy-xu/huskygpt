@@ -8,6 +8,8 @@ import { HuskyGPTTypeEnum, IUserOptions, ReadTypeEnum } from './types';
 export const OPENAI_API_KEY_NAME = 'OPENAI_API_KEY';
 export const OPENAI_SESSION_TOKEN_NAME = 'OPENAI_SESSION_TOKEN';
 
+export const OPENAI_MAX_RETRY = 3;
+
 const DEFAULT_MODELS = {
   apiModel: 'gpt-3.5-turbo',
   proxyModel: 'text-davinci-002-render-sha',
