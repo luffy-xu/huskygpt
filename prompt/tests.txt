@@ -7,6 +7,7 @@ And use @testing-library/react for React component tests (@testing-library/react
 Note, please use ReactDOM.render instead of "react-test-renderer" or "enzyme" library.
 
 Note that you only need to reply with the unit tests code in single markdown code block.
+Note that tou should consider the classNames test case.
 
 Here is example:
 # User question:
