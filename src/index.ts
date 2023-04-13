@@ -8,19 +8,21 @@ import { HuskyGPTTypeEnum, IUserOptions } from './types';
 const runMap: Record<HuskyGPTTypeEnum, () => void> = {
   [HuskyGPTTypeEnum.Test]: async () => {
     const testFilePaths = new ReadFiles();
+    const files = testFilePaths.getFileResults();
     const huskygpt = new HuskyGPTTest();
 
     // Generate a test case for each file path
-    for (const fileResult of testFilePaths.getFileResults()) {
+    for (const fileResult of files) {
       await huskygpt.run(fileResult);
     }
   },
   [HuskyGPTTypeEnum.Review]: async () => {
     const reviewFiles = new ReadFiles();
+    const files = reviewFiles.getFileResults();
     const huskygpt = new HuskyGPTReview();
 
     // Review code for each file path
-    for (const fileResult of reviewFiles.getFileResults()) {
+    for (const fileResult of files) {
       await huskygpt.run(fileResult);
     }
 

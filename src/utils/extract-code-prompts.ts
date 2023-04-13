@@ -1,12 +1,14 @@
 import generate from '@babel/generator';
 import { parse } from '@babel/parser';
 import traverse, { NodePath } from '@babel/traverse';
+import fs from 'fs';
 import { userOptions } from 'src/constant';
+import { IReadFileResult } from 'src/types';
 
 /**
  * Pick function or class code from the given code
  */
-export class CodePicker {
+export class ExtractCodePrompts {
   // Store the remaining code after picking
   private remainingCode: string[];
   // Store the end index of the remaining code
@@ -42,9 +44,12 @@ export class CodePicker {
   /**
    * Pick function or class code from the given code
    */
-  public pickFunctionOrClassCodeArray(code: string): string[] {
+  public extractFunctionOrClassCodeArray({
+    fileContent,
+    filePath,
+  }: IReadFileResult): string[] {
     try {
-      const ast = parse(code, {
+      const ast = parse(fileContent, {
         sourceType: 'module',
         plugins: ['typescript', 'jsx'],
       });
@@ -65,8 +70,13 @@ export class CodePicker {
 
       return this.remainingCode;
     } catch (e) {
-      if (userOptions.options.debug) console.error('Babel parse error: ', code);
-      return [code];
+      if (userOptions.options.debug)
+        console.error('Babel parse error: ', fileContent);
+      return [
+        fs.existsSync(filePath)
+          ? fs.readFileSync(filePath, 'utf-8')
+          : fileContent,
+      ];
     }
   }
 }

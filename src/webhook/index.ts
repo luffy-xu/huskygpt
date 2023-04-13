@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { codeBlocksRegex, reviewFileName, userOptions } from 'src/constant';
@@ -43,7 +43,7 @@ class WebhookNotifier {
   /**
    * Publish all notices to the webhook channel
    */
-  public publishNotice() {
+  async publishNotice() {
     if (!this.tasks?.length) return;
     const content = this.tasks.join('\\r\\r\\n');
     const reviewFilePath = `${path.join(process.cwd(), reviewFileName)}`;
@@ -70,9 +70,13 @@ class WebhookNotifier {
       this.userEmail || getUserEmail()
     }\\" />\\r\\r${simplyReviewData(content)}`;
 
-    execSync(
-      `curl -i -X POST -H 'Content-Type: application/json' -d '{ "tag": "markdown", "markdown": {"content": "${data}"}}' ${this.channel}`,
-    );
+    try {
+      await exec(
+        `curl -i -X POST -H 'Content-Type: application/json' -d '{ "tag": "markdown", "markdown": {"content": "${data}"}}' ${this.channel}`,
+      );
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 

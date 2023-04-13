@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { userOptions } from 'src/constant';
 import { HuskyGPTTypeEnum, IReadFileResult } from 'src/types';
-import { CodePicker } from 'src/utils/pick-code';
+import { ExtractCodePrompts } from 'src/utils/extract-code-prompts';
 import { readPromptFile } from 'src/utils/read-prompt-file';
 
 export class HuskyGPTPrompt {
@@ -21,9 +21,12 @@ export class HuskyGPTPrompt {
         ${userOptions.options.openAIPrompt || ''}
       `;
 
-      const codePicker = new CodePicker();
+      const codePicker = new ExtractCodePrompts();
 
-      const codePrompts = codePicker.pickFunctionOrClassCodeArray(fileContent);
+      const codePrompts = codePicker.extractFunctionOrClassCodeArray({
+        ...fileResult,
+        fileContent,
+      });
 
       return [basePrompt, ...codePrompts];
     },
@@ -37,9 +40,12 @@ export class HuskyGPTPrompt {
         ${userOptions.options.openAIPrompt || ''}
       `;
 
-      const codePicker = new CodePicker();
+      const codePicker = new ExtractCodePrompts();
 
-      const codePrompts = codePicker.pickFunctionOrClassCodeArray(fileContent);
+      const codePrompts = codePicker.extractFunctionOrClassCodeArray({
+        ...fileResult,
+        fileContent,
+      });
 
       return [basePrompt, ...codePrompts];
     },

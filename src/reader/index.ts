@@ -66,22 +66,28 @@ class ReadFiles {
     const readSpinner = ora({
       text: '🚀 [huskygpt] Reading files...',
     }).start();
-    const fileResults = this.readTypeMap[readFileType]().filter(
-      ({ filePath: path }) =>
-        path && this.hasValidExtension(path) && !this.isTestFile(path),
-    );
 
-    if (userOptions.options.debug) {
-      console.log(
-        '[huskygpt] read files ===>',
-        fileResults.map((r) => r.filePath),
+    try {
+      const fileResults = this.readTypeMap[readFileType]().filter(
+        ({ filePath: path }) =>
+          path && this.hasValidExtension(path) && !this.isTestFile(path),
       );
-    }
 
-    fileResults.length > 0
-      ? readSpinner.succeed('🌟🌟 [huskygpt] read files successfully! 🌟🌟')
-      : readSpinner.warn('🤔🤔 [huskygpt] read no files! 🤔🤔');
-    return fileResults;
+      if (userOptions.options.debug) {
+        console.log(
+          '[huskygpt] read files ===>',
+          fileResults.map((r) => r.filePath),
+        );
+      }
+
+      fileResults.length > 0
+        ? readSpinner.succeed('🌟🌟 [huskygpt] read files successfully! 🌟🌟')
+        : readSpinner.warn('🤔🤔 [huskygpt] read no files! 🤔🤔');
+      return fileResults;
+    } catch (error) {
+      readSpinner.fail(`[huskygpt] read files failed: ${error}`);
+      throw error;
+    }
   }
 }
 
