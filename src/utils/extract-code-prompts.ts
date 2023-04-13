@@ -1,12 +1,14 @@
 import generate from '@babel/generator';
 import { parse } from '@babel/parser';
 import traverse, { NodePath } from '@babel/traverse';
+import fs from 'fs';
 import { userOptions } from 'src/constant';
+import { IReadFileResult } from 'src/types';
 
 /**
  * Pick function or class code from the given code
  */
-export class CodePicker {
+export class ExtractCodePrompts {
   // Store the remaining code after picking
   private remainingCode: string[];
   // Store the end index of the remaining code
@@ -42,14 +44,17 @@ export class CodePicker {
   /**
    * Pick function or class code from the given code
    */
-  public pickFunctionOrClassCodeArray(code: string): string[] {
+  public extractFunctionOrClassCodeArray({
+    fileContent,
+    filePath,
+  }: IReadFileResult): string[] {
     try {
-      const ast = parse(code, {
+      const ast = parse(fileContent, {
         sourceType: 'module',
         plugins: ['typescript', 'jsx'],
       });
 
-      traverse.default(ast, {
+      traverse(ast, {
         enter: (nodePath) => {
           // If current node already in the remaining code, skip it
           if (Number(nodePath.node.start) <= this.remainingEndIndex) return;
@@ -58,15 +63,20 @@ export class CodePicker {
 
           this.remainingEndIndex = Number(nodePath.node.end);
           // If the current node is a function or class, generate the code snippet
-          const codeSnippet = generate.default(nodePath.node).code;
+          const codeSnippet = generate(nodePath.node).code;
           this.remainingCode.push(codeSnippet);
         },
       });
 
       return this.remainingCode;
     } catch (e) {
-      if (userOptions.options.debug) console.error('Babel parse error: ', e);
-      return [code];
+      if (userOptions.options.debug)
+        console.error('Babel parse error: ', fileContent);
+      return [
+        fs.existsSync(filePath)
+          ? fs.readFileSync(filePath, 'utf-8')
+          : fileContent,
+      ];
     }
   }
 }

@@ -14,7 +14,7 @@
 - 🤖 `AI`: AI-powered code review and unit test generation
 - ✨ `Free`: Free to use with an `OpenAI Session Token`, enjoy chatgpt-3.5 or gpt-4 (Plus Account).
 - 🛡️ `Security`: Security-conscious function and class extraction, customize your `SECURITY_REGEX`.
-- 🧠 `Customizing`: Customizable prompts and model selection
+- 🧠 `Customizing`: Customizable prompts and model selection.
 - 📂 `File Reader`: Supports reading files from `directories` or `git staged files`.
 
 
@@ -43,6 +43,10 @@ npm install -g huskygpt
 | `OpenAI Session Token`      | ✅ Yes  | ☑️ Maybe   | ✅️ Real ChatGPT  |
 | `OpenAI API Key`            | ❌ No | ✅ Yes | ✅ Real ChatGPT models        |
 
+
+### Local prompt
+1. Create `prompt` directory in the root directory of your project.
+1. Add `review.txt` or `tests.txt` in the `prompt` directory.
 
 ### Pre-Commit
 1. [husky](https://github.com/typicode/husky) and [lint-stage](https://github.com/okonet/lint-staged)
@@ -92,12 +96,11 @@ npm install -g huskygpt
 - `-m, --model <model>`: OpenAI model to use.
 - `-p, --prompt <prompt>`: OpenAI prompt to use.
 - `-mt, --max-tokens <tokens>`: OpenAI max tokens to use.
-- `-e, --file-extensions <extensions>`: File extensions to read, example: .ts,.tsx.
+- `-e, --file-extensions <extensions>`: File extensions to read, example: .ts,.tsx
 - `-r, --read-type <type>`: Read files from directory or git stage, example: dir or git.
 - `-s, --read-git-status <name>`: Read files from git stage by status default: A,R,M.
 - `-d, --read-dir-name <name>`: Root name of the directory to read files from, example: src.
 - `-f, --test-file-type <type>`: Generate test file type, example: test or spec.
-- `-x, --test-file-extension <extension>`: Generate test file name extension, example: .ts or .js.
 - `-n, --test-file-dir-name <name>`: Generate test file directory name, example: __tests__.
 - `-o, --test-file-overwrite <value>`: Generate test file overwrite, default is true.
 - `-w, --review-report-webhook <url>`: Webhook URL to send review report.
