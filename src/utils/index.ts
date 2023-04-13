@@ -21,11 +21,9 @@ export const getUserEmail = () => {
 /**
  * Delete the file by the file path
  */
-export const deleteFile = (filePath: string) => {
+export const deleteFileSync = (filePath: string) => {
   if (!fs.existsSync(filePath)) return;
-  fs.unlink(filePath, (err) => {
-    if (err) throw err;
-  });
+  fs.unlinkSync(filePath);
 };
 
 export * from './simply-result';

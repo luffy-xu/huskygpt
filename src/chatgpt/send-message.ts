@@ -1,5 +1,9 @@
 import { ChatMessage, SendMessageOptions } from 'chatgpt';
-import { OPENAI_MAX_RETRY, codeBlocksMdSymbolRegex } from 'src/constant';
+import {
+  OPENAI_MAX_CONTINUES,
+  OPENAI_MAX_RETRY,
+  codeBlocksMdSymbolRegex,
+} from 'src/constant';
 
 // Helper function to perform the API call with retries, handling specific status codes
 export const sendMessageWithRetry = async (
@@ -42,7 +46,7 @@ export const handleContinueMessage = async (
     messageText: string,
     sendOptions?: SendMessageOptions,
   ) => Promise<ChatMessage>,
-  maxContinueAttempts = 3,
+  maxContinueAttempts = OPENAI_MAX_CONTINUES,
 ): Promise<ChatMessage> => {
   let resMessage = message;
   let continueAttempts = 0;

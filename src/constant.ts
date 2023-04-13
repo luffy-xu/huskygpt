@@ -8,7 +8,10 @@ import { HuskyGPTTypeEnum, IUserOptions, ReadTypeEnum } from './types';
 export const OPENAI_API_KEY_NAME = 'OPENAI_API_KEY';
 export const OPENAI_SESSION_TOKEN_NAME = 'OPENAI_SESSION_TOKEN';
 
+// Fetch openAI api retry times
 export const OPENAI_MAX_RETRY = 3;
+// Fetch openAI api max continues times
+export const OPENAI_MAX_CONTINUES = 3;
 
 const DEFAULT_MODELS = {
   apiModel: 'gpt-3.5-turbo',

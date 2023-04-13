@@ -5,12 +5,10 @@ import fs from 'fs';
 import { userOptions } from 'src/constant';
 import { IReadFileResult } from 'src/types';
 
-// @ts-ignore
 const traverseFunc =
-  typeof traverse === 'function' ? traverse : traverse.default;
-// @ts-ignore
+  typeof traverse === 'function' ? traverse : (traverse as any).default;
 const generateFunc =
-  typeof generate === 'function' ? generate : generate.default;
+  typeof generate === 'function' ? generate : (generate as any).default;
 
 /**
  * Pick function or class code from the given code
