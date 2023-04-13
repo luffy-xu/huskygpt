@@ -14,7 +14,7 @@
 - 🤖 `AI`: AI-powered code review and unit test generation
 - ✨ `Free`: Free to use with an `OpenAI Session Token`, enjoy chatgpt-3.5 or gpt-4 (Plus Account).
 - 🛡️ `Security`: Security-conscious function and class extraction, customize your `SECURITY_REGEX`.
-- 🧠 `Customizing`: Customizable prompts and model selection
+- 🧠 `Customizing`: Customizable prompts and model selection.
 - 📂 `File Reader`: Supports reading files from `directories` or `git staged files`.
 
 
@@ -43,6 +43,10 @@ npm install -g huskygpt
 | `OpenAI Session Token`      | ✅ Yes  | ☑️ Maybe   | ✅️ Real ChatGPT  |
 | `OpenAI API Key`            | ❌ No | ✅ Yes | ✅ Real ChatGPT models        |
 
+
+### Local prompt
+1. Create `prompt` directory in the root directory of your project.
+1. Add `review.txt` or `tests.txt` in the `prompt` directory.
 
 ### Pre-Commit
 1. [husky](https://github.com/typicode/husky) and [lint-stage](https://github.com/okonet/lint-staged)
