@@ -15,9 +15,10 @@ const DEFAULT_MODELS = {
   proxyModel: 'text-davinci-002-render-sha',
 };
 
-export const ROOT_SRC_DIR_PATH = path.join(
-  new URL('.', import.meta.url).pathname,
-);
+export const ROOT_SRC_DIR_PATH = __dirname;
+// export const ROOT_SRC_DIR_PATH = path.join(
+//   new URL('.', import.meta.url).pathname,
+// );
 
 class UserOptionsClass {
   options: IUserOptions;

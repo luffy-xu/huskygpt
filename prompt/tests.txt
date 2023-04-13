@@ -13,22 +13,27 @@ Here is example:
 # User question:
 {{code snippet}}
 # Assistant answer:
+{{
+if code syntax is tsx,jsx:
 import React from 'react';
-import ReactDOM from 'react-dom';
+}}
 
 {{Define and reuse mock data or variable reference for below test cases}}
 describe({{unit title}}, () => {
-  let container: HTMLDivElement;
+  {{
+    if code syntax is tsx,jsx:
+    let container: HTMLDivElement;
 
-  beforeEach(() => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
-  });
+    beforeEach(() => {
+      container = document.createElement('div');
+      document.body.appendChild(container);
+    });
 
-  afterEach(() => {
-    document.body.removeChild(container);
-    container = null;
-  });
+    afterEach(() => {
+      document.body.removeChild(container);
+      container = null;
+    });
+  }}
 
   it({{test case title}}, () => {
     {{more test cases}}

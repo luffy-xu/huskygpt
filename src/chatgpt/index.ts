@@ -8,12 +8,10 @@ import {
 } from 'chatgpt';
 import ora from 'ora';
 import { HuskyGPTPrompt } from 'src/chatgpt/prompt';
-import {
-  OPENAI_MAX_RETRY,
-  codeBlocksMdSymbolRegex,
-  userOptions,
-} from 'src/constant';
+import { userOptions } from 'src/constant';
 import { HuskyGPTTypeEnum, IReadFileResult } from 'src/types';
+
+import { handleContinueMessage, sendMessageWithRetry } from './send-message';
 
 export class ChatgptProxyAPI {
   private api: ChatGPTUnofficialProxyAPI | ChatGPTAPI;
@@ -95,70 +93,6 @@ export class ChatgptProxyAPI {
    * Run the OpenAI API
    */
 
-  // Helper function to perform the API call with retries, handling specific status codes
-  private async sendMessageWithRetry(
-    message: string,
-    options?: SendMessageOptions,
-    retries = OPENAI_MAX_RETRY,
-    retryDelay = 3000,
-  ): Promise<ChatMessage> {
-    for (let retry = 0; retry < retries; retry++) {
-      try {
-        return await this.api.sendMessage(message, options);
-      } catch (error) {
-        if (error.statusCode === 401) {
-          // If statusCode is 401, do not retry
-          throw error;
-        } else if (error.statusCode === 429) {
-          // If statusCode is 429, sleep for retryDelay milliseconds then try again
-          await new Promise((resolve) => setTimeout(resolve, retryDelay));
-        } else {
-          // If not a specified status code, and we've reached the maximum number of retries, throw the error
-          if (retry === retries) {
-            throw error;
-          }
-          console.log(
-            `[huskygpt] sendMessage failed, retrying... (${
-              retry + 1
-            }/${retries})`,
-          );
-        }
-      }
-    }
-    throw new Error('sendMessage failed after retries');
-  }
-
-  // Handle continue message if needed
-  private async handleContinueMessage(
-    message: ChatMessage,
-    sendOptions: SendMessageOptions,
-    maxContinueAttempts = 5,
-  ): Promise<ChatMessage> {
-    let resMessage = message;
-    let continueAttempts = 0;
-
-    while (
-      (resMessage.text.match(codeBlocksMdSymbolRegex) || []).length % 2 === 1 &&
-      continueAttempts < maxContinueAttempts
-    ) {
-      const continueMessage = 'continue';
-      const nextMessage = await this.sendMessageWithRetry(
-        continueMessage,
-        sendOptions,
-      );
-
-      resMessage = {
-        ...resMessage,
-        ...nextMessage,
-        text: `${resMessage.text}${nextMessage.text}`,
-      };
-
-      continueAttempts++;
-    }
-
-    return resMessage;
-  }
-
   // Send the prompt to the API
   private async sendPrompt(
     prompt: string,
@@ -168,7 +102,9 @@ export class ChatgptProxyAPI {
 
     // If this is the first message, send it directly
     if (!prevMessage) {
-      return await this.sendMessageWithRetry(securityPrompt);
+      return await sendMessageWithRetry(() =>
+        this.api.sendMessage(securityPrompt),
+      );
     }
 
     // Send the message with the progress callback
@@ -187,17 +123,16 @@ export class ChatgptProxyAPI {
     };
 
     try {
-      let resMessage = await this.sendMessageWithRetry(
-        securityPrompt,
-        sendOptions,
+      let resMessage = await sendMessageWithRetry(() =>
+        this.api.sendMessage(securityPrompt, sendOptions),
       );
 
       // Handle continue message logic
-      resMessage = await this.handleContinueMessage(resMessage, {
-        ...sendOptions,
-        conversationId: resMessage.conversationId,
-        parentMessageId: resMessage.id,
-      } as SendMessageOptions);
+      resMessage = await handleContinueMessage(
+        resMessage,
+        sendOptions,
+        this.api.sendMessage.bind(this.api),
+      );
 
       // Check if the review is passed
       const isReviewPassed = this.isReviewPassed(resMessage.text);
@@ -235,6 +170,7 @@ export class ChatgptProxyAPI {
         conversationId: message?.conversationId,
         parentMessageId: message?.id,
       });
+      console.log('message.text: ', message.text);
       messageArray.push(message.text);
 
       this.parentMessage = message;
