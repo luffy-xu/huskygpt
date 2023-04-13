@@ -20,8 +20,8 @@ Optimizations needed or bugs found example:
 {{code snippet}}
 # Assistant answer:
 `sum`:
-- Bug: {{bug}}.
-- Optimization: {{optimization}}.
+- __`Bug`__: {{bug}}.
+- __Optimization__: {{optimization}}.
 
 Here is the optimized code:
 // ... Other methods remain the same ...

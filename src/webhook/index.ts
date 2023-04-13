@@ -2,7 +2,7 @@ import { exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { codeBlocksRegex, reviewFileName, userOptions } from 'src/constant';
-import { deleteFile, getUserEmail, simplyReviewData } from 'src/utils';
+import { deleteFileSync, getUserEmail, simplyReviewData } from 'src/utils';
 
 import { INoticeTask, ISeatalkNoticeOptions } from './constant';
 
@@ -48,7 +48,7 @@ class WebhookNotifier {
     const content = this.tasks.join('\\r\\r\\n');
     const reviewFilePath = `${path.join(process.cwd(), reviewFileName)}`;
 
-    deleteFile(reviewFilePath);
+    deleteFileSync(reviewFilePath);
 
     // Write the output text to a file if there are code blocks
     if (codeBlocksRegex.test(content)) {

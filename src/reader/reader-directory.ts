@@ -19,6 +19,11 @@ class ReadTestFilePathsByDirectory {
 
   // Get all file paths in a directory and its subdirectories
   public getFilePaths(dirPath: string): string[] {
+    // If the path is not a directory, return the path
+    if (!this.isDirectory(dirPath)) {
+      return [dirPath];
+    }
+
     const files = this.getFilesInDirectory(dirPath);
 
     return files.reduce((filePaths: string[], file: string) => {

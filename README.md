@@ -57,26 +57,13 @@ npm install -g huskygpt
       }
     },
     ```
-2. `eslintrc.json`:
-    ```
-    "overrides": [
-      {
-        "files": ["**/__test__/*.{ts,tsx}"],
-        "rules": {
-          "no-warning-comments": "off"
-        }
-      }
-    ],
-    ```
-3. `.gitignore`: 
+    
+### `.gitignore`: 
    ```
    # review
    .huskygpt_review.md
    .env.local
    ```
-    
-    
- 
 
 ## Usage
 - Run the following command to review your git staged files:
