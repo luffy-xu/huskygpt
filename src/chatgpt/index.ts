@@ -170,9 +170,7 @@ export class ChatgptProxyAPI {
         conversationId: message?.conversationId,
         parentMessageId: message?.id,
       });
-      console.log('message.text: ', message.text);
       messageArray.push(message.text);
-
       this.parentMessage = message;
     }
 

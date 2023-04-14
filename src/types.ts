@@ -83,7 +83,7 @@ export interface IUserOptions {
    */
   // Generate test file type, default is 'test'
   testFileType?: string;
-  // Generate test file directory name, default is '__test__'
+  // Generate test file directory name, default is '__tests__'
   testFileDirName?: string;
 
   /**
