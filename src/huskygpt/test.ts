@@ -50,7 +50,7 @@ class HuskyGPTTest extends HuskyGPTBase {
       // If the test file doesn't exist, create it
       if (!fs.existsSync(testFilePath)) {
         // Write the message to the output file
-        fs.writeFileSync(testFilePath, message);
+        return fs.writeFileSync(testFilePath, message);
       }
 
       // If the file already exists, and file content is not same, merge existing file content
