@@ -49,6 +49,19 @@ export class HuskyGPTPrompt {
 
       return [basePrompt, ...codePrompts];
     },
+    [HuskyGPTTypeEnum.Translate]: (fileResult) => {
+      const fileContent =
+        fileResult.fileContent ||
+        fs.readFileSync(fileResult.filePath!, 'utf-8');
+      const reviewPrompt = readPromptFile('translate.txt');
+      const basePrompt = `
+        ${reviewPrompt}
+        - Target language: ${userOptions.options.translate}
+        ${userOptions.options.openAIPrompt || ''}
+      `;
+
+      return [basePrompt, fileContent];
+    },
   };
 
   constructor(private huskyGPTType: HuskyGPTTypeEnum) {}

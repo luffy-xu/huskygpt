@@ -1,9 +1,7 @@
-import fs from 'fs';
 import ora from 'ora';
 import path from 'path';
 import { userOptions } from 'src/constant';
-import { HuskyGPTTypeEnum, IReadFileResult, ReadTypeEnum } from 'src/types';
-import { getFileNameByPath } from 'src/utils';
+import { IReadFileResult, ReadTypeEnum } from 'src/types';
 
 import ReadTestFilePathsByDirectory from './reader-directory';
 import StagedFileReader from './reader-git-stage';
@@ -46,6 +44,8 @@ class ReadFiles {
   // Check if a file has a valid extension
   private hasValidExtension(file: string): boolean {
     const extension = path.extname(file);
+    if (!this.fileExtensions.length) return true;
+
     return this.fileExtensions.includes(extension);
   }
 
@@ -57,9 +57,9 @@ class ReadFiles {
   }
 
   // Get all file paths that are not test files
-  public getFileResults(): IReadFileResult[] {
-    const readFileType = userOptions.readFileType;
-
+  public getFileResults(
+    readFileType = userOptions.readFileType,
+  ): IReadFileResult[] {
     if (!this.readTypeMap[readFileType])
       throw new Error('Invalid test file read type');
 

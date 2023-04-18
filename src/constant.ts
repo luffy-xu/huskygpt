@@ -11,7 +11,7 @@ export const OPENAI_SESSION_TOKEN_NAME = 'OPENAI_SESSION_TOKEN';
 // Fetch openAI api retry times
 export const OPENAI_MAX_RETRY = 3;
 // Fetch openAI api max continues times
-export const OPENAI_MAX_CONTINUES = 3;
+export const OPENAI_MAX_CONTINUES = 5;
 
 const DEFAULT_MODELS = {
   apiModel: 'gpt-3.5-turbo',
@@ -39,6 +39,7 @@ class UserOptionsClass {
     testFileType: 'test',
     testFileDirName: '__test__',
     reviewReportWebhook: '',
+    translate: 'zh,en',
   };
 
   /**
@@ -206,6 +207,10 @@ class UserOptionsClass {
        * Review options
        */
       reviewReportWebhook: processEnv.REVIEW_REPORT_WEBHOOK,
+      /**
+       * Translate options
+       */
+      translate: processEnv.TRANSLATE || this.userOptionsDefault.translate,
     };
   }
 

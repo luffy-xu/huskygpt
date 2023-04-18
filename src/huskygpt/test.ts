@@ -77,7 +77,7 @@ class HuskyGPTTest extends HuskyGPTBase {
     // Reset the parent message to avoid the message tokens over limit
     this.openai.resetParentMessage();
     const message = await this.openai.run(fileResult);
-    if (!message?.length) return;
+    if (!message?.length || !this.isMessageContainCode(message)) return;
 
     const extractTestsCode = message
       .map((m) => getAllCodeBlock(m))
