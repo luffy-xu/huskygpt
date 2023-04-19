@@ -2,8 +2,9 @@ import 'isomorphic-fetch';
 
 import { userOptions } from './constant';
 import { HuskyGPTReview, HuskyGPTTest } from './huskygpt';
+import HuskyGPTTranslate from './huskygpt/translate';
 import ReadFiles from './reader';
-import { HuskyGPTTypeEnum, IUserOptions } from './types';
+import { HuskyGPTTypeEnum, IUserOptions, ReadTypeEnum } from './types';
 
 const runMap: Record<HuskyGPTTypeEnum, () => void> = {
   [HuskyGPTTypeEnum.Test]: async () => {
@@ -28,6 +29,16 @@ const runMap: Record<HuskyGPTTypeEnum, () => void> = {
 
     // Publish the notices to the webhook channel
     huskygpt.publishNotice();
+  },
+  [HuskyGPTTypeEnum.Translate]: async () => {
+    const testFilePaths = new ReadFiles({ fileExtensions: [] });
+    const files = testFilePaths.getFileResults(ReadTypeEnum.Directory);
+    const huskygpt = new HuskyGPTTranslate();
+
+    // Translate for each file path
+    for (const fileResult of files) {
+      await huskygpt.run(fileResult);
+    }
   },
 };
 

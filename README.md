@@ -8,10 +8,12 @@
 ![huskygpt-unit-test](https://user-images.githubusercontent.com/105559892/229816192-1cc2c885-b298-41be-9114-7b6b5b2195e8.gif)
 - ✨ The unit test result:
 ![format-test](https://user-images.githubusercontent.com/105559892/229817346-66e272ff-e12a-4d6f-9100-fe445ddd79f1.png)
+- 🌍 Translate source file keep the same format and structure:
+![translate](https://user-images.githubusercontent.com/105559892/232946990-8ec9ae57-c668-40cc-8e1c-8e9eed2c4eac.gif)
 
 
 ## Key Features
-- 🤖 `AI`: AI-powered code review and unit test generation
+- 🤖 `AI`: AI-powered code `review`, `translate` and unit `test` generation
 - ✨ `Free`: Free to use with an `OpenAI Session Token`, enjoy chatgpt-3.5 or gpt-4 (Plus Account).
 - 🛡️ `Security`: Security-conscious function and class extraction, customize your `SECURITY_REGEX`.
 - 🧠 `Customizing`: Customizable prompts and model selection.
@@ -57,8 +59,8 @@ npm install -g huskygpt
       }
     },
     ```
-    
-### `.gitignore`: 
+
+### `.gitignore`:
    ```
    # review
    .huskygpt_review.md
@@ -66,13 +68,17 @@ npm install -g huskygpt
    ```
 
 ## Usage
-- Run the following command to review your git staged files:
+- Run the following command to `review` your git staged files:
   ```
   huskygpt review --model gpt-4 --max-tokens 2048
   ```
-- Run the following command to generate unit tests:
+- Run the following command to generate unit `test`:
   ```
   huskygpt test --model gpt-3.5-turbo --max-tokens 2048 --file-extensions .ts,.tsx --read-type dir --read-dir-name src --test-file-type test --test-file-extension .ts --test-file-dir-name tests
+  ```
+- Run the following command to `translate` your git staged files:
+  ```
+  huskygpt translate -d example/i18n/test.json
   ```
 
 ### Options

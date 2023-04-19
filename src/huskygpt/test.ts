@@ -3,6 +3,7 @@ import path from 'path';
 import { userOptions } from 'src/constant';
 import { IReadFileResult } from 'src/types';
 import { getAllCodeBlock } from 'src/utils';
+import getConflictResult from 'src/utils/write-conflict';
 
 import HuskyGPTBase from './base';
 
@@ -63,8 +64,11 @@ class HuskyGPTTest extends HuskyGPTBase {
         );
       }
 
-      // If the file already exists, and file content is same, overwrite the file
-      return fs.writeFileSync(testFilePath, message);
+      // If the file already exists, and file content is same
+      return fs.writeFileSync(
+        testFilePath,
+        getConflictResult(fileContent, message),
+      );
     } catch (error) {
       console.error('Error writing message to file:', error);
     }

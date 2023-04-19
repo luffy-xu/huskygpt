@@ -41,7 +41,6 @@ export const sendMessageWithRetry = async (
 // Handle continue message if needed
 export const handleContinueMessage = async (
   message: ChatMessage,
-  options: SendMessageOptions,
   sendMessage: (
     messageText: string,
     sendOptions?: SendMessageOptions,
@@ -58,7 +57,6 @@ export const handleContinueMessage = async (
   while (continueAttempts < maxContinueAttempts) {
     const continueMessage = 'continue';
     const nextMessage = await sendMessage(continueMessage, {
-      ...options,
       conversationId: resMessage.conversationId,
       parentMessageId: resMessage.id,
     } as SendMessageOptions);

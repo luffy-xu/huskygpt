@@ -11,11 +11,12 @@ const packageJson = JSON.parse(
   fs.readFileSync(path.join(dirname, '../package.json'), 'utf8'),
 );
 const program = new Command();
+const runTypes = ['test', 'review', 'translate'];
 
 program
   .version(packageJson.version, '-v, --version', 'output the current version')
   .description('Generate unit tests or review your code by chatgpt 4')
-  .argument('<runType>', 'run type: test or review')
+  .argument('<runType>', `run type: ${runTypes.join(', ')}`)
   .option('-k, --api-key <key>', 'Set the OpenAI API key')
   .option(
     '-t, --openai-session-token <token>',
@@ -56,9 +57,21 @@ program
     '-w, --review-report-webhook <url>',
     'Webhook URL to send review report',
   )
+  .option(
+    '-trans, --translate <languages>',
+    'Translate the code to other languages, example: zh,en',
+  )
   .action((runType, options) => {
+    if (!runTypes.includes(runType)) {
+      // exit with error
+      console.error(
+        `Invalid run type: ${runType}, please use one of ${runTypes.join(',')}`,
+      );
+      process.exit(1);
+    }
+
     const userOptions = {
-      huskyGPTType: runType === 'test' ? 'test' : 'review',
+      huskyGPTType: runType,
       reviewTyping: options.reviewTyping,
       ...(options.apiKey && { openAIKey: options.apiKey }),
       ...(options.model && { openAIModel: options.model }),
@@ -82,6 +95,9 @@ program
       }),
       ...(options.openAIProxyUrl && {
         openAIProxyUrl: options.openAIProxyUrl,
+      }),
+      ...(options.translate && {
+        translate: options.translate,
       }),
     };
 
