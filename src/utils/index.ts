@@ -14,7 +14,7 @@ export const getFileNameByPath = (filePath: string) =>
  * @returns {string} The user email
  */
 export const getUserEmail = () => {
-  const output = execSync('git log -1 --pretty=format:%ae').toString().trim();
+  const output = execSync('git config user.email').toString().trim();
   return output;
 };
 
