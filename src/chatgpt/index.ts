@@ -22,14 +22,12 @@ export class ChatgptProxyAPI {
   }
 
   get needPrintMessage(): boolean {
-    return [HuskyGPTTypeEnum.Review, HuskyGPTTypeEnum.Test].includes(
-      userOptions.huskyGPTType,
-    );
+    return true;
   }
 
   private initApi() {
     if (process.env.DEBUG)
-      console.log(`openAI session token: {${userOptions.openAISessionToken}}`);
+      console.log(`openAI session token: "${userOptions.openAISessionToken}"`);
 
     console.log(
       '[huskygpt] Using Model:',
@@ -128,10 +126,8 @@ export class ChatgptProxyAPI {
       );
 
       // Handle continue message logic
-      resMessage = await handleContinueMessage(
-        resMessage,
-        sendOptions,
-        this.api.sendMessage.bind(this.api),
+      resMessage = await handleContinueMessage(resMessage, (message, options) =>
+        this.api.sendMessage(message, { ...sendOptions, ...options }),
       );
 
       // Check if the review is passed
@@ -160,6 +156,10 @@ export class ChatgptProxyAPI {
   async sendFileResult(fileResult: IReadFileResult): Promise<string[]> {
     const promptArray = this.generatePrompt(fileResult);
     const [systemPrompt, ...codePrompts] = promptArray;
+    if (userOptions.options.debug) {
+      console.log('[huskygpt] systemPrompt:', systemPrompt);
+      console.log('[huskygpt] codePrompts:', codePrompts.length, codePrompts);
+    }
     if (!codePrompts.length) return [];
 
     const messageArray: string[] = [];

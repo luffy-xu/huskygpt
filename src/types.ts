@@ -6,6 +6,7 @@
 export enum HuskyGPTTypeEnum {
   Test = 'test',
   Review = 'review',
+  Translate = 'translate',
 }
 
 /**
@@ -90,4 +91,10 @@ export interface IUserOptions {
    * Huskygpt review options
    */
   reviewReportWebhook?: string;
+
+  /**
+   * Huskygpt translate options
+   */
+  // translate to language, like 'en,zh,es'
+  translate?: string;
 }
