@@ -2,6 +2,7 @@ import fs from 'fs';
 import { userOptions } from 'src/constant';
 import { IReadFileResult } from 'src/types';
 import { getAllCodeBlock } from 'src/utils';
+import getConflictResult from 'src/utils/write-conflict';
 
 import HuskyGPTBase from './base';
 
@@ -12,12 +13,15 @@ class HuskyGPTTranslate extends HuskyGPTBase {
   /**
    * Write message to a file
    */
-  private writeMessageToFile({ filePath }: IReadFileResult, message: string) {
+  private writeMessageToFile(
+    { filePath, fileContent }: IReadFileResult,
+    message: string,
+  ) {
     try {
       if (userOptions.options.debug) {
         console.log('Write message to file:', filePath, message);
       }
-      fs.writeFileSync(filePath, message);
+      fs.writeFileSync(filePath, getConflictResult(fileContent, message));
     } catch (error) {
       console.error('Error writing message to file:', error);
     }
@@ -30,7 +34,7 @@ class HuskyGPTTranslate extends HuskyGPTBase {
     // Reset the parent message to avoid the message tokens over limit
     this.openai.resetParentMessage();
     const message = await this.openai.run(fileResult);
-    if (!message?.length || !this.isMessageContainCode(message)) return;
+    if (!message?.length) return;
 
     const extractCode = message.map((m) => getAllCodeBlock(m)).join('\n');
     this.writeMessageToFile(fileResult, extractCode);

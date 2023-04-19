@@ -1,3 +1,4 @@
+import fs from 'fs';
 import ora from 'ora';
 import path from 'path';
 import { userOptions } from 'src/constant';
@@ -26,18 +27,12 @@ class ReadFiles {
   // Get all file paths by directory
   private getTestFilePathByDir(): IReadFileResult[] {
     const reader = new ReadTestFilePathsByDirectory();
-    const filePaths = reader.getFilePaths(this.dirPath);
-
-    return filePaths.map((filePath) => ({
-      filePath,
-      content: '',
-    }));
+    return reader.getDirFiles(this.dirPath);
   }
 
   // Get all file paths by git stage
   private getTestFilePathByGit(): IReadFileResult[] {
     const reader = new StagedFileReader();
-
     return reader.getStagedFiles();
   }
 

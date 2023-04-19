@@ -3,6 +3,7 @@ import path from 'path';
 import { userOptions } from 'src/constant';
 import { IReadFileResult } from 'src/types';
 import { getAllCodeBlock } from 'src/utils';
+import getConflictResult from 'src/utils/write-conflict';
 
 import HuskyGPTBase from './base';
 
@@ -63,8 +64,11 @@ class HuskyGPTTest extends HuskyGPTBase {
         );
       }
 
-      // If the file already exists, and file content is same, overwrite the file
-      return fs.writeFileSync(testFilePath, message);
+      // If the file already exists, and file content is same
+      return fs.writeFileSync(
+        testFilePath,
+        getConflictResult(fileContent, message),
+      );
     } catch (error) {
       console.error('Error writing message to file:', error);
     }
@@ -77,7 +81,7 @@ class HuskyGPTTest extends HuskyGPTBase {
     // Reset the parent message to avoid the message tokens over limit
     this.openai.resetParentMessage();
     const message = await this.openai.run(fileResult);
-    if (!message?.length || !this.isMessageContainCode(message)) return;
+    if (!message?.length) return;
 
     const extractTestsCode = message
       .map((m) => getAllCodeBlock(m))
