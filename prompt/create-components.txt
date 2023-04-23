@@ -1,0 +1,11 @@
+Here is a simple example of how to write a "components":
+
+const Footer: React.FC = () => {
+  return (
+    <footer>
+      <p>Footer</p>
+    </footer>
+  );
+};
+
+export default Footer;

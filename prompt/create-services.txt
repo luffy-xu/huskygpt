@@ -1,0 +1,11 @@
+Here is a simple example of how to write a "services":
+
+export async function login(body: API.LoginParams) {
+  return request<API.LoginResult>('/api/login/account', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+  });
+}

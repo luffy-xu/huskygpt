@@ -36,27 +36,7 @@ const runMap: Record<HuskyGPTTypeEnum, () => void> = {
     huskygpt.publishNotice();
   },
   [HuskyGPTTypeEnum.Create]: async () => {
-    const huskygpt = new HuskyGPTCreate();
-    const cli = new CreateCLI(
-      async ({ option, dirName, name, description }) => {
-        const message = await huskygpt.run({
-          fileContent: `${readPromptFile(
-            `create-${option}.txt`,
-          )}\n Please reply "${option}" code by following requirements: ${description}`,
-        });
-        const dirPath = path.join(
-          process.cwd(),
-          userOptions.options.readFilesRootName,
-          option,
-          dirName,
-        );
-        makeDirExist(dirPath);
-        fs.writeFileSync(
-          path.join(dirPath, `${name}.${OptionTypeExtension[option]}`),
-          message,
-        );
-      },
-    );
+    const cli = new CreateCLI();
 
     await cli.start();
   },

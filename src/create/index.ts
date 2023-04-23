@@ -1,26 +1,39 @@
+import fs from 'fs';
 import inquirer from 'inquirer';
 import ora from 'ora';
+import path from 'path';
+import { userOptions } from 'src/constant';
+import { HuskyGPTCreate } from 'src/huskygpt';
+import { makeDirExist } from 'src/utils';
+import { readPromptFile } from 'src/utils/read-prompt-file';
 
 enum OptionType {
-  Component = 'component',
-  Container = 'container',
-  Store = 'store',
-  Service = 'service',
+  Components = 'components',
+  Pages = 'pages',
+  Models = 'models',
+  Services = 'services',
 }
 
 const OptionTypeExtension = {
-  [OptionType.Component]: 'tsx',
-  [OptionType.Container]: 'tsx',
-  [OptionType.Store]: 'ts',
-  [OptionType.Service]: 'ts',
+  [OptionType.Components]: 'tsx',
+  [OptionType.Pages]: 'tsx',
+  [OptionType.Models]: 'ts',
+  [OptionType.Services]: 'ts',
 };
 
 const optionShortcuts = {
-  [OptionType.Component]: '1',
-  [OptionType.Container]: '2',
-  [OptionType.Store]: '3',
-  [OptionType.Service]: '4',
+  [OptionType.Components]: '1',
+  [OptionType.Pages]: '2',
+  [OptionType.Models]: '3',
+  [OptionType.Services]: '4',
 };
+
+interface IOptionCreated {
+  option: OptionType;
+  description: string;
+  dirName: string;
+  name: string;
+}
 
 const messages = {
   selectOption: 'Select an option:',
@@ -37,14 +50,32 @@ const messages = {
  * Huskygpt Create CLI
  */
 class CreateCLI {
-  constructor(
-    private onOptionCreated: (data: {
-      option: OptionType;
-      name: string;
-      dirName: string;
-      description: string;
-    }) => void,
-  ) {}
+  private onOptionCreated = async ({
+    option,
+    description,
+    dirName,
+    name,
+  }: IOptionCreated) => {
+    const huskygpt = new HuskyGPTCreate();
+    const message = await huskygpt.run({
+      fileContent: `${readPromptFile(
+        `create-${option}.txt`,
+      )}\n Please reply "${option}" code by following requirements: ${description}`,
+    });
+    if (!message) return;
+
+    const dirPath = path.join(
+      process.cwd(),
+      userOptions.options.readFilesRootName,
+      option,
+      dirName,
+    );
+    makeDirExist(dirPath);
+    fs.writeFileSync(
+      path.join(dirPath, `${name}.${OptionTypeExtension[option]}`),
+      message,
+    );
+  };
 
   /**
    * Prompt option selection from user
@@ -73,14 +104,14 @@ class CreateCLI {
       {
         type: 'input',
         name: 'name',
-        default: option ? 'index' : 'example-module',
+        default: option ? 'index' : 'exampleModule',
         message: option
           ? messages.enterName(option)
           : messages.enterDirectoryName,
         validate: (input: string) => {
           if (input.trim() === '') return messages.nameEmpty;
-          if (!/^[a-z]+(?:-[a-z]+)*$|^[a-z]+(?:[A-Z][a-z]*)*$/.test(input))
-            return 'Name must be in camelCase or kebab-case.';
+          if (!/^[a-z]+(?:[A-Z][a-z]*)*$/.test(input))
+            return 'Name must be in camelCase.';
           return true;
         },
       },
@@ -97,7 +128,7 @@ class CreateCLI {
       {
         type: 'input',
         name: 'description',
-        default: `Write ${option} by pervious contexts and requirements`,
+        default: `Please input your requirements`,
         message: messages.enterDescription(option),
         validate: (input: string) =>
           input.trim() !== '' || messages.descriptionEmpty,

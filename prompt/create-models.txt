@@ -1,0 +1,27 @@
+Here is a simple example of how to write a "models":
+import { useState, useCallback } from 'react'
+import { signIn, signOut } from '@/services'
+
+export default function useAuthModel() {
+  const [user, setUser] = useState(null)
+
+  const signIn = useCallback(async ({{payload}}) => {
+    // signIn implementation
+    {{Call API from "services"}}
+    const {{response}} = await signIn({{payload}});
+    {{setUser({{response}})}}
+  }, [])
+
+  const signOut = useCallback(() => {
+    // signOut implementation
+    {{Call API from "services"}}
+    signOut();
+    {{setUser(null)}}
+  }, [])
+
+  return {
+    user,
+    signIn,
+    signOut
+  }
+}
