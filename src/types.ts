@@ -8,6 +8,7 @@ export enum HuskyGPTTypeEnum {
   Review = 'review',
   Create = 'create',
   Translate = 'translate',
+  Modify = 'modify',
 }
 
 /**

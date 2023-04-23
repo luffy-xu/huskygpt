@@ -5,9 +5,9 @@ import { getAllCodeBlock } from 'src/utils';
 import HuskyGPTBase from './base';
 
 /**
- * Generate a test case for a given file path
+ * Translate for a given file path
  */
-class HuskyGPTCreate extends HuskyGPTBase {
+class HuskyGPTModify extends HuskyGPTBase {
   /**
    * Generate a test case for a given file
    */
@@ -23,4 +23,4 @@ class HuskyGPTCreate extends HuskyGPTBase {
   }
 }
 
-export default HuskyGPTCreate;
+export default HuskyGPTModify;

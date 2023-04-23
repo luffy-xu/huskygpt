@@ -11,7 +11,7 @@ const packageJson = JSON.parse(
   fs.readFileSync(path.join(dirname, '../package.json'), 'utf8'),
 );
 const program = new Command();
-const runTypes = ['test', 'review', 'translate', 'create'];
+const runTypes = ['test', 'review', 'translate', 'create', 'modify'];
 
 program
   .version(packageJson.version, '-v, --version', 'output the current version')

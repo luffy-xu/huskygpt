@@ -1,15 +1,11 @@
-import fs from 'fs';
 import 'isomorphic-fetch';
-import path from 'path';
 
 import { userOptions } from './constant';
-import CreateCLI, { OptionTypeExtension } from './create';
-import { HuskyGPTCreate, HuskyGPTReview, HuskyGPTTest } from './huskygpt';
-import HuskyGPTTranslate from './huskygpt/translate';
+import CreateCLI from './create';
+import { HuskyGPTReview, HuskyGPTTest, HuskyGPTTranslate } from './huskygpt';
+import ModifyCLI from './modify';
 import ReadFiles from './reader';
 import { HuskyGPTTypeEnum, IUserOptions, ReadTypeEnum } from './types';
-import { makeDirExist } from './utils';
-import { readPromptFile } from './utils/read-prompt-file';
 
 const runMap: Record<HuskyGPTTypeEnum, () => void> = {
   [HuskyGPTTypeEnum.Test]: async () => {
@@ -38,6 +34,14 @@ const runMap: Record<HuskyGPTTypeEnum, () => void> = {
   [HuskyGPTTypeEnum.Create]: async () => {
     const cli = new CreateCLI();
 
+    await cli.start();
+  },
+  [HuskyGPTTypeEnum.Modify]: async () => {
+    const reviewFiles = new ReadFiles();
+    const files = reviewFiles.getFileResults();
+    if (!files.length) return;
+
+    const cli = new ModifyCLI(files[0]);
     await cli.start();
   },
   [HuskyGPTTypeEnum.Translate]: async () => {
