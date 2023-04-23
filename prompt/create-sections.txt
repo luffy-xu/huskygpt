@@ -2,7 +2,7 @@ Here is a simple example of how to write a "sections":
 import { useModel } from 'umi';
 
 const Welcome: React.FC = () => {
-  const { user, fetchUser } = useModel({{model file name under the "models"}}, model => ({ user: model.user, fetchUser: model.fetchUser }));
+  const {{some api}} = useModel({{model file name under the "models"}});
 
   return <div>user</div>
 };

@@ -2,33 +2,20 @@
 Here is a simple example of how to write a "mock":
 import { Request, Response } from 'express';
 
-// mock logic functions
-async function getFakeCaptcha(req: Request, res: Response) {
-  // some custom logic
-  await waitTime(2000);
-  return res.json('captcha-xxx');
-}
+{{here are mock logic functions}}
 
-// mock api responses
+{{here are mock api responses}}
 export default {
-  // Complexity case by user requirements
-  'GET /api/currentUser': (req: Request, res: Response) => {
-    if (!getAccess()) {
-      // res.status(401).send({{response json}});
-      return;
+  {{#if Complexity case by user requirements}}
+  'GET {{api pathname}}': (req: Request, res: Response) => {
+    if ({{logic condition}}) {
+      return res.status(401).send({{response json}});
     }
-    // res.send({{response json}});
+
+    return res.send({{response json}});
   },
   // Simple case by user requirements
-  'GET /api/users': [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-    },
-    {...}
-  ],
+  'GET {{api pathname}}': {{response json, or mock logic function}},
 };
 
 Please note that you need send response json by following structure, the "data" field type T I will provide later:
