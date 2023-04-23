@@ -41,8 +41,11 @@ const runMap: Record<HuskyGPTTypeEnum, () => void> = {
     const files = reviewFiles.getFileResults();
     if (!files.length) return;
 
-    const cli = new ModifyCLI(files[0]);
-    await cli.start();
+    // Modify for each file path
+    for (const fileResult of files) {
+      const cli = new ModifyCLI(fileResult);
+      await cli.start();
+    }
   },
   [HuskyGPTTypeEnum.Translate]: async () => {
     const testFilePaths = new ReadFiles({ fileExtensions: [] });
