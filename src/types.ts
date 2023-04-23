@@ -27,6 +27,7 @@ export enum ReadTypeEnum {
 export interface IReadFileResult {
   filePath?: string;
   fileContent?: string;
+  prompts?: string[];
 }
 
 export interface IUserOptions {

@@ -12,7 +12,7 @@ abstract class HuskyGPTBase {
     this.openai = new ChatgptProxyAPI();
   }
 
-  abstract run(fileResult: IReadFileResult): Promise<string>;
+  abstract run(fileResult: IReadFileResult): Promise<string | string[]>;
 }
 
 export default HuskyGPTBase;

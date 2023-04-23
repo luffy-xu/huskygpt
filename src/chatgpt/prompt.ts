@@ -49,17 +49,15 @@ export class HuskyGPTPrompt {
 
       return [basePrompt, ...codePrompts];
     },
-    [HuskyGPTTypeEnum.Create]: (fileResult) => {
-      const codePrompts =
-        fileResult.fileContent ||
-        fs.readFileSync(fileResult.filePath!, 'utf-8');
+    [HuskyGPTTypeEnum.Create]: ({ prompts }) => {
+      if (!prompts) throw new Error('prompts is required for create');
       const createPrompt = readPromptFile('create.txt');
       const basePrompt = `
       ${createPrompt}
       ${userOptions.options.openAIPrompt || ''}
     `;
 
-      return [basePrompt, codePrompts];
+      return [basePrompt, ...prompts];
     },
     [HuskyGPTTypeEnum.Translate]: (fileResult) => {
       const fileContent =

@@ -1,6 +1,6 @@
 Here is a simple example of how to write a "services":
 
-export async function login(body: API.LoginParams) {
+export async function {{apiName}}(body: API.LoginParams) {
   return request<API.LoginResult>('/api/login/account', {
     method: 'POST',
     headers: {

@@ -4,8 +4,10 @@ import ora from 'ora';
 import path from 'path';
 import { userOptions } from 'src/constant';
 import { HuskyGPTCreate } from 'src/huskygpt';
+import { getFileNameToCamelCase } from 'src/utils';
 import { makeDirExist } from 'src/utils';
 import { readPromptFile } from 'src/utils/read-prompt-file';
+import getConflictResult from 'src/utils/write-conflict';
 
 enum OptionType {
   Components = 'components',
@@ -57,24 +59,76 @@ class CreateCLI {
     name,
   }: IOptionCreated) => {
     const huskygpt = new HuskyGPTCreate();
-    const message = await huskygpt.run({
-      fileContent: `${readPromptFile(
-        `create-${option}.txt`,
-      )}\n Please reply "${option}" code by following requirements: ${description}`,
-    });
-    if (!message) return;
 
-    const dirPath = path.join(
-      process.cwd(),
-      userOptions.options.readFilesRootName,
-      option,
-      dirName,
-    );
-    makeDirExist(dirPath);
-    fs.writeFileSync(
-      path.join(dirPath, `${name}.${OptionTypeExtension[option]}`),
-      message,
-    );
+    const getPrompts = () => {
+      const basePrompts = [
+        `${readPromptFile(`create-${option}.txt`)}
+            Please note is's modelName is "${dirName}", and reply "${option}" code by following requirements: ${description}.
+          `,
+      ];
+      if (option === OptionType.Models) {
+        basePrompts.push(
+          `${readPromptFile(`create-${OptionType.Services}.txt`)}
+            Note that you should consider the method name and relationship between the "${
+              OptionType.Models
+            }" that you reply before.
+            Please reply "${
+              OptionType.Services
+            }" code by following requirements: ${description}.
+          `,
+        );
+      }
+      return basePrompts;
+    };
+
+    const message = await huskygpt.run({
+      prompts: getPrompts(),
+    });
+    if (!message.length) return;
+
+    const writeFile = (
+      fileName = name,
+      fileContent = '',
+      needCreateDir = true,
+      optionType = option,
+    ) => {
+      const dirPath = path.join(
+        process.cwd(),
+        userOptions.options.readFilesRootName,
+        optionType,
+        needCreateDir ? getFileNameToCamelCase(dirName, true) : '',
+      );
+      makeDirExist(dirPath);
+      const filePath = path.join(
+        dirPath,
+        `${fileName}.${OptionTypeExtension[optionType]}`,
+      );
+
+      const existFileContent =
+        fs.existsSync(filePath) && fs.readFileSync(filePath, 'utf-8');
+      fs.writeFileSync(
+        filePath,
+        existFileContent
+          ? getConflictResult(existFileContent, fileContent)
+          : fileContent,
+      );
+    };
+
+    if ([OptionType.Models].includes(option)) {
+      const [modelContent, serviceContent] = message;
+      const fileName = `${dirName}${getFileNameToCamelCase(name, true)}`;
+      writeFile(getFileNameToCamelCase(fileName), modelContent, false);
+      writeFile(
+        getFileNameToCamelCase(fileName),
+        serviceContent,
+        false,
+        OptionType.Services,
+      );
+      return;
+    }
+    writeFile(getFileNameToCamelCase(name, true), message.join('\n'), true);
+
+    return;
   };
 
   /**
@@ -104,7 +158,7 @@ class CreateCLI {
       {
         type: 'input',
         name: 'name',
-        default: option ? 'index' : 'exampleModule',
+        default: option ? option.replace(/s$/i, '') : 'exampleModule',
         message: option
           ? messages.enterName(option)
           : messages.enterDirectoryName,

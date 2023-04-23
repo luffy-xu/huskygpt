@@ -2,7 +2,7 @@ Here is a simple example of how to write a "models":
 import { useState, useCallback } from 'react'
 import { signIn, signOut } from '@/services'
 
-export default function useAuthModel() {
+export default function {{modelName}}() {
   const [user, setUser] = useState(null)
 
   const signIn = useCallback(async ({{payload}}) => {
@@ -25,3 +25,5 @@ export default function useAuthModel() {
     signOut
   }
 }
+
+Please note it's following umi useModel design. No need replay me any explain or usage.

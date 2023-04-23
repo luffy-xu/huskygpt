@@ -32,4 +32,36 @@ export const makeDirExist = (dirPath: string) => {
   fs.mkdirSync(dirPath, { recursive: true });
 };
 
+/**
+ * Get the file name to camel case
+ * @param {string} fileName The file name
+ * @returns {string} The file name to camel case
+ * @example
+ * // returns 'exampleModule'
+ */
+export const getFileNameToCamelCase = (
+  fileName: string,
+  isFirstUpper = false,
+) => {
+  if (!fileName) return '';
+  if (fileName.indexOf('-') === -1) {
+    return isFirstUpper
+      ? fileName.slice(0, 1).toUpperCase() + fileName.slice(1)
+      : fileName.slice(0, 1).toLowerCase() + fileName.slice(1);
+  }
+
+  fileName
+    .split('-')
+    .map((word, index) => {
+      if (index !== 0) {
+        return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`;
+      }
+
+      return isFirstUpper
+        ? word.slice(0, 1).toUpperCase()
+        : word.slice(0, 1).toLowerCase();
+    })
+    .join('');
+};
+
 export * from './simply-result';
