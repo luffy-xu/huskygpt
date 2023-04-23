@@ -31,10 +31,10 @@ class HuskyGPTReview extends HuskyGPTBase {
     // Reset the parent message to avoid the message tokens over limit
     this.openai.resetParentMessage();
     const message = await this.openai.run(fileResult);
+    if (!message?.length) return;
+
     const resMessage = message.join('\n\n---\n\n');
-
     this.postAIMessage(fileResult.filePath!, resMessage);
-
     return resMessage;
   }
 

@@ -55,11 +55,24 @@ export class HuskyGPTPrompt {
         fs.readFileSync(fileResult.filePath!, 'utf-8');
       const createPrompt = readPromptFile('create.txt');
       const basePrompt = `
-        ${createPrompt}
+      ${createPrompt}
+      ${userOptions.options.openAIPrompt || ''}
+    `;
+
+      return [basePrompt, codePrompts];
+    },
+    [HuskyGPTTypeEnum.Translate]: (fileResult) => {
+      const fileContent =
+        fileResult.fileContent ||
+        fs.readFileSync(fileResult.filePath!, 'utf-8');
+      const reviewPrompt = readPromptFile('translate.txt');
+      const basePrompt = `
+        ${reviewPrompt}
+        - Target language: ${userOptions.options.translate}
         ${userOptions.options.openAIPrompt || ''}
       `;
 
-      return [basePrompt, codePrompts];
+      return [basePrompt, fileContent];
     },
   };
 

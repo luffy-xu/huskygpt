@@ -11,7 +11,7 @@ const packageJson = JSON.parse(
   fs.readFileSync(path.join(dirname, '../package.json'), 'utf8'),
 );
 const program = new Command();
-const runTypes = ['test', 'review', 'create'];
+const runTypes = ['test', 'review', 'translate', 'create'];
 
 program
   .version(packageJson.version, '-v, --version', 'output the current version')
@@ -57,6 +57,10 @@ program
     '-w, --review-report-webhook <url>',
     'Webhook URL to send review report',
   )
+  .option(
+    '-trans, --translate <languages>',
+    'Translate the code to other languages, example: zh,en',
+  )
   .action((runType, options) => {
     if (!runTypes.includes(runType)) {
       // exit with error
@@ -91,6 +95,9 @@ program
       }),
       ...(options.openAIProxyUrl && {
         openAIProxyUrl: options.openAIProxyUrl,
+      }),
+      ...(options.translate && {
+        translate: options.translate,
       }),
     };
 

@@ -5,8 +5,9 @@ import path from 'path';
 import { userOptions } from './constant';
 import CreateCLI, { OptionTypeExtension } from './create';
 import { HuskyGPTCreate, HuskyGPTReview, HuskyGPTTest } from './huskygpt';
+import HuskyGPTTranslate from './huskygpt/translate';
 import ReadFiles from './reader';
-import { HuskyGPTTypeEnum, IUserOptions } from './types';
+import { HuskyGPTTypeEnum, IUserOptions, ReadTypeEnum } from './types';
 import { makeDirExist } from './utils';
 import { readPromptFile } from './utils/read-prompt-file';
 
@@ -58,6 +59,16 @@ const runMap: Record<HuskyGPTTypeEnum, () => void> = {
     );
 
     await cli.start();
+  },
+  [HuskyGPTTypeEnum.Translate]: async () => {
+    const testFilePaths = new ReadFiles({ fileExtensions: [] });
+    const files = testFilePaths.getFileResults(ReadTypeEnum.Directory);
+    const huskygpt = new HuskyGPTTranslate();
+
+    // Translate for each file path
+    for (const fileResult of files) {
+      await huskygpt.run(fileResult);
+    }
   },
 };
 

@@ -1,0 +1,26 @@
+{
+  "en": {
+    "app": {
+      "welcome": "Welcome to my app",
+      "login": "Log In",
+      "logout": "Log Out",
+      "menu": {
+        "home": "Home",
+        "about": "About Us",
+        "contact": "Contact Us"
+      }
+    }
+  },
+  "fr": {
+    "app": {
+      "welcome": "Bienvenue sur mon application",
+      "login": "Se connecter",
+      "logout": "Se déconnecter",
+      "menu": {
+        "home": "Accueil",
+        "about": "À propos de nous",
+        "contact": "Nous contacter"
+      }
+    }
+  }
+}

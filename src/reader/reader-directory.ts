@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { IReadFileResult } from 'src/types';
 
 class ReadTestFilePathsByDirectory {
   // Get all files in a directory
@@ -13,29 +14,37 @@ class ReadTestFilePathsByDirectory {
   }
 
   // Get file paths of all files in a subdirectory
-  private getSubDirectoryFilePaths(filePath: string): string[] {
-    return this.getFilePaths(filePath);
+  private getSubDirectoryFilePaths(filePath: string): IReadFileResult[] {
+    return this.getDirFiles(filePath);
+  }
+
+  // Get file content of a file
+  private getFileContent(filePath: string): string {
+    return fs.readFileSync(filePath, 'utf-8');
   }
 
   // Get all file paths in a directory and its subdirectories
-  public getFilePaths(dirPath: string): string[] {
+  public getDirFiles(dirPath: string): IReadFileResult[] {
     // If the path is not a directory, return the path
     if (!this.isDirectory(dirPath)) {
-      return [dirPath];
+      return [{ filePath: dirPath, fileContent: this.getFileContent(dirPath) }];
     }
 
-    const files = this.getFilesInDirectory(dirPath);
+    const filesPath = this.getFilesInDirectory(dirPath);
 
-    return files.reduce((filePaths: string[], file: string) => {
+    return filesPath.reduce((fileResult: IReadFileResult[], file: string) => {
       const filePath = path.join(dirPath, file);
 
       if (this.isDirectory(filePath)) {
-        const subDirFilePaths = this.getSubDirectoryFilePaths(filePath);
-        return [...filePaths, ...subDirFilePaths];
+        const subDirFileResults = this.getSubDirectoryFilePaths(filePath);
+        return [...fileResult, ...subDirFileResults];
       }
 
-      return [...filePaths, filePath];
-    }, []);
+      return [
+        ...fileResult,
+        { filePath, fileContent: this.getFileContent(filePath) },
+      ];
+    }, [] as IReadFileResult[]);
   }
 }
 
