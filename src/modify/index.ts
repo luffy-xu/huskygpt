@@ -27,7 +27,7 @@ class ModifyCLI {
       {
         type: 'input',
         name: 'description',
-        default: `Please chunk my code, and add both en and zh comments for each step`,
+        default: `Please fix bugs or optimize my code. if the function is complexity, please chunk it. If it's function component, use hooks optimize it. And add en and zh comments for complexity logic steps e.g. // EN: some comments, // ZH: 一些评论.`,
         messages: `Please input your modify requirements`,
         validate: (input: string) =>
           input.trim() !== '' || 'Description cannot be empty.',

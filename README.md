@@ -4,16 +4,19 @@
 [![NPM](https://img.shields.io/npm/v/huskygpt.svg)](https://www.npmjs.com/package/huskygpt)  [![Prettier Code Formatting](https://img.shields.io/badge/code_style-prettier-brightgreen.svg)](https://prettier.io)
 
 ## Demo
-- 🤖 Generate unit tests by gpt-4 model:
+- 🤖 Generate `unit tests` by gpt-4 model:
 ![huskygpt-unit-test](https://user-images.githubusercontent.com/105559892/229816192-1cc2c885-b298-41be-9114-7b6b5b2195e8.gif)
-- ✨ The unit test result:
+- ✨ The `unit test` result:
 ![format-test](https://user-images.githubusercontent.com/105559892/229817346-66e272ff-e12a-4d6f-9100-fe445ddd79f1.png)
-- 🌍 Translate source file keep the same format and structure:
+- 🌍 `Translate` source file keep the same format and structure:
 ![translate](https://user-images.githubusercontent.com/105559892/232946990-8ec9ae57-c668-40cc-8e1c-8e9eed2c4eac.gif)
+- 🖊️ `Modify` exist code by your input requirements e.g.
+![modify](https://user-images.githubusercontent.com/105559892/234238162-d9cfcc33-8b5a-4f7d-b3d5-d940598cf449.png)
+  > Please fix bugs or optimize my code. if the function is complexity, please chunk it. If it's function component, use hooks optimize it. And add en and zh comments for complexity logic steps e.g. // EN: some comments, // ZH: 一些评论.
 
 
 ## Key Features
-- 🤖 `AI`: AI-powered code `review`, `translate` and unit `test` generation
+- 🤖 `AI`: AI-powered code `review`, `modify`, `translate` and unit `test` generation
 - ✨ `Free`: Free to use with an `OpenAI Session Token`, enjoy chatgpt-3.5 or gpt-4 (Plus Account).
 - 🛡️ `Security`: Security-conscious function and class extraction, customize your `SECURITY_REGEX`.
 - 🧠 `Customizing`: Customizable prompts and model selection.
@@ -71,6 +74,10 @@ npm install -g huskygpt
 - Run the following command to `review` your git staged files:
   ```
   huskygpt review --model gpt-4 --max-tokens 2048
+  ```
+- Run the following command to `modify` your exist code:
+  ```
+  huskygpt modify -r dir -d src/pages/UserRegister/RegisterList.tsx -m gpt-4
   ```
 - Run the following command to generate unit `test`:
   ```
