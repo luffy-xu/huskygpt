@@ -1,6 +1,6 @@
 {
   "name": "huskygpt",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Automatically generate unit tests or review your code using openai chatgpt",
   "main": "lib/index.js",
   "type": "module",
@@ -22,7 +22,7 @@
     "pretest": "run-s build",
     "pre-commit": "lint-staged",
     "prepare": "husky install",
-    "prepublishOnly": "run-s build",
+    "prepublishOnly": "run-s build && run-s test",
     "prettier": "prettier --write ./src",
     "test": "jest --watch"
   },

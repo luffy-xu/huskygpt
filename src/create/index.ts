@@ -49,12 +49,15 @@ class CreateCLI {
   /**
    * Prompt name from user
    */
-  private async promptName(option?: OptionType): Promise<string> {
+  private async promptName(
+    option?: OptionType,
+    defaultName?: string,
+  ): Promise<string> {
     const { name } = await inquirer.prompt([
       {
         type: 'input',
         name: 'name',
-        default: option ? 'index' : 'exampleModule',
+        default: defaultName || option ? 'index' : 'exampleModule',
         message: option
           ? messages.enterName(option)
           : messages.enterDirectoryName,
@@ -110,11 +113,12 @@ class CreateCLI {
   async start() {
     // Prompt user for a directory name
     let continuePrompt = true;
-    const dirName = await this.promptName();
 
+    let dirName;
     // If user says yes, prompt for options and create a file
     while (continuePrompt) {
       const selectedOption = await this.promptOptionSelection();
+      dirName = await this.promptName(undefined, dirName);
       const name = await this.promptName(selectedOption);
       const description = await this.promptOptionDescription(selectedOption);
       const spinner = ora('[huskygpt] Processing...').start();
