@@ -1,12 +1,12 @@
 Here is a simple example of how to write a "sections":
 import { useModel } from 'umi';
 
-const Welcome: React.FC = () => {
-  const {{some api}} = useModel({{model file name under the "models"}});
+const {{ModelName}}: React.FC = () => {
+  const {{#if need call model, import api here}} = useModel({{model file name under the "models"}});
 
   return <div>user</div>
 };
 
-export default Welcome;
+export default {{ModelName}};
 
 Please note that "sections" is a module of "pages"

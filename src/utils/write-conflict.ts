@@ -40,9 +40,40 @@ function getConflictResult(
     return i;
   };
 
+  // Find reverse same lines length
+  const findReverseSameLinesLength = (
+    sourceLines: string[],
+    targetLines: string[],
+  ): number => {
+    let i = 0;
+    const sourceLinesReverse = sourceLines.slice().reverse();
+    const targetLinesReverse = targetLines.slice().reverse();
+
+    for (
+      ;
+      i < sourceLinesReverse.length && i < targetLinesReverse.length;
+      i++
+    ) {
+      if (sourceLinesReverse[i] !== targetLinesReverse[i]) {
+        break;
+      }
+    }
+    return i;
+  };
+
   const sourceLines = removeStartAndEndEmptyLine(sourceContent);
   const targetLines = removeStartAndEndEmptyLine(targetContent);
+
+  // if the source and target are the same, return the source
+  if (sourceLines.join('\n') === targetLines.join('\n')) {
+    return sourceContent;
+  }
+
   const firstNotSameLineNumber = findFirstNotSameLineNumber(
+    sourceLines,
+    targetLines,
+  );
+  const reverseSameLinesLength = findReverseSameLinesLength(
     sourceLines,
     targetLines,
   );
@@ -51,10 +82,17 @@ function getConflictResult(
   const resultLines: string[] = [
     ...sourceLines.slice(0, firstNotSameLineNumber),
     '<<<<<<< HEAD',
-    ...sourceLines.slice(firstNotSameLineNumber),
+    ...sourceLines.slice(
+      firstNotSameLineNumber,
+      sourceLines.length - reverseSameLinesLength,
+    ),
     '=======',
-    ...targetLines.slice(firstNotSameLineNumber),
+    ...targetLines.slice(
+      firstNotSameLineNumber,
+      targetLines.length - reverseSameLinesLength,
+    ),
     '>>>>>>> Incoming',
+    ...sourceLines.slice(sourceLines.length - reverseSameLinesLength),
   ];
 
   return resultLines.join('\n');

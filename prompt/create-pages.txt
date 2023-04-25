@@ -4,7 +4,7 @@ import {{modelName}} from './{{modelName}}';
 const Welcome: React.FC = () => {
   return (
     <PageContainer>
-      {{"sections" code}}
+      {{"sections" code from {{modelName}}}}
     </PageContainer>
   );
 };

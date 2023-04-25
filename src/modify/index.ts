@@ -11,7 +11,7 @@ import getConflictResult from 'src/utils/write-conflict';
 class ModifyCLI {
   private huskygpt: HuskyGPTModify;
 
-  constructor(private readFileResult: IReadFileResult) {
+  constructor(private readFileResult: IReadFileResult[]) {
     this.init();
   }
 
@@ -54,48 +54,58 @@ class ModifyCLI {
   }
 
   // Write AI message to file
-  private writeFile(newContent: string) {
-    const { filePath } = this.readFileResult;
-
+  private writeFile(filePath: string, newContent: string) {
     fs.writeFileSync(
       filePath,
       getConflictResult(fs.readFileSync(filePath, 'utf-8'), newContent),
     );
   }
 
+  // Run single file modify
+  private async runSingleFile(
+    fileResult: IReadFileResult,
+    continueTimes: number,
+  ) {
+    if (!fileResult?.filePath) throw new Error('File path is empty');
+
+    console.log(`[huskygpt] Start modify ${fileResult.filePath}...`);
+    const description = await this.promptOptionDescription();
+    const spinner = ora(`[huskygpt] Processing...`).start();
+
+    const prompts = [
+      continueTimes === 0
+        ? `My fileContent is: ${fileResult.fileContent}.`
+        : '',
+      `Please modify my code by following requirements: ${description}`,
+    ];
+    const message = await this.huskygpt.run({
+      ...this.readFileResult,
+      prompts: [prompts.join('\n')],
+    });
+    if (!message?.length) {
+      spinner.stop();
+      return;
+    }
+
+    this.writeFile(fileResult.filePath, message.join('\n'));
+
+    spinner.stop();
+  }
+
   /**
    * Start CLI
    */
   async start() {
-    if (!this.readFileResult.filePath) throw new Error('File path is empty');
-
-    console.log(`[huskygpt] Start modify ${this.readFileResult.filePath}...`);
+    if (!this.readFileResult?.length) throw new Error('File path is empty');
 
     let continuePrompt = true;
     let continueTimes = 0;
 
     while (continuePrompt) {
-      const description = await this.promptOptionDescription();
-      const spinner = ora(`[huskygpt] Processing...`).start();
-
-      const prompts = [
-        continueTimes === 0
-          ? `My fileContent is: ${this.readFileResult.fileContent}.`
-          : '',
-        `Please modify my code by following requirements: ${description}`,
-      ];
-      const message = await this.huskygpt.run({
-        ...this.readFileResult,
-        prompts: [prompts.join('\n')],
-      });
-      if (!message?.length) {
-        spinner.stop();
-        return;
+      for (const fileResult of this.readFileResult) {
+        await this.runSingleFile(fileResult, continueTimes);
       }
 
-      this.writeFile(message.join('\n'));
-
-      spinner.stop();
       continuePrompt = await this.promptContinueOrFinish();
       continueTimes += 1;
     }
