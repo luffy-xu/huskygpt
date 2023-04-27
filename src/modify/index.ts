@@ -1,6 +1,7 @@
 import fs from 'fs';
 import inquirer from 'inquirer';
 import ora from 'ora';
+import { userOptions } from 'src/constant';
 import { HuskyGPTModify } from 'src/huskygpt';
 import { IReadFileResult } from 'src/types';
 import getConflictResult from 'src/utils/write-conflict';
@@ -27,7 +28,9 @@ class ModifyCLI {
       {
         type: 'input',
         name: 'description',
-        default: `Please fix bugs or optimize my code. if the function is complexity, please chunk it. If it's function component, use hooks optimize it. And add en and zh comments for complexity logic steps e.g. // EN: some comments, // ZH: 一些评论.`,
+        default: `Please fix bugs or optimize my code, and extract constant variable or enum variable. if the function is complexity, please chunk it. If it's functional component, use react hooks optimize some UI component or functions. And add comments with ${
+          userOptions.options.translate || 'en'
+        } language for complexity logic steps.`,
         messages: `Please input your modify requirements`,
         validate: (input: string) =>
           input.trim() !== '' || 'Description cannot be empty.',
@@ -76,7 +79,7 @@ class ModifyCLI {
       continueTimes === 0
         ? `My fileContent is: ${fileResult.fileContent}.`
         : '',
-      `Please modify my code by following requirements: ${description}`,
+      `Please modify previous code by following requirements: ${description}`,
     ];
     const message = await this.huskygpt.run({
       ...this.readFileResult,
