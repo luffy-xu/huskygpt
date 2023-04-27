@@ -169,14 +169,23 @@ class UserOptionsClass {
    */
   get openAIPrompt(): string {
     const { openAIPrompt } = this.options;
+
     if (!openAIPrompt) return '';
-    if (fs.statSync(openAIPrompt).isFile()) {
-      return `Note here is context that you need understand: ${fs.readFileSync(
-        openAIPrompt,
-        'utf-8',
-      )}.`;
-    }
-    return openAIPrompt;
+
+    // Split the string by comma to get individual file paths
+    const filePaths = openAIPrompt.split(',');
+
+    // Filter out invalid file paths and read each file's content
+    const filesContent = filePaths
+      .filter(
+        (filePath) => fs.existsSync(filePath) && fs.statSync(filePath).isFile(),
+      )
+      .map((filePath) => fs.readFileSync(filePath.trim(), 'utf-8'))
+      .join('\n');
+
+    return filesContent
+      ? `Note here is context that you need understand: ${filesContent}.`
+      : openAIPrompt;
   }
 
   /**
