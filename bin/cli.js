@@ -2,13 +2,14 @@
 import { Command } from 'commander';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { main } from '../build/index.js';
 
 // Assuming the current file is located at /home/user/project/app.js
-const dirname = path.join(new URL('.', import.meta.url).pathname);
+const dirname = fileURLToPath(new URL('.', import.meta.url));
 const packageJson = JSON.parse(
-  fs.readFileSync(path.join(dirname, '../package.json'), 'utf8'),
+  fs.readFileSync(path.join(dirname, '..', 'package.json'), 'utf8'),
 );
 const program = new Command();
 const runTypes = ['test', 'review', 'translate', 'create', 'modify'];
