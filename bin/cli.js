@@ -3,6 +3,7 @@ import { Command } from 'commander';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
 import { main } from '../build/index.js';
 
 // Assuming the current file is located at /home/user/project/app.js
