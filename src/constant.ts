@@ -1,6 +1,7 @@
 import { ChatGPTAPIOptions } from 'chatgpt';
 import { execSync } from 'child_process';
 import { config } from 'dotenv';
+import fs from 'fs';
 import path from 'path';
 
 import { HuskyGPTTypeEnum, IUserOptions, ReadTypeEnum } from './types';
@@ -161,6 +162,21 @@ class UserOptionsClass {
   get readFileType(): ReadTypeEnum {
     if (!this.options.readType) throw new Error('readType is not set');
     return this.options.readType;
+  }
+
+  /**
+   * Get user openAIPrompt arg, if prompts is a file path, read the file
+   */
+  get openAIPrompt(): string {
+    const { openAIPrompt } = this.options;
+    if (!openAIPrompt) return '';
+    if (fs.statSync(openAIPrompt).isFile()) {
+      return `Note here is context that you need understand: ${fs.readFileSync(
+        openAIPrompt,
+        'utf-8',
+      )}.`;
+    }
+    return openAIPrompt;
   }
 
   /**

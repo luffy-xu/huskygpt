@@ -41,7 +41,10 @@ class ReadFiles {
     const extension = path.extname(file);
     if (!this.fileExtensions.length) return true;
 
-    return this.fileExtensions.includes(extension);
+    // Check if the file extension is in the list of valid extensions, both match .ts or ts
+    return this.fileExtensions.some(
+      (ext) => ext === extension || ext === extension.slice(1),
+    );
   }
 
   // Check if a file is a test file

@@ -18,7 +18,7 @@ export class HuskyGPTPrompt {
       // - Import the test function from "../${fileName}".
       const basePrompt = `
         ${testsPrompt}
-        ${userOptions.options.openAIPrompt || ''}
+        ${userOptions.openAIPrompt || ''}
       `;
 
       const codePicker = new ExtractCodePrompts();
@@ -37,7 +37,7 @@ export class HuskyGPTPrompt {
       const reviewPrompt = readPromptFile('review.txt');
       const basePrompt = `
         ${reviewPrompt}
-        ${userOptions.options.openAIPrompt || ''}
+        ${userOptions.openAIPrompt || ''}
       `;
 
       const codePicker = new ExtractCodePrompts();
@@ -49,16 +49,6 @@ export class HuskyGPTPrompt {
 
       return [basePrompt, ...codePrompts];
     },
-    [HuskyGPTTypeEnum.Create]: ({ prompts }) => {
-      if (!prompts) throw new Error('prompts is required for create');
-      const createPrompt = readPromptFile('create.txt');
-      const basePrompt = `
-      ${createPrompt}
-      ${userOptions.options.openAIPrompt || ''}
-    `;
-
-      return [basePrompt, ...prompts];
-    },
     [HuskyGPTTypeEnum.Translate]: (fileResult) => {
       const fileContent =
         fileResult.fileContent ||
@@ -67,19 +57,33 @@ export class HuskyGPTPrompt {
       const basePrompt = `
         ${readPrompt}
         - Target language: ${userOptions.options.translate}
-        ${userOptions.options.openAIPrompt || ''}
+        ${userOptions.openAIPrompt || ''}
       `;
 
       return [basePrompt, fileContent];
     },
-    [HuskyGPTTypeEnum.Modify]: (fileResult) => {
-      const readPrompt = readPromptFile('modify.txt');
-      const basePrompt = `
-        ${readPrompt}
-        ${userOptions.options.openAIPrompt || ''}
-      `;
+    [HuskyGPTTypeEnum.Create]: ({ prompts }) => {
+      if (!prompts) throw new Error('prompts is required for create');
+      const createPrompt = readPromptFile('create.txt');
 
-      return [basePrompt, ...fileResult.prompts];
+      return [
+        createPrompt,
+        ...[
+          `${userOptions.openAIPrompt}\n${prompts.slice(0, 1)}`,
+          ...prompts.slice(1),
+        ],
+      ];
+    },
+    [HuskyGPTTypeEnum.Modify]: ({ prompts }) => {
+      const readPrompt = readPromptFile('modify.txt');
+
+      return [
+        readPrompt,
+        ...[
+          `${userOptions.openAIPrompt}\n${prompts.slice(0, 1)}`,
+          ...prompts.slice(1),
+        ],
+      ];
     },
   };
 
