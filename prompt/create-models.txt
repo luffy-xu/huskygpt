@@ -1,37 +1,35 @@
 Here is a simple example of how to write a "models":
 import { useState, useCallback } from 'react'
-import { signIn, signOut } from '@/services/{{services modelName}}'
 
 export default function use{{modelName}}() {
   {{manage api response data, and set to state}}
-  const [user, setUser] = useState<API.LoginResult | undefined>()
+  const [user, setUser] = useState<LoginResult | undefined>()
   {{#if useLoading}}}
   const [loading, setLoading] = useState(false);
   {{here are some other state}}}
 
-  const signIn = useCallback(async ({{payload}}: API.LoginParams): Promise<API.LoginResult | undefined> => {
-    // signIn implementation
+  const {{api method name}} = useCallback(({{payload}}: LoginParams): Promise<LoginResult | undefined> => {
     {{Call API from "services"}}
-    try {
-      const {{response}} = await signIn({{payload}});
-      {{setUser({{response.data}})}}
-      return {{response.data}};
-    } catch(error) {
-      console.log(error);
-    }
-  }, [])
-
-  const signOut = useCallback(async () => {
-    // signOut implementation
-    {{Call API from "services"}}
-    await signOut();
-    {{setUser(undefined)}}
+    {{#if useLoading}}
+    setLoading(true);
+    {{/if}}
+    return {{api method name}}({{payload}})
+      .then((response) => {
+        {{setUser({{response}})}}
+      })
+      .catch((error) => {
+        {{message.error(error.message)}}
+      })
+      .finally(() => {
+        {{#if useLoading}}
+        setLoading(false);
+        {{/if}}
+      });
   }, [])
 
   return {
     user,
-    signIn,
-    signOut
+    {{api method name}},
   }
 }
 
