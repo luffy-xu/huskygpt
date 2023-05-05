@@ -28,7 +28,7 @@ class ModifyCLI {
       {
         type: 'input',
         name: 'description',
-        default: `Please fix bugs or optimize my code, and extract constant variable or enum variable. if the function is complexity, please chunk it. If it's functional component, use react hooks optimize some UI component or functions. And add comments with ${
+        default: `Please fix bugs or optimize my code, and extract constant and enum variable. if the function is complexity, please chunk it. If it's functional component, use react hooks optimize some UI component or functions. And add comments with ${
           userOptions.options.translate || 'en'
         } language for complexity logic steps.`,
         messages: `Please input your modify requirements`,

@@ -47,21 +47,18 @@ class CreateCodeGenerator {
           `,
     ];
     if (option === OptionType.Models) {
-      basePrompts.push(
-        `${readPromptFile(`create-${OptionType.Services}.txt`)}
-            Note that you should consider the method name and relationship between the "${
-              OptionType.Models
-            }" that you reply before.
-            Please reply "${
-              OptionType.Services
-            }" code by following requirements: ${description}.
-          `,
-      );
+      // basePrompts.push(
+      //   `${readPromptFile(`create-${OptionType.Services}.txt`)}
+      //       Note that you should consider the method name and relationship between the "${
+      //         OptionType.Models
+      //       }" that you reply before.
+      //       Please reply "${
+      //         OptionType.Services
+      //       }" code by following requirements: ${description}.
+      //     `,
+      // );
       basePrompts.push(
         `${readPromptFile(`create-${OptionType.Mock}.txt`)}
-            Note that you should consider the requests api path and relationship between the "${
-              OptionType.Services
-            }" that you reply before.
             Please reply "${
               OptionType.Mock
             }" code by following requirements: ${description}.
@@ -106,7 +103,7 @@ class CreateCodeGenerator {
 
   // Handle models option
   private handleModelsOption(dirName: string, name: string, message: string[]) {
-    const [modelContent, serviceContent, mockContent] = message;
+    const [modelContent, mockContent] = message;
     const fileName = `${dirName}${getFileNameToCamelCase(name, true)}`;
     this.writeFile({
       fileName,
@@ -114,12 +111,12 @@ class CreateCodeGenerator {
       needCreateDir: false,
       optionType: OptionType.Models,
     });
-    this.writeFile({
-      fileName,
-      fileContent: serviceContent,
-      needCreateDir: false,
-      optionType: OptionType.Services,
-    });
+    // this.writeFile({
+    //   fileName,
+    //   fileContent: serviceContent,
+    //   needCreateDir: false,
+    //   optionType: OptionType.Services,
+    // });
     this.writeFile({
       fileName,
       fileContent: mockContent,

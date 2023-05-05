@@ -17,3 +17,12 @@ export default {
   // Simple case by user requirements
   'GET {{api pathname}}': {{response json, or mock logic function}},
 };
+
+Please note that you need send response json by following structure, the "data" field type T I will provide later:
+interface ResponseStructure<T = any> {
+  success: boolean;
+  data: T;
+  errorCode?: number;
+  errorMessage?: string;
+  showType?: ErrorShowType;
+}
